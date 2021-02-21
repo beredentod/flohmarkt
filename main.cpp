@@ -6,4 +6,6 @@ int main () {
 	cout << "Nummer des Beispiels: ";
 	cin >> n;
 	Solver S("../beispiele/flohmarkt" + to_string(n) + ".txt");
+	S.printAllStripes();
+	S.printAllBestFit();
 }

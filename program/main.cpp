@@ -8,4 +8,5 @@ int main () {
 	Solver S("../beispiele/flohmarkt" + to_string(n) + ".txt");
 	S.printAllStripes();
 	S.printAllBestFit();
+	S.printAllRectangles();
 }

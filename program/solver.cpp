@@ -56,24 +56,29 @@ void Solver::knapsackStripe(int p){
 		}
 	}
 
-	sort(bestFitRectangles[p].begin(), bestFitRectangles[p].end(), sortRecSize);
+	sort(bestFitRectangles[p].begin(), bestFitRectangles[p].end(), greaterRec);
 
 	cout << "Stripe " << p << ": " << DP[curr_size][N] << "\n";
 }
 
+void Solver::insertPlace(Rec* r, int p){
+	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
+	placedRectangles[p].insert(it, r);
+}
+
 void Solver::processStripe(int p){
 	for(auto r: bestFitRectangles[p]){
-		if (placedRectangles[p].empty()) {
+		if (placedRectangles[p].empty())
 			r->x1 = 0;
-			r->x2 = r->getSize();
-			placedRectangles[p].pb(r);
-		} else {
-			int num = placedRectangles[p].size();
-			int curr = placedRectangles[p][num-1]->x2;
+		else {
+			auto it = placedRectangles[p].end();
+			it--;
+			int curr = (*it)->x2;
 			r->x1 = curr;
-			r->x2 = r->x1 + r->getSize();
-			placedRectangles[p].pb(r);
 		}
+		r->x2 = r->x1 + r->getSize();
+		for (int i = r->getBegin(); i < r->getEnd(); i++)
+			insertPlace(r, i);
 	}
 }
 

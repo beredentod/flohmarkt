@@ -18,11 +18,15 @@ class Solver{
 	vector<vector<Rec*>> rectangles_stripes;
 	vector<vector<Rec*>> bestFitRectangles;
 
-	vector<vector<Rec*>> placedRectangles;
+	vector<list<Rec*>> placedRectangles;
 
 	void readFile(string path);
 
 	void distributeToStripes();
+
+	void insertPlace(Rec* r, int p);
+	void knapsackStripe(int p);
+	void processStripe(int p);
 
 public:
 	Solver(string path, int width = 10, int length = 1000, int start = 8):
@@ -31,7 +35,7 @@ public:
 		distributeToStripes();
 
 		bestFitRectangles = vector<vector<Rec*>> (M);
-		placedRectangles = vector<vector<Rec*>> (M);
+		placedRectangles = vector<list<Rec*>> (M);
 
 		for (int i = 0; i < int(rectangles_stripes.size()); i++)
 			knapsackStripe(i);
@@ -42,9 +46,6 @@ public:
 		for (auto r: rectangles)
 				delete r;
 	}
-
-	void knapsackStripe(int p);
-	void processStripe(int p);
 
 	void printAllRectangles();
 	void printStripe(int p);

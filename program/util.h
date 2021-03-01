@@ -6,6 +6,7 @@
 #include<bits/stdc++.h>
 #include"util.h"
 
+using namespace std;
 
 class Rec {
 private:
@@ -32,6 +33,7 @@ public:
 	int x1, x2;
 };
 
-bool sortRecSize(Rec *a, Rec *b);
+bool greaterRec(Rec *a, Rec *b);
+bool smallerx2(Rec *a, Rec *b);
 
 #endif

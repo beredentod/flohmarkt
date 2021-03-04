@@ -56,9 +56,33 @@ void Solver::knapsackStripe(int p){
 		}
 	}
 
-	sort(bestFitRectangles[p].begin(), bestFitRectangles[p].end(), greaterRec);
+	sort(bestFitRectangles[p].begin(), bestFitRectangles[p].end(), greaterEnd);
 
 	cout << "Stripe " << p << ": " << DP[curr_size][N] << "\n";
+}
+
+void Solver::swapRecs(Rec* a, Rec* b){
+	if (!checkSwap(a, b)){
+		cout << "DEBUG: swap not possible for: ";
+		printRectangle(a);
+		cout << ", ";
+		printRectangle(b);
+		cout << "\n";
+		return;
+	}
+
+	int val1 = a->x1;
+	a->x1 = b->x1;
+	a->x2 = a->x1 + a->getSize();
+	b->x1 = val1;
+	b->x2 = b->x1 + b->getSize();
+}
+
+bool Solver::checkSwap(Rec* a, Rec* b){
+	int val1 = a->x1, val2 = b->x1;
+	if (val1 + b->getSize() > N || val2 + a->getSize() > N)
+		return false;
+	return true;
 }
 
 void Solver::insertPlace(Rec* r, int p){
@@ -66,30 +90,93 @@ void Solver::insertPlace(Rec* r, int p){
 	placedRectangles[p].insert(it, r);
 }
 
+int Solver::findNearestHole(Rec* r, int p){
+//think about something faster (?)
+	list<Rec*>::iterator it = placedRectangles[p].begin();
+
+	if ((*it)->x1 >= r->getSize())
+		return 0;
+
+	for (; it != placedRectangles[p].end(); it++){
+		list<Rec*>::iterator it2 = it;
+		it2++;
+		if (it2 == placedRectangles[p].end()) {
+			//cout << r->getSize() << " -- " << (*it)->x2 << "\n";
+			if (N - (*it)->x2 >= r->getSize()) 
+				return (*it)->x2;
+			else
+				return -1;
+		}
+
+		if ((*it2)->x1 - (*it)->x2 >= r->getSize()){
+			//cout << r->getSize() << "-- " << (*it)->x2 << "\n";
+			return (*it)->x2;
+		}
+	}
+
+	r->status = 0;
+	return -1;	
+}
+
 void Solver::processStripe(int p){
 	for(auto r: bestFitRectangles[p]){
+		if (r->x1 > -1 || r->getBegin() < p)
+			continue;
+
 		if (placedRectangles[p].empty())
 			r->x1 = 0;
 		else {
-			auto it = placedRectangles[p].end();
-			it--;
-			int curr = (*it)->x2;
-			r->x1 = curr;
+			//auto it = placedRectangles[p].end();
+			//it--;
+			int curr = findNearestHole(r, p);
+			if (curr > -1)
+				r->x1 = curr;
+			else {
+				continue;
+			}
 		}
 		r->x2 = r->x1 + r->getSize();
 		for (int i = r->getBegin(); i < r->getEnd(); i++)
 			insertPlace(r, i);
 	}
+
+	//auto it = placedRectangles[p].begin();
+	//auto it2 = it;
+	//it2++;
+
+	//swapRecs(*it2, *it);
 }
 
+int Solver::calculateAreaUsed(){
+	int sum = 0;
+	for (auto r: rectangles)
+		if (r->x1 > -1)
+			sum += r->getArea();
+
+	return sum;
+}
+
+int Solver::calculateTotalArea(){
+	int sum = 0;
+	for (auto r: rectangles)
+			sum += r->getArea();
+
+	return sum;
+}
 
 // ------------------------- DEBUGGING -------------------------
 
 void Solver::printAllRectangles(){
 	cout << "\nDEBUG: All rectangles\n";
+	cout << "DEBUG: B\tE\tS\tA\tx1\tx2\n";
 	for (auto r: rectangles)
 		cout << "DEBUG: " << r->getBegin() << "\t" << r->getEnd() << "\t" << r->getSize()
-			 << "\t" << r->x1 << "\t" << r->x2 << "\n"; 	
+			 << "\t" << r->getArea() << "\t" << r->x1 << "\t" << r->x2 << "\n";
+	cout << "\n"; 	
+}
+
+void Solver::printRectangle(Rec *r){
+	cout << "(" << r->getBegin() << ", " << r->getEnd() << ", " << r->getSize() << ") ";
 }
 
 void Solver::printStripe(int p){
@@ -107,11 +194,25 @@ void Solver::printAllStripes(){
 void Solver::printStripeBestFit(int p){
 	cout << "DEBUG: Best fit for stripe: " << p << ":\t";
 	for (auto r: bestFitRectangles[p])
-		cout << "(" << r->getBegin() << ", " << r->getEnd() << ", " << r->getSize() << ") ";
+		cout << "(" << r->getBegin() << ", " << r->getEnd() << ", S: "
+			 << r->getSize() << ", A: " << r->getArea() << ") ";
 	cout << "\n";
 }
 
 void Solver::printAllBestFit(){
 	for (int i = 0; i < int(bestFitRectangles.size());i++)
 		printStripeBestFit(i);
+}
+
+void Solver::printPlacedStripe(int p){
+	cout << "DEBUG: Placed stripe: " << p << "\t";
+	for (auto r: placedRectangles[p])
+		cout << "(" << r->x1 << ", " << r->x2 << ", S: "
+			 << r->getSize() << ", A: " << r->getArea() << ") ";
+	cout << "\n";
+}
+
+void Solver::printAllPlaced(){
+	for (int i = 0; i < int(placedRectangles.size()); i++)
+		printPlacedStripe(i);
 }

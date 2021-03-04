@@ -24,9 +24,13 @@ class Solver{
 
 	void distributeToStripes();
 
+	void swapRecs(Rec* a, Rec* b);
+	bool checkSwap(Rec* a, Rec* b);
 	void insertPlace(Rec* r, int p);
 	void knapsackStripe(int p);
 	void processStripe(int p);
+
+	int findNearestHole(Rec* r, int p);
 
 public:
 	Solver(string path, int width = 10, int length = 1000, int start = 8):
@@ -40,18 +44,27 @@ public:
 		for (int i = 0; i < int(rectangles_stripes.size()); i++)
 			knapsackStripe(i);
 
-		processStripe(0);
+		for (int i = 0; i < 8; i++)
+			processStripe(i);
+
+		cout << 401 << " " << bestFitRectangles[7][0]->status << "\n";
 	}
 	~Solver(){
 		for (auto r: rectangles)
-				delete r;
+			delete r;
 	}
 
+	int calculateAreaUsed();
+	int calculateTotalArea();
+
 	void printAllRectangles();
+	void printRectangle(Rec *r);
 	void printStripe(int p);
 	void printAllStripes();
 	void printStripeBestFit(int p);
 	void printAllBestFit();
+	void printPlacedStripe(int p);
+	void printAllPlaced();
 };
 
 #endif

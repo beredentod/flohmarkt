@@ -43,4 +43,8 @@ bool greaterRec(Rec *a, Rec *b);
 bool greaterEnd(Rec *a, Rec *b);
 bool smallerx2(Rec *a, Rec *b);
 
+struct hole{
+	int x1, x2, b, e;
+};
+
 #endif

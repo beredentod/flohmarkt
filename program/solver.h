@@ -7,6 +7,7 @@
 #include"util.h"
 
 #define pb push_back
+typedef pair<int,int> iPair;
 
 using namespace std;
 
@@ -20,6 +21,8 @@ class Solver{
 
 	vector<list<Rec*>> placedRectangles;
 
+	vector<list<iPair>> holes;
+
 	void readFile(string path);
 
 	void distributeToStripes();
@@ -32,6 +35,13 @@ class Solver{
 
 	int findNearestHole(Rec* r, int p);
 
+	void findHolesStripe(int p);
+	void findAllHoles();
+
+	Rec* findReplacement(iPair h);
+
+	//void DP();
+
 public:
 	Solver(string path, int width = 10, int length = 1000, int start = 8):
 		M(width), N(length), START(start) {
@@ -40,14 +50,25 @@ public:
 
 		bestFitRectangles = vector<vector<Rec*>> (M);
 		placedRectangles = vector<list<Rec*>> (M);
+		holes = vector<list<iPair>> (M);
 
-		for (int i = 0; i < int(rectangles_stripes.size()); i++)
-			knapsackStripe(i);
+		//for (int i = 0; i < int(rectangles_stripes.size()); i++)
+		//	knapsackStripe(i);
 
 		for (int i = 0; i < 8; i++)
 			processStripe(i);
 
-		cout << 401 << " " << bestFitRectangles[7][0]->status << "\n";
+		findAllHoles();
+
+		for (int i = 0; i < M; i++){
+			cout << "Holes Stripe " << i <<": ";
+			for (auto h: holes[i])
+				cout << "(" << h.first << ", " << h.second << ") ";
+			cout << "\n";
+		}
+		cout << "\n";
+
+		sort(rectangles.begin(), rectangles.end(), greaterEnd);
 	}
 	~Solver(){
 		for (auto r: rectangles)
@@ -56,6 +77,10 @@ public:
 
 	int calculateAreaUsed();
 	int calculateTotalArea();
+
+	int getM();
+	int getN();
+	int getStart();
 
 	void printAllRectangles();
 	void printRectangle(Rec *r);

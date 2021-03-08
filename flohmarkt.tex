@@ -118,10 +118,48 @@
 \section{Lösungsidee}
 
 \subsection{Formulierung des Problems}
+Gegeben sei eine Strecke der Länge $N$ und eine Zeitspanne von $B$ bis $E$.
+Außerdem gegeben sei eine Liste von $Z$ Voranmeldungen. 
+Die Voranmeldugen betreffen die Vermietung eines Teils der Strecke in einer konkreten Zeitspanne.
+So besteht jede Voranmeldug $i$ aus einer Strecke $0 < s_i \leqslant N$,
+einem Mietbeginn $B \leqslant b_i < E$ und einem Mietende $b_i < e_i \leqslant E$.
+In diesem Problem behandelt werden Strecken in volltändigen Metern 
+und alle Zeiten werden in vollständigen Stunden angegeben.
+Obwohl $N$ auf 1000 Meter, $B$ auf 8:00 und $E$ auf 18:00 festgelegt sind,
+kann mein Programm mit beliebigen Größen umgehen.
+
+Die Aufgabe ist ein Optimierungsproblem.
+Man soll so eine Teilfolge aus den $m$ Voranmeldugen wählen,
+dass alle gewählten Strecken in den angebenen Zeiten vermietet werden können
+und die Mieteinnahmen möglichst hoch sind, wobei der Preis 1 Euro pro Meter pro Stunde beträgt.
+
+Man kann das Problem auf folgende Weise modellieren. 
+Wir setzen: $M := E - B$.
+Wir bilden ein Rechteck $R$ der Größe $N \times M$.
+So kann man analog jede Voranmeldung $i$ als ein kleineres Rechteck 
+$r_i$ der Größe $s_i \times m_i$ darstellen, wobei $m_i := e_i - b_i$.
+
+So können wir die obige Aufgabe umformulieren:
+Wähle so eine Teilfolge $Z'$ von Rechtecken aus $Z$,
+die eine Anordnung innerhalb von $R$ bilden,
+sodass der Gesamtflächeninhalt aller Rechtecke in $Z'$ maximal ist und
+kein Paar der Rechtecke sich nicht überdeckt.
+Genauer gesagt: Jedes Rechteck $r_i$ in $Z'$ besitzt Ecken,
+die den folgenden Punkten entsprechen:
+$(x_i, b_i), (x_i, e_i), (x_i + s_i, e_i), (x_i + s_i, b_i)$.
+
+\TODO{check, reformulate}
 
 \subsection{Themenbezogene Arbeiten}
 
 \subsection{Komplexität des Problems}
+
+\TODO{Zeige, das Problem ist NP (überprüfbar in P)\\
+Zeige, das Problem ist NP-schwer: Reduktion zu einem anderen NP-voll. oder NP-schweren Problem.
+Die Reduktionsfunktion muss in Polynomialzeit laufen.\\
+https://stackoverflow.com/questions/4294270/how-to-prove-that-a-problem-is-np-complete}
+
+
 \TODO{Notwendigkeit einer Heuristik}
 
 \subsection{Inhalt: Heuristik}

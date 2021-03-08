@@ -30,6 +30,9 @@ void Solver::distributeToStripes(){
 		for (int i = r->getBegin(); i < r->getEnd(); i++) 
 			rectangles_stripes[i].pb(r);
 	}
+
+	for (int i = 0; i < M; i++)
+		sort(rectangles_stripes[i].begin(), rectangles_stripes[i].end(), greaterEnd);
 }
 
 void Solver::knapsackStripe(int p){
@@ -119,7 +122,7 @@ int Solver::findNearestHole(Rec* r, int p){
 }
 
 void Solver::processStripe(int p){
-	for(auto r: bestFitRectangles[p]){
+	for(auto r: rectangles_stripes[p]){
 		if (r->x1 > -1 || r->getBegin() < p)
 			continue;
 
@@ -147,6 +150,48 @@ void Solver::processStripe(int p){
 	//swapRecs(*it2, *it);
 }
 
+void Solver::findHolesStripe(int p){
+	list<Rec*>::iterator it = placedRectangles[p].begin();
+	for (; it != placedRectangles[p].end(); it++){
+		auto it2 = it;
+		it2++;
+
+		if (it == placedRectangles[p].begin() && (*it)->x1 > 0)
+			holes[p].pb({0, (*it)->x1});
+		if (it2 == placedRectangles[p].end()){
+			if ((*it)->x2 < N)
+				holes[p].pb({(*it)->x2, N});
+		}
+		else if ((*it)->x2 < (*it2)->x1)
+			holes[p].pb({(*it)->x1, (*it)->x2});
+	}
+}
+
+void Solver::findAllHoles(){
+	for (int i = 0; i < M; i++)
+		findHolesStripe(i);
+}
+
+
+/*void Solver::DP(){
+	int num = rectangles.size();
+	vector<vector<vector<int>>> DP(num + 1, vector<vector<int>> (N+1, vector<int> (M+1, 0)));
+
+	for (int i = 1; i <= int(rectangles.size()); i++){
+		rec *curr = rectangles[i-1];
+		int b = curr->getBegin();
+		int e = curr->getEnd();
+		int a = curr->getArea();
+		int s = curr->getSize();
+
+		for (int j = N; j >= s; j--) {
+			DP[i]
+
+		}
+	}
+}*/
+
+
 int Solver::calculateAreaUsed(){
 	int sum = 0;
 	for (auto r: rectangles)
@@ -162,6 +207,16 @@ int Solver::calculateTotalArea(){
 			sum += r->getArea();
 
 	return sum;
+}
+
+int Solver::getM(){
+	return M;
+}
+int Solver::getN(){
+	return N;
+}
+int Solver::getStart(){
+	return START;
 }
 
 // ------------------------- DEBUGGING -------------------------

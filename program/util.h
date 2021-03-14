@@ -36,12 +36,16 @@ public:
 	}
 
 	int x1, x2;
-	bool status = 1;
 };
 
+bool smaller(Rec *a, Rec *b);
+bool smallerx2(Rec *a, Rec *b);
 bool greaterRec(Rec *a, Rec *b);
 bool greaterEnd(Rec *a, Rec *b);
-bool smallerx2(Rec *a, Rec *b);
+bool smallerSize(Rec *a, Rec *b);
+bool smallerArea(Rec *a, Rec *b);
+bool greaterArea(Rec *a, Rec *b);
+bool sortHolesSize(const pair<pair<int, int>, int> &a, const pair<pair<int, int>, int> &b);
 
 struct hole{
 	int x1, x2, b, e;

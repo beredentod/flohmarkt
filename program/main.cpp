@@ -6,9 +6,6 @@ int main () {
 	cout << "Nummer des Beispiels: ";
 	cin >> n;
 	Solver S("../beispiele/flohmarkt" + to_string(n) + ".txt");
-	S.printAllStripes();
-	S.printAllRectangles();
-	S.printAllPlaced();
 
 	double used = S.calculateAreaUsed();
 	double total = S.calculateTotalArea();
@@ -17,4 +14,6 @@ int main () {
 	<< used/(S.getM()*S.getN())*100 << "% of the total area and which is "
 	<< used/total*100 << "% of all rectanlges.\n";
 	cout << "Total area of all rectangles: " << total << "\n";
+
+	S.saveResult("../results/flohmarkt" + to_string(n) + "_result");
 }

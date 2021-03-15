@@ -18,7 +18,7 @@ bool smaller(Rec *a, Rec *b) {
 	//if (a->getSize() == b->getSize())
 	//	return a->getBegin() < b->getBegin();
 
-	return (a->x2 < b->x1);
+	return (a->x2 < b->x2);
 }
 
 

@@ -17,7 +17,7 @@ class Solver{
 	vector<Rec*> rectangles;
 
 	vector<vector<Rec*>> rectangles_stripes;
-	vector<vector<Rec*>> rec_stripes_size;
+	vector<vector<Rec*>> rec_stripes_area;
 
 	vector<list<Rec*>> placedRectangles;
 	vector<list<iPair>> holes;
@@ -34,9 +34,9 @@ class Solver{
 
 	void findHoles(int p = -1);
 	pair<iPair, int> findLargestHole();
-	Rec* findReplacement();
+	pair<Rec*, iPair> findReplacement(int epoch);
 	vector<Rec*> addNew(Rec* rep);
-	void removeCollisions(int area, Rec* rep);
+	void removeCollisions(int area, pair<Rec*, iPair> rep);
 
 	bool checkIfOverlaps();
 

@@ -18,11 +18,12 @@ class Solver{
 
 	vector<vector<Rec*>> rectangles_stripes;
 	vector<vector<Rec*>> rec_stripes_area;
+	vector<vector<Rec*>> unusedRectangles;
 
 	vector<list<Rec*>> placedRectangles;
-	vector<list<iPair>> holes;
+	vector<list<Hole>> holes;
 
-	vector<pair<iPair, int>> all_holes;
+	vector<Hole> all_holes;
 
 	void readFile(string path);
 	void distributeToStripes();
@@ -31,9 +32,10 @@ class Solver{
 	void insertPlace(Rec* r, int p);
 	void processStripe(int p);
 	vector<Rec*> processStripeReturn(int p);
+	void determineUnused(int p = -1);
 
 	void findHoles(int p = -1);
-	pair<iPair, int> findLargestHole();
+	Hole findNextLargestHole(int it);
 	pair<Rec*, iPair> findReplacement(int epoch);
 	vector<Rec*> addNew(Rec* rep);
 	void removeCollisions(int area, pair<Rec*, iPair> rep);
@@ -47,7 +49,8 @@ public:
 		M(width), N(length), START(start) {
 
 		placedRectangles = vector<list<Rec*>> (M);
-		holes = vector<list<iPair>> (M);
+		unusedRectangles = vector<vector<Rec*>> (M);
+		holes = vector<list<Hole>> (M);
 
 		readFile(path);
 		run();

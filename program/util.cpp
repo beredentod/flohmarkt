@@ -54,9 +54,9 @@ bool greaterArea(Rec *a, Rec *b) {
 	return a->getArea() > b->getArea();
 }
 
-bool sortHolesSize(const pair<pair<int, int>, int> &a, const pair<pair<int, int>, int> &b){
-	if (a.first.second - a.first.first == b.first.second - b.first.first)
-		return a.second < b.second;
+bool sortHolesSize(const Hole &a, const Hole &b){
+	if (a.x2 - a.x1 == b.x2 - b.x1)
+		return a.stripe < b.stripe;
 
-	return (a.first.second - a.first.first > b.first.second - b.first.first);
+	return (a.x2 - a.x1 > b.x2 - b.x1);
 }

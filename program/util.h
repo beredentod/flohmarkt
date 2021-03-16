@@ -38,6 +38,22 @@ public:
 	int x1, x2;
 };
 
+class Hole{
+public:
+	int x1 = -1, x2 = -1, stripe = -1, it = -1;
+	Hole(){}
+	Hole(int a, int b){
+		x1 = a;
+		x2 = b;
+	}
+	Hole(int a, int b, int c){
+		x1 = a;
+		x2 = b;
+		stripe = c;
+	}
+
+};
+
 bool smaller(Rec *a, Rec *b);
 bool smallerx2(Rec *a, Rec *b);
 bool greaterRec(Rec *a, Rec *b);
@@ -45,10 +61,7 @@ bool greaterEnd(Rec *a, Rec *b);
 bool smallerSize(Rec *a, Rec *b);
 bool smallerArea(Rec *a, Rec *b);
 bool greaterArea(Rec *a, Rec *b);
-bool sortHolesSize(const pair<pair<int, int>, int> &a, const pair<pair<int, int>, int> &b);
+bool sortHolesSize(const Hole &a, const Hole &b);
 
-struct hole{
-	int x1, x2, b, e;
-};
 
 #endif

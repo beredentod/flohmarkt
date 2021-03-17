@@ -36,9 +36,9 @@ class Solver{
 
 	void findHoles(int p = -1);
 	Hole findNextLargestHole(int it);
-	pair<Rec*, iPair> findReplacement(int epoch);
+	pair<Rec*, iPair> findReplacement(Hole hole, int it);
 	vector<Rec*> addNew(Rec* rep);
-	void removeCollisions(int area, pair<Rec*, iPair> rep);
+	bool removeCollisions(int area, pair<Rec*, iPair> rep);
 
 	bool checkIfOverlaps();
 

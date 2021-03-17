@@ -42,23 +42,43 @@ void Solver::run(){
 	//if (int(rectangles.size()) < 30) {
 		printStripes(-1, true);
 	//}
+	bool result = true;
+	Hole hole;
+	pair<Rec*, iPair> rep;
+	int itR = 0, itH = 0;
+	do {
+		if (result){
+			area = calculateAreaUsed();
+			determineUnused();
+			findHoles();
 
-	determineUnused();
-	findHoles();
-	printHoles();
+			printHoles();
 
-	int epoch = 1;
-	pair<Rec*, iPair> rep = findReplacement(epoch);
+			hole = findNextLargestHole(itH = 0);
+			rep = findReplacement(hole, itR = 0);
+			if (rep.second.second == -1)
+				break;
+			result = removeCollisions(area, rep);
+			cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
+		}
+		else {
+			rep = findReplacement(hole, ++itR);
+			if (rep.second.second == -2){
+				hole = findNextLargestHole(++itH);
+				rep = findReplacement(hole, itR = 0);
+				if (rep.second.second == -1)
+					break; 
+			}
+			result = removeCollisions(area, rep);
+			cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
+		}
+
+	} while(rep.second.second > -1);
+
 
 	//printPlaced();
 
-	if (rep.second.second > -1)
-		removeCollisions(area, rep);
-	epoch++;
-
-	//printPlaced();
-
-	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
+	
 
 	/*findHoles();
 	pair<Rec*, iPair> rep2 = findReplacement(epoch);
@@ -83,9 +103,9 @@ void Solver::distributeToStripes(){
 	for (int i = 0; i < M; i++)
 		sort(rectangles_stripes[i].begin(), rectangles_stripes[i].end(), greaterEnd);
 
-	rec_stripes_area = rectangles_stripes;
+	/*rec_stripes_area = rectangles_stripes;
 	for (int i = 0; i < M; i++)
-		sort(rec_stripes_area[i].begin(), rec_stripes_area[i].end(), greaterArea);
+		sort(rec_stripes_area[i].begin(), rec_stripes_area[i].end(), greaterArea);*/
 }
 
 void Solver::insertPlace(Rec* r, int p){
@@ -204,6 +224,8 @@ void Solver::determineUnused(int p){
 			unusedRectangles[i].clear();
 		for (int i = 0; i < M; i++)
 			determineUnused(i);
+		for (int i = 0; i < M; i++)
+			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), greaterArea); 
 	}
 	else {
 		for (auto r: rectangles_stripes[p])
@@ -214,43 +236,45 @@ void Solver::determineUnused(int p){
 
 Hole Solver::findNextLargestHole(int it){
 	for (; it < int(all_holes.size()); it++)
-		if (!unusedRectangles[all_holes[it].stripe].empty())
+		if (!unusedRectangles[all_holes[it].stripe].empty()){
+			cout << "Largest hole: (" << all_holes[it].x1 << ", " << all_holes[it].x2 << ")\n";
 			return all_holes[it];
+		}
 
 	Hole h(-1, -1);
 	return h;
 }
 
 
-pair<Rec*, iPair> Solver::findReplacement(int epoch){
-	Hole hole = findNextLargestHole(0);
+pair<Rec*, iPair> Solver::findReplacement(Hole hole, int it){
 	int stripe = hole.stripe;
-	cout << "Largest hole: (" << hole.x1 << ", " << hole.x2 << ")\n";
 
 	if (stripe == -1) {
-		cout << "== No holes applicable. ==\n";
+		cout << "=== No holes applicable. ===\n";
 		Rec a(-1,-1,-1);
 		Rec *a_p = &a;
 		return {a_p, {-1, -1}};
 	}
 
 	Rec *rep;
-	int count = 0;
-	for (auto r: rec_stripes_area[stripe])
-		if (r->x1 == -1)
-			count++;
+	Rec a(-1,-1,-1);
+	Rec *a_p = &a;
 
-	int it = 0;
-	if (epoch <= count){
-		for (auto r: rec_stripes_area[stripe])
-			if (r->x1 == -1) {
-				it++;
-				if (epoch == it) {
-					rep = r;
-					break;
-				}
-			}
+	if (unusedRectangles[stripe].empty()){
+		cout << " => No rectangle for replacement.\n";
+		return {a_p, {-2, -2}};		
 	}
+
+	/*for (auto r: unusedRectangles[stripe])
+		cout << "(" << r->x1 << ", " << r->x2 << ", S: "
+			 << r->getSize() << ", A: " << r->getArea() << ") ";*/
+
+
+	if (it > int(unusedRectangles[stripe].size() -1)){
+		return {a_p, {-2, -2}};	
+	}
+
+	rep = unusedRectangles[stripe][it];
 
 	return make_pair(rep, make_pair(hole.x1, hole.x2));
 }
@@ -272,7 +296,7 @@ vector<Rec*> Solver::addNew(Rec* rep){
 //
 //}
 
-void Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
+bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
 	vector<int> remove(M);
 	vector<pair<list<Rec*>::iterator, Rec>> rec_remove;
@@ -360,9 +384,12 @@ void Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 			r->x1 = -1;
 			r->x2 = -1;
 		}
+
+		return false;
 	}	
 	else {
 		cout << "\033[1;32mBETTER!\n\n\033[0m";
+		return true;
 	}
 
 	/*for (int i = 0; i < M; i++) {

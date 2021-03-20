@@ -55,6 +55,7 @@ public:
 };
 
 bool smaller(Rec *a, Rec *b);
+bool smallerx1(Rec *a, Rec *b);
 bool smallerx2(Rec *a, Rec *b);
 bool greaterRec(Rec *a, Rec *b);
 bool greaterEnd(Rec *a, Rec *b);

@@ -7,6 +7,13 @@ bool greaterRec(Rec *a, Rec *b) {
 	return (a->getSize() > b->getSize());
 }
 
+bool smallerx1(Rec *a, Rec *b) {
+	//if (a->getSize() == b->getSize())
+	//	return a->getBegin() < b->getBegin();
+
+	return (a->x1 < b->x1);
+}
+
 bool smallerx2(Rec *a, Rec *b) {
 	//if (a->getSize() == b->getSize())
 	//	return a->getBegin() < b->getBegin();

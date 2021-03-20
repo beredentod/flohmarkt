@@ -17,7 +17,7 @@ class Solver{
 	vector<Rec*> rectangles;
 
 	vector<vector<Rec*>> rectangles_stripes;
-	vector<vector<Rec*>> rec_stripes_area;
+	//vector<vector<Rec*>> rec_stripes_area;
 	vector<vector<Rec*>> unusedRectangles;
 
 	vector<list<Rec*>> placedRectangles;
@@ -33,8 +33,8 @@ class Solver{
 	void processStripe(int p);
 	vector<Rec*> processStripeReturn(int p);
 	void determineUnused(int p = -1);
-
 	void findHoles(int p = -1);
+
 	Hole findNextLargestHole(int it);
 	pair<Rec*, iPair> findReplacement(Hole hole, int it);
 	vector<Rec*> addNew(Rec* rep);
@@ -43,6 +43,7 @@ class Solver{
 	bool checkIfOverlaps();
 
 	void run();
+	void runOptimization();
 
 public:
 	Solver(string path, int width = 10, int length = 1000, int start = 8):
@@ -72,7 +73,7 @@ public:
 	void printAllRectangles();
 	void printStripes(int p, bool unused = false);
 	void printHoles(int p = -1);
-	void printPlaced(int p = -1);
+	void printPlaced(int from = 0, int p = -1);
 };
 
 #endif

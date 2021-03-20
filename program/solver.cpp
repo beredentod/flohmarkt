@@ -6,7 +6,6 @@ void Solver::readFile(string path){
 	if (file.is_open()) {
 		int n;
 		file >> n;
-
 		for (int i = 0; i < n; i++) {
 			int a, b, c;
 			file >> a >> b >> c;
@@ -26,70 +25,67 @@ void Solver::run(){
 	distributeToStripes();
 	for (int i = 0; i < M; i++)
 		processStripe(i);
-	int area = calculateAreaUsed();
-	int total = calculateTotalArea();
-	printAllRectangles();
-	if (int(rectangles.size()) < 30) {
-		printPlaced();
-	}
 
 	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
 
 	bool all = true;
-	for (auto r: rectangles) if (r->x1 == -1) all = false;
-	if (all || total == area) return;
-	
-	//if (int(rectangles.size()) < 30) {
-		printStripes(-1, true);
-	//}
+	for (auto r: rectangles)
+		if (r->x1 == -1)
+			all = false;
+	int area = calculateAreaUsed();
+	int total = calculateTotalArea();
+	if (all || total == area)
+		return;
+	runOptimization();
+}
+
+void Solver::runOptimization(){
+	int area = calculateAreaUsed();
 	bool result = true;
 	Hole hole;
 	pair<Rec*, iPair> rep;
 	int itR = 0, itH = 0;
 	do {
+		printPlaced();
 		if (result){
 			area = calculateAreaUsed();
 			determineUnused();
 			findHoles();
 
+			//DEBUG
 			printHoles();
 
 			hole = findNextLargestHole(itH = 0);
 			rep = findReplacement(hole, itR = 0);
-			if (rep.second.second == -1)
-				break;
+			if (rep.second.second < 0){
+				return;
+			}
 			result = removeCollisions(area, rep);
-			cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
+
+			//DEBUG
+			cout << "\n\nDEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
 		}
 		else {
 			rep = findReplacement(hole, ++itR);
-			if (rep.second.second == -2){
-				hole = findNextLargestHole(++itH);
-				rep = findReplacement(hole, itR = 0);
+			while (rep.second.second < 0){
 				if (rep.second.second == -1)
-					break; 
+					return;
+				if (rep.second.second == -2){
+					hole = findNextLargestHole(++itH);
+					rep = findReplacement(hole, itR = 0);
+				}
+				if (rep.second.second == -3)
+					rep = findReplacement(hole, ++itR);
 			}
 			result = removeCollisions(area, rep);
+
+			//DEBUG
 			cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
 		}
 
 	} while(rep.second.second > -1);
-
-
-	//printPlaced();
-
 	
-
-	/*findHoles();
-	pair<Rec*, iPair> rep2 = findReplacement(epoch);
-	if (rep.second.second > -1)
-		removeCollisions(area, rep);
-	epoch++;
-
-	//printPlaced();
-
-	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";*/
-
+	return;	
 }
 
 void Solver::distributeToStripes(){
@@ -102,87 +98,21 @@ void Solver::distributeToStripes(){
 
 	for (int i = 0; i < M; i++)
 		sort(rectangles_stripes[i].begin(), rectangles_stripes[i].end(), greaterEnd);
-
-	/*rec_stripes_area = rectangles_stripes;
-	for (int i = 0; i < M; i++)
-		sort(rec_stripes_area[i].begin(), rec_stripes_area[i].end(), greaterArea);*/
 }
 
-void Solver::insertPlace(Rec* r, int p){
-	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
-	placedRectangles[p].insert(it, r);
-}
-
-int Solver::findNearestHole(Rec* r, int p){
-//think about something faster (?)
-
-	list<Rec*>::iterator it = placedRectangles[p].begin();
-
-	if ((*it)->x1 >= r->getSize())
-		return 0;
-
-	for (; it != placedRectangles[p].end(); it++){
-		list<Rec*>::iterator it2 = it;
-		it2++;
-		if (it2 == placedRectangles[p].end()) {
-			if (N - (*it)->x2 >= r->getSize()) 
-				return (*it)->x2;
-			else
-				return -1;
-		}
-
-		if ((*it2)->x1 - (*it)->x2 >= r->getSize()){
-			return (*it)->x2;
-		}
+void Solver::determineUnused(int p){
+	if (p == -1){
+		for (int i = 0; i < M; i++)
+			unusedRectangles[i].clear();
+		for (int i = 0; i < M; i++)
+			determineUnused(i);
+		for (int i = 0; i < M; i++)
+			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), greaterArea); 
 	}
-
-	return -1;	
-}
-
-vector<Rec*> Solver::processStripeReturn(int p){
-	vector<Rec*> added;
-	for(auto r: rectangles_stripes[p]){
-		if (r->x1 > -1 || r->getBegin() < p)
-			continue;
-
-		if (placedRectangles[p].empty())
-			r->x1 = 0;
-		else {
-			int curr = findNearestHole(r, p);
-			if (curr > -1)
-				r->x1 = curr;
-			else {
-				continue;
-			}
-		}
-
-		r->x2 = r->x1 + r->getSize();
-		for (int i = r->getBegin(); i < r->getEnd(); i++)
-			insertPlace(r, i);
-		added.pb(r);
-	}
-	return added;
-}
-
-void Solver::processStripe(int p){
-	for(auto r: rectangles_stripes[p]){
-		if (r->x1 > -1 || r->getBegin() < p)
-			continue;
-
-		if (placedRectangles[p].empty())
-			r->x1 = 0;
-		else {
-			int curr = findNearestHole(r, p);
-			if (curr > -1)
-				r->x1 = curr;
-			else {
-				continue;
-			}
-		}
-
-		r->x2 = r->x1 + r->getSize();
-		for (int i = r->getBegin(); i < r->getEnd(); i++)
-			insertPlace(r, i);
+	else {
+		for (auto r: rectangles_stripes[p])
+			if (r->x1 == -1)
+				unusedRectangles[p].pb(r);
 	}
 }
 
@@ -202,9 +132,8 @@ void Solver::findHoles(int p){
 			auto it2 = it;
 			it2++;
 
-			if (it == placedRectangles[p].begin() && (*it)->x1 > 0){
+			if (it == placedRectangles[p].begin() && (*it)->x1 > 0)
 				holes[p].emplace_back(0, (*it)->x1, p);
-			}
 
 			if (it2 == placedRectangles[p].end()){
 				if ((*it)->x2 < N)
@@ -218,26 +147,118 @@ void Solver::findHoles(int p){
 	}
 }
 
-void Solver::determineUnused(int p){
-	if (p == -1){
-		for (int i = 0; i < M; i++)
-			unusedRectangles[i].clear();
-		for (int i = 0; i < M; i++)
-			determineUnused(i);
-		for (int i = 0; i < M; i++)
-			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), greaterArea); 
+void Solver::insertPlace(Rec* r, int p){
+	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
+	placedRectangles[p].insert(it, r);
+}
+
+int Solver::findNearestHole(Rec* r, int p){
+	list<Rec*>::iterator it = placedRectangles[p].begin();
+
+	//think about something faster (?)
+
+	if ((*it)->x1 >= r->getSize())
+		return 0;
+
+	for (; it != placedRectangles[p].end(); it++){
+		list<Rec*>::iterator it2 = it;
+		it2++;
+		if (it2 == placedRectangles[p].end()) {
+			if (N - (*it)->x2 >= r->getSize()) 
+				return (*it)->x2;
+			else
+				return -1;
+		}
+		if ((*it2)->x1 - (*it)->x2 >= r->getSize()){
+			return (*it)->x2;
+		}
 	}
-	else {
-		for (auto r: rectangles_stripes[p])
-			if (r->x1 == -1)
-				unusedRectangles[p].pb(r);
+
+	return -1;	
+}
+
+void Solver::processStripe(int p){
+	for(auto r: rectangles_stripes[p]){
+		if (r->x1 > -1 || r->getBegin() < p)
+			continue;
+
+		if (placedRectangles[p].empty())
+			r->x1 = 0;
+		else {
+			int curr = findNearestHole(r, p);
+			if (curr > -1)
+				r->x1 = curr;
+			else
+				continue;
+		}
+
+		r->x2 = r->x1 + r->getSize();
+		for (int i = r->getBegin(); i < r->getEnd(); i++)
+			insertPlace(r, i);
 	}
 }
+
+vector<Rec*> Solver::processStripeReturn(int p){
+	vector<Rec*> added;
+	for(auto r: rectangles_stripes[p]){
+		if (r->x1 > -1 || r->getBegin() < p)
+			continue;
+
+		if (placedRectangles[p].empty())
+			r->x1 = 0;
+		else {
+			int curr = findNearestHole(r, p);
+			Rec rr(r->getSize(), r->getBegin(), r->getEnd());
+			rr.x1 = curr;
+			rr.x2 = curr + rr.getSize();
+			Rec *rr_p = &rr;
+			if (curr > -1){
+				cout << "(S: " << rr.getSize() << ", A: " << rr.getArea() << ") -> "
+				 << rr.x1 << ",  " << rr.x2 << "\n";
+				for (int i = r->getBegin()+1; i < r->getEnd(); i++){
+					auto it = upper_bound(placedRectangles[i].begin(),
+						placedRectangles[i].end(), rr_p, smallerx2);
+					int curr_x1, prev_x2;
+					if (it != placedRectangles[i].end())
+						curr_x1 = (*it)->x1;
+					else
+						curr_x1 = N;
+					if (it != placedRectangles[i].begin())
+						prev_x2 = (*(--it))->x2;
+					else
+						prev_x2 = 0;
+					//if (it != placedRectangles[i].end())
+					//	cout << "s: " << i << "; " << (*it)->x1 << ", " << (*it)->x2 << "\n";
+					//else 
+					//	cout << "s: " << i << "; ---end---\n";
+					cout << "s: " << i << "; x2: " << prev_x2 << ", x1: " << curr_x1 << "\n";
+					if (curr_x1 - prev_x2 < rr.getSize() || curr_x1 < curr + rr.getSize()){
+						cout << " -- IMPOSSIBLE\n";
+						goto next;
+					}
+				}
+				cout << " -- possible\n";
+				r->x1 = curr;
+			}
+			else {
+				next:
+				continue;
+			}
+		}
+
+		r->x2 = r->x1 + r->getSize();
+		for (int i = r->getBegin(); i < r->getEnd(); i++)
+			insertPlace(r, i);
+		added.pb(r);
+	}
+	return added;
+}
+
 
 Hole Solver::findNextLargestHole(int it){
 	for (; it < int(all_holes.size()); it++)
 		if (!unusedRectangles[all_holes[it].stripe].empty()){
-			cout << "Largest hole: (" << all_holes[it].x1 << ", " << all_holes[it].x2 << ")\n";
+			cout << "Largest hole: (S: " << all_holes[it].stripe << ", " << all_holes[it].x1 << ", " << all_holes[it].x2 << ")\n";
 			return all_holes[it];
 		}
 
@@ -269,12 +290,15 @@ pair<Rec*, iPair> Solver::findReplacement(Hole hole, int it){
 		cout << "(" << r->x1 << ", " << r->x2 << ", S: "
 			 << r->getSize() << ", A: " << r->getArea() << ") ";*/
 
-
+	//cout << "it: " << it << ",  size: " << unusedRectangles[stripe].size() << "\n";
 	if (it > int(unusedRectangles[stripe].size() -1)){
 		return {a_p, {-2, -2}};	
 	}
 
 	rep = unusedRectangles[stripe][it];
+
+	if (rep->getSize() > hole.x2)
+		return {a_p, {-3, -3}};
 
 	return make_pair(rep, make_pair(hole.x1, hole.x2));
 }
@@ -285,16 +309,15 @@ vector<Rec*> Solver::addNew(Rec* rep){
 		insertPlace(rep, i);
 	added.pb(rep);
 
-	for (int i = rep->getBegin(); i < rep->getEnd(); i++){
+	printPlaced();
+
+	for (int i = 0; i < M; i++){
 		auto v = processStripeReturn(i);
 		added.insert(added.end(), v.begin(), v.end());
 	}
+
 	return added;
 }
-
-//void Solver::setCoordinatesReplacement(Rec* rep){
-//
-//}
 
 bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
@@ -317,7 +340,7 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 
 	for (int i = rep_rec->getBegin(); i < rep_rec->getEnd(); i++){
 		auto it = upper_bound(placedOld[i].begin(), placedOld[i].end(), rec_p, smaller);
-		cout << "Removing: ";
+		cout << "Removing (" << i << "): ";
 		for (; it != placedOld[i].end(); it++){
 			if ((*it)->x1 > rep_rec->x2)
 				break;
@@ -349,14 +372,14 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 			placedRectangles[i].erase(it1, it2);
 		}
 	}
-
+	
 	vector<Rec*> added = addNew(rep_rec);
+	printPlaced();
 
+	cout << "\n\n << New additional rectangles >>\n";
 	for (auto r: added) {
 		cout << "Added\t(B: " << r->getBegin() << ", E: " << r->getEnd() << ", S: "
 		<< r->getSize() << ", A: " << r->getArea() << ", x: " << r->x1 << ", " << r->x2 << ")\n"; 
-		//r->x1 = -1;
-		//r->x2 = -1;
 	}
 
 	//printPlaced();
@@ -370,8 +393,8 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	}*/
 
 	cout << "\nPrevious area: " << area << ", new area: " << calculateAreaUsed() << "\n";
-	if (area > calculateAreaUsed()) {
-		cout << "\033[1;31mRevert!\n\033[0m";
+	if (area >= calculateAreaUsed()) {
+		cout << "\033[1;33mRevert!\n\033[0m";
 		for (auto r: rec_remove){
 			(*r.first)->x1 = r.second.x1;
 			(*r.first)->x2 = r.second.x2;
@@ -385,10 +408,29 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 			r->x2 = -1;
 		}
 
+		vector<pair<int, list<Rec*>::iterator>> rem;
+		for (int i = 0; i < M; i++)
+			for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
+				if ((*it)->x1 == -1 || (*it)->x2 == -1)
+					rem.pb({i, it});
+
+		for (auto x: rem)
+			placedRectangles[x.first].erase(x.second);
+
 		return false;
 	}	
 	else {
 		cout << "\033[1;32mBETTER!\n\n\033[0m";
+		placedOld.clear();
+		vector<pair<int, list<Rec*>::iterator>> rem;
+		for (int i = 0; i < M; i++)
+			for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
+				if ((*it)->x1 == -1 || (*it)->x2 == -1)
+					rem.pb({i, it});
+
+		for (auto x: rem)
+			placedRectangles[x.first].erase(x.second);
+
 		return true;
 	}
 
@@ -405,24 +447,41 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 
 
 bool Solver::checkIfOverlaps(){
+	bool overlap = false;
 	for (int i = 0; i < M; i++){
 		list<Rec*>::iterator it = placedRectangles[i].begin();
 		for (; it != placedRectangles[i].end(); it++){
 			auto it2 = it;
 			it2++;
 
-			if (it == placedRectangles[i].begin() && (*it)->x1 < 0)
-				return true;
+			if (it == placedRectangles[i].begin() && (*it)->x1 < 0){
+				cout << "\033[1;31m1OVERLAP\033[0m: Stripe " << i << ": (" << (*it)->x1 << ", " << 0 << ")\n";
+				overlap = true;
+				//return true;
+			}
 
 			if (it2 == placedRectangles[i].end()){
-				if ((*it)->x2 > N)
-					return true;
+				if ((*it)->x2 > N){
+					cout << "\033[1;31m2OVERLAP\033[0m: Stripe " << i << ": (" << (*it)->x2 << ", " << N << ")\n";
+					overlap = true;
+					//return true;
+				}
 			}
-			else if ((*it)->x2 > (*it2)->x1)
-				return true;
+			else if ((*it)->x2 > (*it2)->x1){
+				cout << "\033[1;31m3OVERLAP\033[0m: Stripe " << i << ": ("
+				<< (*it)->x2 << ", " << (*it2)->x1 << ", S1: " << (*it)->getSize() << ", S2: " 
+				<< ((*it2)->getSize()) << ")\n";
+				cout << " --- > " << "(" << (*it)->x1 << ", " << (*it)->x2 << ", S: "
+					 << (*it)->getSize() << ", A: " << (*it)->getArea() << ") ";
+				cout << "(" << (*it2)->x1 << ", " << (*it2)->x2 << ", S: "
+					 << (*it2)->getSize() << ", A: " << (*it2)->getArea() << ")\n";					
+				overlap = true;
+				//return true;
+			}
 		}		
 	}
-	return false;
+	return overlap;
+	//return false;
 }
 
 
@@ -526,25 +585,27 @@ void Solver::printHoles(int p){
 	}
 }
 
-void Solver::printPlaced(int p){
+void Solver::printPlaced(int beg, int p){
 	if (p == -1) {
 		for (int i = 0; i < int(placedRectangles.size()); i++)
-			printPlaced(i);
+			printPlaced(beg, i);
 		cout << "\n";		
 	}
 	else {
-	//cout << "DEBUG: Placed stripe: " << p << "\t";
-	cout << "\033[1;32mPlaced stripe: " << p << "  \033[0m";
-	for (auto r: placedRectangles[p]){
-		if (r->x1 == -1){
-			cout << "\033[1;31m(" << r->x1 << ", " << r->x2 << ", S: "
-				 << r->getSize() << ", A: " << r->getArea() << ") \033[0m";			
-		}
+		//cout << "DEBUG: Placed stripe: " << p << "\t";
+		cout << "\033[1;34mPlaced stripe: " << p << "  \033[0m";
+		for (auto r: placedRectangles[p]){
+			if (r->x1 >= beg) {
+				//if (r->x1 == -1 || r->x2 == -1){
+				//	cout << "\033[1;31m(" << r->x1 << ", " << r->x2 << ", S: "
+				//		 << r->getSize() << ", A: " << r->getArea() << ") \033[0m";			
+				//}
 
-		cout << "(" << r->x1 << ", " << r->x2 << ", S: "
-			 << r->getSize() << ", A: " << r->getArea() << ") ";
-	}
-	cout << "\n";
+				cout << "(" << r->x1 << ", " << r->x2 << ", S: "
+					 << r->getSize() << ", A: " << r->getArea() << ") ";
+			}
+		}
+		cout << "\n";
 	}
 }
 

@@ -35,6 +35,10 @@ public:
 		return (e-b)*size;
 	}
 
+	int getWidth(){
+		return (e-b);
+	}
+
 	int x1, x2;
 };
 
@@ -60,9 +64,11 @@ bool smallerx2(Rec *a, Rec *b);
 bool greaterRec(Rec *a, Rec *b);
 bool greaterEnd(Rec *a, Rec *b);
 bool smallerSize(Rec *a, Rec *b);
+bool greaterSize(Rec *a, Rec *b);
 bool smallerArea(Rec *a, Rec *b);
 bool greaterArea(Rec *a, Rec *b);
-bool sortHolesSize(const Hole &a, const Hole &b);
+bool greaterHolesSize(const Hole &a, const Hole &b);
+bool smallerHolesSize(const Hole &a, const Hole &b);
 
 
 #endif

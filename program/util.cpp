@@ -47,6 +47,13 @@ bool smallerSize(Rec *a, Rec *b) {
 	return a->getSize() < b->getSize();
 }
 
+bool greaterSize(Rec *a, Rec *b) {
+	if (a->getSize() == b->getSize())
+		return a->getBegin() < b->getBegin();
+
+	return a->getSize() > b->getSize();
+}
+
 bool smallerArea(Rec *a, Rec *b) {
 	if (a->getArea() == b->getArea())
 		return a->getBegin() < b->getBegin();
@@ -61,9 +68,16 @@ bool greaterArea(Rec *a, Rec *b) {
 	return a->getArea() > b->getArea();
 }
 
-bool sortHolesSize(const Hole &a, const Hole &b){
+bool greaterHolesSize(const Hole &a, const Hole &b){
 	if (a.x2 - a.x1 == b.x2 - b.x1)
 		return a.stripe < b.stripe;
 
 	return (a.x2 - a.x1 > b.x2 - b.x1);
+}
+
+bool smallerHolesSize(const Hole &a, const Hole &b){
+	if (a.x2 - a.x1 == b.x2 - b.x1)
+		return a.stripe < b.stripe;
+
+	return (a.x2 - a.x1 < b.x2 - b.x1);
 }

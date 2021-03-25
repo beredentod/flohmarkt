@@ -26,6 +26,7 @@
 % Für mathematische Befehle und Symbole
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
 %\usepackage{cite}
 
 \usepackage[backend=bibtex]{biblatex}
@@ -40,8 +41,6 @@
 }
 % Für Bilder
 \usepackage{graphicx}
-\usepackage[all]{xy}
-\usepackage{svg}
 \graphicspath{ {./tex/images/} }
 
 % Für Algorithmen
@@ -57,8 +56,10 @@
 \usepackage[backgroundcolor=lightgray]{todonotes}
 \usepackage{minibox}
 
-\usepackage{amsthm}
+
 \usepackage{enumitem}
+\usepackage[export]{adjustbox}
+\usepackage{csquotes}
 
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{spiess.bib}
@@ -86,14 +87,11 @@
 \usepackage{hyperref} % Anklickbare Links im Dokument
 \usepackage{cleveref}
 
-
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
 \newtheorem{satz}{Satz}
 \newtheorem{axiom}{Axiom}
 \newtheorem{korollar}{Korollar}
-
-\usepackage[export]{adjustbox}
 
 \newcommand{\TODO}[1]{\todo[inline]{TODO: #1}}
 \newcommand{\mb}[1]{{\color{red}[MB: #1]}}
@@ -114,6 +112,43 @@
 
 \maketitle
 \tableofcontents
+
+\todo[inline,caption={Struktur}]{
+  \begin{itemize}
+    \item Definitionen, Modellierung des Problems
+    \item (Themenbezogene Arbeiten)
+    \item Komplexität
+    \begin{itemize}
+      \item Notwendigkeit einer Heuristik
+    \end{itemize}
+    \item heuristisches Verfahren
+    \begin{itemize}
+      \item Greedy--Anlegen am Anfang
+      \item heurostisches Verbesserungsverfahren
+      \begin{itemize}
+        \item welche Methode? 
+        \item hill climbing
+        \item simuliertes Abglühen
+      \end{itemize}      
+    \end{itemize}
+    \item Diskussion der Ergebnisse
+    \begin{itemize}
+      \item Grenzen/Mängel der Heuristik
+      \begin{itemize}
+        \item was wird nicht erkannt? (edge--cases)
+        \item was lässt sich nicht eindeutig ausschließen?
+        \item getroffene Annahmen
+      \end{itemize}
+      \item Qualität der Ergebnisse
+      \begin{itemize}
+        \item Qualität der Ergebnisse am Anfang (Greedy--Verfahren)
+        \item Qualität bzgl. des großen Flächeninhalt, des Gesamtflächeninhalts aller Rechtecke, \%
+        \item was und wann kann nicht verbessert werden? (Beispiel 4: 7370)
+      \end{itemize}      
+    \end{itemize}
+    \item Laufzeit
+  \end{itemize}
+}
 
 \section{Lösungsidee}
 

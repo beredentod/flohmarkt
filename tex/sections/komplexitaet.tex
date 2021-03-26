@@ -1,0 +1,28 @@
+\subsection{Komplexität des Problems}
+
+Betrachten wir das zu \fp{} zugehörige Entscheidungsproblem:
+Gegeben ein umschließendes Rechteck $R$ und eine Liste $Z$
+von Rechtecken mit fixierten Länge, Breite und Anordnung entlang der $y$--Achse,
+können alle Rechtecke aus $Z$ innerhalb von $R$ so platziert werden, dass
+sie sich paarweise nicht überlappen?
+
+Wir zeigen, dass \fp{} NP--vollständig ist, indem wir zunächst zeigen, dass
+es in NP liegt und auch NP--schwer ist.
+
+Offensichtlich kann dieses Problem von einer nichtdeterministischen
+Turingmaschine bezüglich der Eingabelänge in Polynomialzeit gelöst werden.
+Gegeben sei eine Platzierung der Rechtecke aus $Z$ innerhalb von $R$. 
+Man kann leicht einen in Polynomialzeit laufenden Algorithmus entwickeln, der
+anhand der Koordinaten der kleineren Rechtecke überprüft, ob keines
+der Rechtecke über die Grenzen von $R$ hinausreicht und ob
+kein Paar von Rechtecken aus $Z$ sich überlappt.  
+Somit liegt \fp{} in NP.
+
+
+
+\TODO{Zeige, das Problem ist NP (überprüfbar in P)\\
+Zeige, das Problem ist NP-schwer: Reduktion zu einem anderen NP-voll. oder NP-schweren Problem.
+Die Reduktionsfunktion muss in Polynomialzeit laufen.\\
+https://stackoverflow.com/questions/4294270/how-to-prove-that-a-problem-is-np-complete}
+
+\TODO{Notwendigkeit einer Heuristik}

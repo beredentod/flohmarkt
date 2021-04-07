@@ -2,8 +2,13 @@
 
 void Solver::readFile(string path){
 	ifstream file;
-	file.open(path, ios::in);
+	file.open(path, ios::in); 
 	if (file.is_open()) {
+		file >> N;
+		int a, b;
+		file >> a >> b;
+		M = b - a;
+		START = a;
 		int n;
 		file >> n;
 		for (int i = 0; i < n; i++) {
@@ -25,6 +30,8 @@ void Solver::run(){
 	distributeToStripes();
 	for (int i = 0; i < M; i++)
 		processStripe(i);
+
+	printPlaced();
 
 	//DEBUG
 	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";

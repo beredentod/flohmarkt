@@ -49,6 +49,7 @@
 \usepackage{algorithm}
 \usepackage{gensymb}
 \usepackage{tikz}
+\usepackage{pgfplots} 
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{array}
@@ -102,6 +103,7 @@
 
 \usetikzlibrary{fit,backgrounds,positioning}
 \tikzset{vertex/.style={circle,draw,minimum size=0.8cm,inner sep=1pt,fill=white}}
+\pgfplotsset{compat=newest}
 
 % Daten für die Titelseite
 \title{\textbf{\Huge\Aufgabe}}
@@ -116,6 +118,7 @@
 \tableofcontents
 
 \todo[inline,caption={Struktur}]{
+  Program: erweitere Zeiträume um Minuten
   \begin{itemize}
     \item Definitionen, Modellierung des Problems
     \item (Themenbezogene Arbeiten)
@@ -160,22 +163,27 @@
 
 \input{./tex/sections/komplexitaet}
 
+\input{./tex/sections/heuristik}
 
+\input{./tex/sections/diskussion}
 
-\subsection{Heuristik}
-\subsubsection{Ausgangspunkt}
-\subsubsection{Heuristisches Verbesserungsverfahren}
-
-\subsection{Grenzen der Heuristik}
+\subsection{Diskussion der Ergebnisse}
+\subsubsection{Grenzen der Heuristik}
+\subsubsection{Qualität der Ergebnisse}
 
 \subsection{Laufzeit}
-
-
-
 
 \section{Umsetzung}\label{sec:umsetzung}
 
 \section{Beispiele}
+\subsection{Beispiel 1}\label{ex:1}
+\subsection{Beispiel 2}\label{ex:2}
+\subsection{Beispiel 3}\label{ex:3}
+\subsection{Beispiel 4}\label{ex:4}
+\subsection{Beispiel 5}\label{ex:5}
+\subsection{Beispiel 6}\label{ex:6}
+\subsection{Beispiel 7}\label{ex:7}
+
 
 \section{Quellcode}
 \lstinputlisting[language=C++]{./tex/flohmarkt.m}

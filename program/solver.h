@@ -46,14 +46,11 @@ class Solver{
 	void runOptimization();
 
 public:
-	Solver(string path, int width = 10, int length = 1000, int start = 8):
-		M(width), N(length), START(start) {
-
+	Solver(string path){
+		readFile(path);
 		placedRectangles = vector<list<Rec*>> (M);
 		unusedRectangles = vector<vector<Rec*>> (M);
 		holes = vector<list<Hole>> (M);
-
-		readFile(path);
 		run();
 	}
 	~Solver(){

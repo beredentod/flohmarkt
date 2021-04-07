@@ -1,41 +1,44 @@
-\subsection{Formulierung des Problems}
+\subsection{Formulierung des Problems}\label{sec:definitionen}
 Gegeben sei eine Strecke der Länge $N$ und ein Zeitraum von $B$ bis $E$.
 Außerdem gegeben sei eine Liste von $Z$ Anmeldungen. 
 Die Anmeldugen betreffen die Vermietung eines Teils der Strecke in einer konkreten Zeitspanne.
-Jede \textbf{\textit{Anmeldung}} $i$ besteht aus einer Strecke $0 < s_i \leqslant N$,
-einem Mietbeginn $B \leqslant b_i < E$ und einem Mietende $b_i < e_i \leqslant E$.
+Jede \textbf{\textit{Anmeldung}} $i$ besteht aus einer Strecke $s_i$ ($0 < s_i \leqslant N$),
+einem Mietbeginn $b_i$ ($B \leqslant b_i < E$) und einem Mietende $e_i$ ($b_i < e_i \leqslant E$).
 In diesem Problem werden Strecken in volltändigen Metern behandelt 
 und alle Zeiten werden in vollständigen Stunden angegeben.
-Obwohl $N$ auf 1000 Meter, $B$ auf 8:00 und $E$ auf 18:00 festgelegt sind,
-kann unser Programm mit beliebigen Größen umgehen.
+Obwohl $N$ auf 1000 Meter, $B$ auf 8:00 und $E$ auf 18:00 in der ursprünglichen Aufgabe festgelegt sind,
+kann die folgende Lösungidee auf beliebige Größen, die die Aufgabenbedingungen erfüllen, übertragen werden.
+Das gelieferte Programm kann auch mit unterschiedlichen Werten umgehen.
 
 Die Aufgabe ist ein Optimierungsproblem.
 Man soll so eine Teilfolge von $k$ Anmeldugen wählen,
 dass alle gewählten Strecken in den angebenen Zeiten vermietet werden können, d.h.,
 für jede Anmeldung steht eine freie stetige Strecke der angegbenen Länge 
 in der angegebenen Zeitspanne durchgehend zur Verfügung,
-und die Mieteinnahmen möglichst hoch sind, wobei der Preis 1 Euro pro Meter pro Stunde beträgt.
+und dazu die Mieteinnahmen möglichst hoch sind, wobei der Preis 1 Euro pro Meter pro Stunde beträgt.
 
 Man kann das Problem auf folgende Weise modellieren. 
 Wir setzen: $M \coloneqq E - B$.
-Wir bilden ein Rechteck $R$ der Größe $N \times M$.
-So kann man analog jede Anmeldung $i$ als ein kleineres Rechteck 
+Wir bilden ein \textit{\textbf{großes Rechteck}} $R$ der Größe $N \times M$.
+So kann man analog jede Anmeldung $i$ als ein \textit{\textbf{kleineres Rechteck}}
 $r_i$ der Größe $s_i \times m_i$ darstellen, wobei $m_i \coloneqq e_i - b_i$.
 
 So können wir die obige Aufgabe umformulieren:
 Wähle so eine Teilfolge $Z'$ von Rechtecken aus $Z$,
 die eine Anordnung innerhalb von $R$ bilden,
-dass kein Paar der Rechtecke in $Z'$ sich überlappt und
+dass kein Paar der Rechtecke in $Z'$ sich überdeckt und
 der Gesamtflächeninhalt aller Rechtecke in $Z'$ maximal ist.
+Als Fläche eines kleineren Rechtecks $r_i$ bezeichnen wir das Produkt $m_i \times s_i$.
+
 Genauer gesagt: Jedes Rechteck $r_i$ in $Z'$ besitzt 4 Ecken,
 die den folgenden Punkten entsprechen:
 $(x_i, b_i), (x_i, e_i), (x_i + s_i, e_i), (x_i + s_i, b_i)$.
 Man beachte, dass $b_i$, $e_i$ und $s_i$ fixiert sind. 
 So ist die Aufgabe, nur $x_i$ so zu wählen, dass die Bedingungen der Aufgabe erfüllt werden.
-Wir können uns dieses Problem so vorstellen, dass die Länge $s_i$ und Breite $m_i$
+Wir können uns dieses Problem so vorstellen, dass die Länge $s_i$ und die Breite $m_i$
 jedes Rechtecks $r_i$ sowie seine Anordnung entlang der $y$--Achse fixiert sind,
-und wir können das Rechteck entlang der $x$--Achse zwischen den $x$--Werten von 0 und $N-s_i$ verschieben.
+und wir das Rechteck entlang der $x$--Achse zwischen den $x$--Werten von 0 und $N-s_i$ verschieben können.
 
-Wir nennen unsere Aufgabe \fp.
+Weiter nennen wir unsere Aufgabe das \fp.
 
 \TODO{check, reformulate}

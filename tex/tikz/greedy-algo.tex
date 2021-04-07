@@ -1,0 +1,23 @@
+\begin{tikzpicture} 
+\begin{axis}[
+		ticks=none,
+        xmin =-2.55,
+        xmax = 12.75,
+        ymax = 10.75,
+        ymin = -1.55,
+        axis x line = middle, axis y line = middle,
+        every axis plot/.append style={ultra thick}]
+
+	\draw [draw=lightgray, fill=orange, fill opacity=0.2] (0,0) rectangle (10, 10);
+	\draw [fill = green] (0,0) rectangle node {1} (2.49, 7) ;
+	\draw [fill = yellow] (2.49, 0) rectangle node {2} (4.2, 4) ;
+	\draw [fill = blue, fill opacity = 0.8] (4.2, 0) rectangle node {3} (9.23, 1) ;
+	\draw [fill = red, fill opacity = 0.8] (9.23, 0) rectangle node {4} (10, 1) ;
+	\draw [fill = purple] (4.2, 1) rectangle node {5} (8.97, 7) ;
+	\node[label={200:{$(0, B)$}},circle,fill,inner sep=1.5pt] at (axis cs:0,0) {};
+	\node[label={290:{$(N, B)$}},circle,fill,inner sep=1.5pt] at (axis cs:10,0) {};
+	\node[label={200:{$(0, E)$}},circle,fill,inner sep=1.5pt] at (axis cs:0,10) {};
+	\node[label={290:{$(N, E)$}},circle,fill,inner sep=1.5pt] at (axis cs:10,10) {};
+	%\draw [fill = yellow] (0,7) rectangle node {} (5.26, 10) ;
+\end{axis} 
+\end{tikzpicture}

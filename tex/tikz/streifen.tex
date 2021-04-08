@@ -9,11 +9,10 @@
         every axis plot/.append style={ultra thick}]
 
 	\draw [draw=lightgray, fill=orange, fill opacity=0.2] (0,0) rectangle node {$R$} (10, 10);
-	\draw [fill = green] (0,0) rectangle node {1} (2.49, 7) ;
-	\draw [fill = yellow] (2.49, 0) rectangle node {2} (4.2, 4) ;
-	\draw [fill = blue, fill opacity = 0.8] (4.2, 0) rectangle node {3} (9.23, 1) ;
-	\draw [fill = red, fill opacity = 0.8] (9.23, 0) rectangle node {4} (10, 1) ;
-	%\draw [fill = purple] (4.2, 1) rectangle node {5} (8.97, 7) ;
+	\draw [fill = gray] (0,0) rectangle node {Streifen $S_0$} (10, 1) ;
+	\draw [fill = gray] (0,1) rectangle node {Streifen $S_1$} (10, 2) ;
+	\draw [fill = gray] (0,2) rectangle node {Streifen $S_2$} (10, 3) ;
+	\node at (5,3.5) {...};
 	\node[label={200:{$(0, B)$}},circle,fill,inner sep=1.5pt] at (axis cs:0,0) {};
 	\node[label={290:{$(N, B)$}},circle,fill,inner sep=1.5pt] at (axis cs:10,0) {};
 	\node[label={200:{$(0, E)$}},circle,fill,inner sep=1.5pt] at (axis cs:0,10) {};

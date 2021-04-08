@@ -1,0 +1,22 @@
+\subsubsection{Konversion der Eingabe}
+Wie schon im \cref{sec:definitionen} erwähnt wurde, können die Gedanken bezüglich des
+\fp{} auf andere Größen übetragen werden. Da die Größen des Rechtecks $R$ sowie des Zeitraums fest sind
+und auf 1000 Metern bzw. auf den Zeitraum von 8:00 is 18:00 beschränkt sind, konvertieren wir
+die Eingabe, indem wir den Beginn des Zeitraumes auf 0 setzen, d.h., wir subtrahieren den 
+Beginn $B$ vom Ende $E$. So bleibt auch der Wert $M$, also die Differenz von $E$ und $B$, gleich. 
+Analog müssen wir die Eingabe für die kleineren Rechtecke $r_i$ entsprechend konvertieren, indem wir
+von jedem $b_i$ und $e_i$ den Wert $B$ abziehen. Für die Aufgabe selbst hat diese Konversion keine
+Bedeutung und funktioniert auch, wenn ein angegebener Zeitraum sich vom ursprünglichen Zeitraum unterscheidet.
+
+Mit dieser Konversion können wir ebenfalls mehrtägige Flohmärkte oder
+sogar mehrere unterschiedlichen Flohmärkte behandeln.
+Zur Darstellung eines mehrtägigen Flohmarktes kann man die gesamte Öffnungszeiten des Flohmarktes in Stunden angeben,
+z.B. der Zeitraum eines Flohmarkts, der zwei Tage von 10:00 bis 17:00 dauert,
+kann als von 10:00 bis 41:00 (17:00 + 24 Stunden) dargestellt werden. 
+Dann ist der Zeitraum von 17:00 bis 34:00 an keiner Stelle besetzt.
+Ebenfalls, wenn ein angegebener Zeitraum an einer Stelle unterbrochen ist,
+etwa von 7:00 bis 9:00 und dann von 12:00 bis 15:00, kann der
+Zeitraum von 7:00 bis 15:00 angegeben werden.
+Mehrere unterschiedlichen Flohmärkte kann man analog kodieren. Es hängt nur von der Eingabe ab.
+\TODO{Beipiele dazu}
+\TODO{Erwähne Zeiten in Minuten}

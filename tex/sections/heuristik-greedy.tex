@@ -1,81 +1,95 @@
 \subsubsection{Greedy--Algorithmus}
-Wie schon im \cref{sec:definitionen} erwähnt wurde, können die Gedanken bezüglich des
-\fp{} auf andere Größen übetragen werden. Da die Größen des Rechtecks $R$ sowie des Zeitraums fest sind
-und auf 1000 Metern bzw. auf den Zeitraum von 8:00 is 18:00 beschränkt sind, konvertieren wir
-die Eingabe, indem wir den Beginn des Zeitraumes auf 0 setzen, d.h., wir subtrahieren den 
-Anfang $B$ vom Ende $E$. So bleibt auch der WErt $M$, also die Differenz von $E$ und $B$, gleich. 
-Analog müssen wir Eingabe der kleineren Rechtecke $r_i$ entsprechend konvertieren, indem wir
-von jedem $b_i$ und $e_i$ den Wert $B$ abziehen. Für"die Aufgabe hat diese Konversion keine
-Bedeutung und funktioniert auch, wenn ein angegebener Zeitraum sich vom ursprünglichen Zeitraum unterscheidet.
-Mit dieser Konversion können wir ebenfalls mehrtägige Flohmärkte oder
-sogar mehrere unterschiedlichen Flohmärkte behandeln.
-Wenn der angegebene Zeitraum an einer Stelle unterbrochen ist,
-etwa von 7:00 bis 9:00 und dann von 12:00 bis 15:00, ist es auch kein Problem, dann kann der
-Zeitraum von 7:00 bis 15:00 angegeben werden und die Zeiten zwischen 9:00 und 12:00 bleiben unbesetzt.
-Mehrtägige Flohmärkte können auf dieselbe Weise behandelt werden: Die gesamte Öffnungszeiten des Flohmarktes können in Stunden angegeben werden, zum Beispiel der Zeitraum eines Flohmarkts, der zwei Tage von 10:00 bis 17:00 dauert, kann als von 10:00 bis 41:00 (17:00 + 24 Stunden) dargestellt werden. Mehrere unterschiedlichen Flohmärkte kann man analog kodieren. Es hängt nur von der Eingabe ab.
-\TODO{Beipiele dazu}
-\TODO{Erwähne Zeiten in Minuten}
-Nach der Konversion der Eingabe bilden wir eine Liste $Z$, in der jedes
-Rechteck $r_i$ mit seinen genannten Größen $s_i, b_i, e_i$ gespeichert.
+
+Wir bilden das große Rechteck $R$ auf ein Koordinatensystem ab.
+Die Seite der Länge $N$ verläuft entlang der $x$--Achse und die Seite der Länge
+$M$ entlang der $y$--Achse.
+Der Wert $B$ (nach der Konversion) wird entsprechend am Punkt $(0, 0)$ abgebildet (s. \cref{fig:rechteck-streifen-platzierung})
 
 Die Größen $N$ und $M$ sind im Programm fest, unabhängig davon, wie viel sie betragen.
 Außerdem wurde im \cref{sec:definitionen} festegestellt, dass die Größen $s_i$, $b_i$ und $e_i$
-des jeweiligen Rechtecks $r_i$ fest sind und dass wir nur ein Rechteck $r_i$ entlang der $x$--Achse,
-also entlang der Seite der Länge $N$ des Rechtecks $R$ bewegen dürfen.
+des jeweiligen Rechtecks $r_i$ fest sind und dass wir ein Rechteck $r_i$ nur entlang der $x$--Achse,
+also entlang der Seite der Länge $N$ des Rechtecks $R$, bewegen dürfen.
 So bietet sich eine Verteilung der kleinere Rechtecke $r_i$ auf kleinere \textit{\textbf{Streifen}}
-der Länge $N$ im Rechteck $R$ entlang der Seite der Länge $N$.
+der Länge $N$ im Rechteck $R$ entlang der $x$--Achse (s. \cref{fig:streifen}).
 Die Breite eines solchen Streifen ist äquidistant für alle Streifen und, da
-man Stände am Flohmarkt nur zu vollständigen Stunden vermieten kann, lässt sich
-die Breite eines Streifens zu einer vollständiger Stunde bstimmen.
+man Stände am Flohmarkt nur zu vollständigen Stunden vermietet, lässt sich
+die Breite eines Streifens zu einer vollständiger Stunde bestimmen.
 \TODO{Minuten erwähnen}
-Im Programm sind diese Streifen einfach Listen mit allen kleineren Rechtecken, 
-deren Breite $m_i$ sich in diesem Streifen enthält.
 Legen wir die folgende Schreibweise fest: Ein Streifen im Rechteck $R$, der die
 Stunde $k$ betrifft, also in der Stunde $k$ beginnt und in der Stunde $k+1$ endet, nennen wir $S_k$.
+
+
+Im Programm sind diese Streifen einfach Listen mit allen kleineren Rechtecken, 
+deren Breite $m_i$ sich in diesem Streifen enthält.
+Nach der Konversion der Eingabe bilden wir eine Liste $Z$, in der jedes
+Rechteck $r_i$ mit seinen genannten Größen $s_i, b_i, e_i$ gespeichert wird.
+Dann iterieren wir über jedes Rechteck $m_i$ in $Z$ und fügen wir es in jede Liste $S_j$ fïr alle
+$j$ hinzu, die die folgende Bedingung erfüllen: $b_i \leqslant j < e_i$.
 Das bedeutet, dass ein Rechteck von $b_i = 1$ (nach Konversion, in vollständigen Stunden)
-und $e_i = 5$ in den folgenden Streifen enthalten wird: $S_1, S_2, S_3, S_4$. Im Streifen $S_5$
+bis $e_i = 5$ in den folgenden Streifen enthalten wird: $S_1, S_2, S_3, S_4$. Im Streifen $S_5$
 wird er nicht enthalten, da die Miete mit dem Anfang der 5. Stunde endet.
 Wie Streifen implementiert werden, lesen Sie in der \nameref{sec:umsetzung}.
 
+
 Nach dieser Vorbereitung der Eingabe erfolgt der Lauf unseres Greedy--Algorithmus, der das
 Ausgangsergebnis liefert.
-Wir sortieren die Rechtecke in jeder Liste $S_i$ unabhängig voneinander nach folgenden Kriterien
+Wir sortieren die Rechtecke $r_i$ in jedem Streifen $S_j$ unabhängig voneinander nach folgenden Kriterien
 in dieser Reihenfolge: 
 1) fallend nach dem Wert $e_i$,
 2) aufsteigend nach dem Wert $b_i$ und
 3) fallend nach der Fläche jedes Rechtecks. 
-Somit sind die ersten Rechtecke in jeder Liste $S_i$ diejenigen,
+Somit sind die ersten Rechtecke in jeder Liste $S_j$ diejenigen,
 deren Wert $e_i$ am größten ist --- oft diejenigen, die am breitesten im Streifen sind.
-\TODO{warum diese Reihenfolge? najpierw załatwaimy od lewej największe, po prawej upychamy najmniejszymi}
-Diese Reihenfolge wurde so gewählt, dass wir in dieser Reihefolge versuchen,
+%\TODO{warum diese Reihenfolge? najpierw załatwaimy od lewej największe, po prawej upychamy najmniejszymi}
+Die Reihenfolge wurde so gewählt, damit wir in dieser Reihefolge versuchen,
 die Rechtecke aus den Streifen ins große Rechteck $R$ zu platzieren.
+Die Idee hinter dieser Platzierung ist, dass wir zuerst die breitesten Rechtecke
+„links”, also an niedrigeren $x$--Werten, platzieren, so weit es geht. Dann füllen wir 
+die Lücken „rechts“ (an größeren $x$--Werten) mit schmalleren Rechtecken. 
+Die grobe Idee ist, dass wir das Rechteck $R$ quasi vom Punkt $(0,0)$ bis zum Punkt
+$(N, E)$ mit kleineren Rechtecken füllen.
 
-Stellen wir uns vor, die das Rechteck $R$ liegt auf auf einem Koordinatensystem.
-Die Seite der Länge $N$ verläuft entlang der $x$--Achse und die Seite der Länge
-$M$ entlang der $y$--Achse.
-Der Wert $B$ (nach der Konversion) wird entsprechend am Punkt $(0, 0)$ abgebildet.
+\input{./tex/figures/fig_rechteck-streifen-platzierung}
+
 Wir verarbeiten Streifen für Streifen in der
-aufsteigenden Reihenfolge der $y$--Werte beginned mit dem 0--ten Streifen.
-Wir iterieren durch jede Liste $S_i$ und untersuchen jedes Rechteck $r_j$ in diesem
-Streifen, ob sein Wert $b_j$ gleich dem Wert $i$, also ob das Rechteck (die Anmeldung) mit dem
-aktuellen Zeitpunkt $i$ beginnt. Außerdem prüfen wir, ob ein Rechteck bereits platziert wurde.
-Wenn ein 
+aufsteigenden Reihenfolge der $y$--Werte, beginned mit dem 0--ten Streifen.
+Wir iterieren durch jede Liste $S_j$ und untersuchen jedes Rechteck $r_i$ in diesem
+Streifen, ob sein Wert $b_i$ gleich dem Wert $j$ ist, also ob das Rechteck (die Anmeldung) mit dem
+aktuellen Zeitpunkt $j$ beginnt.
+%\TODO{Das is wichtig, weil ...}
+Außerdem prüfen wir, ob ein Rechteck bereits platziert wurde.
+Wenn die Werte $b_i$ und $j$ übereinstimmen und $r_i$ noch nicht platziert wurde, 
+suchen wir von $x = 0$ bis $x = N$ nach der ersten freien Lücke im Streifen $j$,
+die mindestens so groß ist wie die Länge des Rechtecks $s_i$. 
+Wenn es so eine Lücke gibt, legen wir $r_i$ ins $R$ und übergehen zum Rechteck $r_{i+1}$.
 
+Nachdem alle Streifen verarbeitet worden sind, ist unser Ausgangsergebnis erzeugt.
 
+In diesem einfachen Algorithmus nutzt man beim Platzieren eines Rechtecks den
+Vorteil, dass beim Streifen $j$ nur ein Rechteck $r_i$ platziert werden kann, 
+das an diesem Streifen beginnt --- es gilt: $b_i = j$.
+Natürlich können andere Rechtecke bereits platziert sein,
+aber unsere Vorgehensweise sichert uns, dass es für ein Rechteck $r_i$
+genug Platz, also genau: $s_i$, über diesem Rechteck
+in den weiteren Streifen $S_{b_i + 1}, S_{b_i + 2}, ..., S_{e_i - 1}$ 
+gibt, wenn der Algorithmus entscheidet, dieses Rechteck in $R$ zu platzieren.
+Diese Beobachtung ist offensichtlich wahr, da man die Streifen von „unten“ 
+(beginnend mit den niedrigeren $y$--Werten im Koordinatensystem) nach „oben“
+verarbeitet und bei jedem Streifen $j$ prüft, ob es eine genug große Lücke für ein Rechteck
+$r_i$ gibt.
+Wenn es eine solche Lücke nicht gibt, bedeutet, dass es im Streifen $j$ und 
+möglicherweise in weiteren Streifen $j+1, j+2...$ ein Rechteck gibt, das 
+die Platzierung von $j$ unmöglich macht.
 
-Damit kann man sich vorstellen, dass wir das Rechteck $R$ quasi vom Punkt $(0,0)$ bis zum Punkt
-$(N, E)$ mit kleineren Rechtecken füllen. Nach 
+Man kann leicht begründen, dass der vorgestellte Algorithmus als Greedy klassifiziert werden
+kann.
+Mit jedem Schritt des Algorithmus wird die aktuell beste Verbesserungsmöglichkeit gewählt.
+Der Algorithmus nutzt die sortierte Reihenfolge der Rechtecke im Streifen, um anhand
+des aktuellen Standes im Streifen eine Entscheidung zu treffen, ob ein Rechteck $r_i$ in $R$
+platziert werden kann.
 
-\begin{figure}[h]
-\centering
-\input{./tex/tikz/greedy-algo}
-\end{figure}
-
-
-
-
-\TODO{wie werden die Rechtecke gelegt?\\
--- binary search\\
--- was sind die Folgen? was will man damit erreichen?}
+Auf der \Cref{fig:platzierung} sieht man den verarbeiteten Streifen $S_0$.
+Insbesondere erkennt man gut die Reihenfolge der Sortierkriterien der Rechtecke
+im Strefen.
 
 

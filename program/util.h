@@ -8,6 +8,8 @@
 
 using namespace std;
 
+const double EulerConstant = exp(1.0);
+
 class Rec {
 private:
 	int size, b, e;

@@ -38,12 +38,14 @@ class Solver{
 	Hole findNextLargestHole(int it);
 	pair<Rec*, iPair> findReplacement(Hole hole, int it);
 	vector<Rec*> addNew(Rec* rep);
-	bool removeCollisions(int area, pair<Rec*, iPair> rep);
+	bool removeCollisions(int area, pair<Rec*, iPair> rep, int temp);
 
 	bool checkIfOverlaps();
 
 	void run();
 	void runOptimization();
+
+	default_random_engine gen;
 
 public:
 	Solver(string path){
@@ -51,6 +53,7 @@ public:
 		placedRectangles = vector<list<Rec*>> (M);
 		unusedRectangles = vector<vector<Rec*>> (M);
 		holes = vector<list<Hole>> (M);
+
 		run();
 	}
 	~Solver(){

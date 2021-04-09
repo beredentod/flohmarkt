@@ -1,2 +1,34 @@
 \subsubsection{Heuristisches Verbesserungsverfahren}
-Das Ausgangsergebnis kann man 
+Wir probieren, das Ausgangsergebnis zu verbessern.
+Bezeichnen wir ab jetzt ein beliebiges Ergebnis, also eine beliebige Anordnung
+der kleineren Rechtecke innerhalb des großen Rechtecks $R$, die unser Programm liefert, 
+als $C$. Insbesondere nennen wir unser Ausgangsergebnis $C_A$.
+
+
+Man leicht feststellen, dass man mithilfe des obengenannten Greedy--Algorithmus 
+das Ausgangsergebnis nicht optimieren kann. Wir haben begründet, dass dieser Algorithmus
+an jeder Stelle stets die aktuell optimale Variante wählt. 
+Außerdem dürfen wir diesen Algorithmus nicht nochmal nutzen,
+da wir voraussetzen, dass die Streifen in der aufsteigender Reihenfolge ein nach dem anderen
+verarbeitet werden. Dann kann es sein, dass es sich eine Lücke zwischen den Punkten $(x_j, j)$ und 
+$(x_j + \ell, j)$ der Länge $\ell$ an einer Stelle in einem Streifen $j$ befindet
+und dass ein Rechteck $r_i$ mit $s_i < \ell$ theorethisch hineinpassen würde, aber
+es ist nicht mehr gesichert, dass es die Lücken direkt darüber in oberen Streifen $j+1, j+2, ...$
+geben würde.
+
+
+Deshalb führen wir ein neues Verfahren ein. 
+Sei $C$ eine beliebige Platzierung von Rechtecken innerhalb von $R$.
+Nennen wir $C$ \textit{das aktuelle Ergebnis}. 
+Die allgemeine Idee des Verbesserungsverfahrens besteht darin,
+man findet eine Lücke in einem Streifen 
+und man legt ein noch nicht platziertes Rechteck $r$ in die Lücke, gegebenfalls
+muss man die Rechtecken, die mit $r$ kollidieren, aus der Platzierung entfernen
+und somit entstehen neue Lücken, die mit anderen nicht gelegten Rechtecken gefüllt werden
+können.
+So kommt man auf ein neues Ergebnis $C'$.
+Wir vergleichen die Gesamtflächeninhalte der kleineren Rechtecke innerhalb von $R$
+der Platzierungen $C$ und $C'$. 
+Wenn $C'$ größer ist als $C$, wird $C'$ das aktuelle Ergebnis und der Vorgang
+wiederholt sich. Somit stellt dieses Verfahren das
+heuristisches Verfahren, das als ein Bergsteigeralgorithmus klassifiziert werden kann.

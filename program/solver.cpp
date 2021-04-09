@@ -53,7 +53,6 @@ void Solver::runOptimization(){
 	Hole hole;
 	pair<Rec*, iPair> rep;
 	int itR = 0, itH = 0;
-	int temp = 10000;
 	do {
 
 		//DEBUG
@@ -82,10 +81,8 @@ void Solver::runOptimization(){
 				}
 				if (rep.second.second == -3)
 					rep = findReplacement(hole, ++itR);
-				temp--;
 			}
-			result = removeCollisions(area, rep, temp);
-			temp--;
+			result = removeCollisions(area, rep);
 
 			//DEBUG
 			bool overlap = checkIfOverlaps();
@@ -104,10 +101,8 @@ void Solver::runOptimization(){
 				}
 				if (rep.second.second == -3)
 					rep = findReplacement(hole, ++itR);
-				temp--;
 			}
-			result = removeCollisions(area, rep, temp);
-			temp--;
+			result = removeCollisions(area, rep);
 
 			//DEBUG
 			bool overlap = checkIfOverlaps();
@@ -359,7 +354,7 @@ vector<Rec*> Solver::addNew(Rec* rep){
 	return added;
 }
 
-bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep, int temp){
+bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
 	vector<int> remove(M);
 	vector<pair<list<Rec*>::iterator, Rec>> rec_remove;
@@ -449,15 +444,7 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep, int temp){
 	cout << "Previous area: " << area << ", new area: " << calculateAreaUsed() << "\n";
 	int new_area = calculateAreaUsed();
 	double diff = new_area - area;
-	uniform_real_distribution<double> dist(0.997899,1.0);
-	if (temp <= 1)
-		temp = 2;
-	cout << "DEBUG: diff: " << diff << "\ttemp: " << temp << "\n";
-	double ex = diff / (double)temp;
-	cout << "DEBUG: ex: " << ex << "\n";
-	cout << "DEBUG: exp: " <<(double)pow((double)EulerConstant, ex) << "\n";
-	cout << "DEBUG: rand: " << dist(gen) << "\n";
-	if (diff > 0 || pow(EulerConstant, ex) > dist(gen)) {
+	if (diff > 0) {
 		cout << "\033[1;32mBETTER!\n\033[0m";
 		placedOld.clear();
 		vector<pair<int, list<Rec*>::iterator>> rem;

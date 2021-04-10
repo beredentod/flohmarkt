@@ -17,7 +17,6 @@ class Solver{
 	vector<Rec*> rectangles;
 
 	vector<vector<Rec*>> rectangles_stripes;
-	//vector<vector<Rec*>> rec_stripes_area;
 	vector<vector<Rec*>> unusedRectangles;
 
 	vector<list<Rec*>> placedRectangles;
@@ -40,10 +39,11 @@ class Solver{
 	vector<Rec*> addNew(Rec* rep);
 	bool removeCollisions(int area, pair<Rec*, iPair> rep);
 
-	bool checkIfOverlaps();
-
 	void run();
 	void runOptimization();
+
+//DEBUGGING
+	bool checkIfOverlaps();
 
 public:
 	Solver(string path){
@@ -68,6 +68,7 @@ public:
 
 	void saveResult(string path, bool all = true, int mode = 1);
 
+//DEBUGGING
 	void printAllRectangles();
 	void printStripes(int p, bool unused = false);
 	void printHoles(int p = -1);

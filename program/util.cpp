@@ -81,3 +81,21 @@ bool smallerHolesSize(const Hole &a, const Hole &b){
 
 	return (a.x2 - a.x1 < b.x2 - b.x1);
 }
+
+int timeToMinutes(string time){
+	size_t mode = time.find(":");
+
+	if (mode != string::npos) {
+		string s_min = time.substr(time.size() - 2);
+		string s_hours = time.substr(0, time.size() - 3);
+
+		int min = stoi(s_min);
+		int hours = stoi(s_hours);
+
+		return hours * 60 + min;
+	}
+	else {
+		return stoi(time);
+	}
+}
+

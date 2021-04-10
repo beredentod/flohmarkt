@@ -5,18 +5,20 @@ void Solver::readFile(string path){
 	file.open(path, ios::in); 
 	if (file.is_open()) {
 		file >> N;
-		int a, b;
+		string a, b;
 		file >> a >> b;
-		M = b - a;
-		START = a;
+		int B = timeToMinutes(a), E = timeToMinutes(b);
+		M = E - B;
+		START = B;
 		int n;
 		file >> n;
 		for (int i = 0; i < n; i++) {
-			int a, b, c;
+			a = "", b = "";
+			int c;
 			file >> a >> b >> c;
-			a -= START;
-			b -= START;
-			Rec *r = new Rec (c, a, b);
+			int bi = timeToMinutes(a), ei = timeToMinutes(b);
+			bi -= START, ei -= START;
+			Rec *r = new Rec (c, bi, ei);
 			rectangles.pb(r);
 		}
 	}

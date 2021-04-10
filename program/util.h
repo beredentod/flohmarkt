@@ -72,5 +72,7 @@ bool greaterArea(Rec *a, Rec *b);
 bool greaterHolesSize(const Hole &a, const Hole &b);
 bool smallerHolesSize(const Hole &a, const Hole &b);
 
+int timeToMinutes(string time);
+
 
 #endif

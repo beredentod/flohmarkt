@@ -13,8 +13,8 @@ Das gelieferte Programm kann auch mit unterschiedlichen Werten umgehen.
 Die Aufgabe ist ein Optimierungsproblem.
 Man soll so eine Teilfolge von $k$ Anmeldugen wählen,
 dass alle gewählten Strecken in den angebenen Zeiten vermietet werden können, d.h.,
-für jede Anmeldung steht eine freie stetige Strecke der angegbenen Länge 
-in der angegebenen Zeitspanne durchgehend zur Verfügung,
+für jede Anmeldung eine freie stetige Strecke der angegbenen Länge 
+in der angegebenen Zeitspanne durchgehend zur Verfügung steht,
 und dazu die Mieteinnahmen möglichst hoch sind, wobei der Preis 1 Euro pro Meter pro Stunde beträgt.
 
 Man kann das Problem auf folgende Weise modellieren. 
@@ -36,9 +36,7 @@ $(x_i, b_i), (x_i, e_i), (x_i + s_i, e_i), (x_i + s_i, b_i)$.
 Man beachte, dass $b_i$, $e_i$ und $s_i$ fixiert sind. 
 So ist die Aufgabe, nur $x_i$ so zu wählen, dass die Bedingungen der Aufgabe erfüllt werden.
 Wir können uns dieses Problem so vorstellen, dass die Länge $s_i$ und die Breite $m_i$
-jedes Rechtecks $r_i$ sowie seine Anordnung entlang der $y$--Achse fixiert sind,
-und wir das Rechteck entlang der $x$--Achse zwischen den $x$--Werten von 0 und $N-s_i$ verschieben können.
+jedes Rechtecks $r_i$, sowie seine Anordnung entlang der $y$--Achse fixiert sind,
+und wir das Rechteck nur entlang der $x$--Achse zwischen den $x$--Werten von 0 und $N-s_i$ verschieben können.
 
-Weiter nennen wir unsere Aufgabe das \fp.
-
-\TODO{check, reformulate}
+In den weiteren Betrachtungen nennen wir unsere Aufgabe das \fp.

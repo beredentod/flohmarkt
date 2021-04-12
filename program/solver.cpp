@@ -1,54 +1,76 @@
 #include "solver.h"
 
+//eine Methode zum Einlesen der Textdatei und zur Konversion der Eingabe
+// path ist die Adresse der Textdatei
 void Solver::readFile(string path){
+	//die Textdateit
 	ifstream file;
 	file.open(path, ios::in); 
+
+	//falls die Textdateit geoeffnet werden kann
 	if (file.is_open()) {
-		file >> N;
+		//eingelesen werden
+		file >> N; //die Laenge des Flohmarkts (Laenge des grossen Rechtecks)
 		string a, b;
-		file >> a >> b;
+		file >> a >> b; //die Zeitangaben -- Beginn, Ende
+		//die Angaben werden zuerst als Strings eingelesen, dann werden
+		//sie gemaess des Formats zu Stunden oder zu Minuten konvertiert
 		int B = timeToMinutes(a), E = timeToMinutes(b);
-		M = E - B;
-		START = B;
+		M = E - B; //die Breite des grossen Rechtecks
+		START = B; //der Beginn des Flohmarkts
 		int n;
-		file >> n;
+		file >> n;	//die Anzahl der Rechtecke (Ameldungen)
 		for (int i = 0; i < n; i++) {
 			a = "", b = "";
 			int c;
 			file >> a >> b >> c;
+			//der Beginn und das Ende der Anmeldung
 			int bi = timeToMinutes(a), ei = timeToMinutes(b);
+			//der Beginn des Flohmarkts wird abgezogen
 			bi -= START, ei -= START;
+			//ein neues Rechteck wird erzeugt
 			Rec *r = new Rec (c, bi, ei);
 			rectangles.pb(r);
 		}
 	}
+	//falls die Datei nicht geoeffnet werden kann
 	else {
 		cerr << "Error: File could not be opened. Abort.\n";
 		exit(0);
 	}
 }
 
+//der Lauf des Programms
 void Solver::run(){
+	//die Rechtecke werden auf die Streifen verteilt, 
+	// durch die sie verlaufen
 	distributeToStripes();
+	//jeder Streifen wird verarbeitet, indem der erste
+	//	Greedy-Algorithmus angewendet wird
 	for (int i = 0; i < M; i++)
 		processStripe(i);
-
-	//printPlaced();
 
 	//DEBUG
 	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
 
+	//Indikator dafuer, ob alle Rechtecke platziert wurden
 	bool all = true;
 	for (auto r: rectangles)
 		if (r->x1 == -1)
 			all = false;
+
+	//der Gesamtflaecheninhalt der platzierten Rechtecke wird berechnet
 	int area = calculateAreaUsed();
-	int total = calculateTotalArea();
-	if (all || total == area)
+	if (all || getM()*getN() == area)
 		return;
+
+	//wenn nicht alle Rechtecke platziert wurden
+	//	oder das grosse Rechteck nicht vollstaendig mit Rechtecken 
+	//	bedeckt ist, laesst man das heuristische Verbesserungsverfahren laufen
 	runOptimization();
 }
 
+//der Lauf des heuristischen Verbesserungsverfahrens
 void Solver::runOptimization(){
 	int area = calculateAreaUsed();
 	bool result = true;
@@ -56,14 +78,6 @@ void Solver::runOptimization(){
 	pair<Rec*, iPair> rep;
 	int itR = 0, itH = 0;
 	do {
-
-		//DEBUG
-		//cout << "\t[New try!]\n\n";
-		//printPlaced(950, 4);
-		//printPlaced(950, 5);
-		//printPlaced(950, 6);
-		//printPlaced(950, 7);
-
 		if (result){
 			area = calculateAreaUsed();
 			determineUnused();
@@ -118,6 +132,8 @@ void Solver::runOptimization(){
 	return;	
 }
 
+//diese Methode verteilt jedes Rechteck auf die Streifen,
+//	über die es verlaeuft
 void Solver::distributeToStripes(){
 	rectangles_stripes = vector<vector<Rec*>> (M);
 
@@ -130,6 +146,8 @@ void Solver::distributeToStripes(){
 		sort(rectangles_stripes[i].begin(), rectangles_stripes[i].end(), greaterEnd);
 }
 
+//diese Methode findet alle nicht platzierten Rechtecke in einem
+//	Streifen p; p = -1 steht fuer alle Streifen
 void Solver::determineUnused(int p){
 	if (p == -1){
 		for (int i = 0; i < M; i++)
@@ -137,11 +155,8 @@ void Solver::determineUnused(int p){
 		for (int i = 0; i < M; i++)
 			determineUnused(i);
 
-		//unsigned seed = 785;
-		//auto rng = default_random_engine {seed};
 		for (int i = 0; i < M; i++)
 			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
-			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), rng);
 	}
 	else {
 		for (auto r: rectangles_stripes[p])
@@ -150,6 +165,8 @@ void Solver::determineUnused(int p){
 	}
 }
 
+//diese Methode findet alle Luecken im Streifen p;
+//	p = -1 steht fuer alle Streifen
 void Solver::findHoles(int p){
 	if (p == -1){ 
 		for (int i = 0; i < M; i++)
@@ -181,15 +198,18 @@ void Solver::findHoles(int p){
 	}
 }
 
+
+//diese Methode fuegt ein Rechteck in einen Streifen p ein
 void Solver::insertPlace(Rec* r, int p){
 	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
 	placedRectangles[p].insert(it, r);
 }
 
+
+//diese Methode findet die naechste leere Luecke im Streifen p
+//	fuer ein Rechteck r
 int Solver::findNearestHole(Rec* r, int p){
 	list<Rec*>::iterator it = placedRectangles[p].begin();
-
-	//think about something faster (?)
 
 	if (placedRectangles[p].empty())
 		return 0;
@@ -214,6 +234,8 @@ int Solver::findNearestHole(Rec* r, int p){
 	return -1;	
 }
 
+//diese Methode verarbeitet den Streifen p beim Lauf
+//	des Greedy-Algorithmus am Anfang
 void Solver::processStripe(int p){
 	for(auto r: rectangles_stripes[p]){
 		if (r->x1 > -1 || r->getBegin() < p)
@@ -235,6 +257,8 @@ void Solver::processStripe(int p){
 	}
 }
 
+//diese Methode verarbeitet den Streifen p beim Lauf
+//	des Verbesserungsalgorithmus
 vector<Rec*> Solver::processStripeReturn(int p){
 	vector<Rec*> added;
 	for(auto r: rectangles_stripes[p]){
@@ -285,7 +309,8 @@ vector<Rec*> Solver::processStripeReturn(int p){
 	return added;
 }
 
-
+//diese Methode findet die naechste groesste Luecke im ganzen
+//	grossen Rechtek; it ist ein Iterator fuer die Liste all_holes
 Hole Solver::findNextLargestHole(int it){
 	for (; it < int(all_holes.size()); it++)
 		if (!unusedRectangles[all_holes[it].stripe].empty()){
@@ -297,7 +322,8 @@ Hole Solver::findNextLargestHole(int it){
 	return h;
 }
 
-
+//diese Methode findet ein noch nicht platziertes Rechteck 
+// fuer einer Luecke hole; it ist ein Iterator fuer unusedRectangles
 pair<Rec*, iPair> Solver::findReplacement(Hole hole, int it){
 	int stripe = hole.stripe;
 
@@ -334,6 +360,8 @@ pair<Rec*, iPair> Solver::findReplacement(Hole hole, int it){
 	return make_pair(rep, make_pair(hole.x1, hole.x2));
 }
 
+//die Methode versucht im Verbesserungsverfahren, neue Rechtecke
+//	ins grosse Rechteck zu legen
 vector<Rec*> Solver::addNew(Rec* rep){
 	vector<Rec*> added;
 	for (int i = rep->getBegin(); i < rep->getEnd(); i++)
@@ -348,6 +376,9 @@ vector<Rec*> Solver::addNew(Rec* rep){
 	return added;
 }
 
+//diese Methode entfernt alle Rechtecke, die mit einem im Verbesserungsverfahren
+//	gelegten Rechteck kollidieren und aktualisiert die Platzierung,
+//	falls es sich ein besserer Gesamtflaecheninhalt ergibt
 bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
 	vector<int> remove(M);
@@ -492,6 +523,69 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 }
 
 
+
+//diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke,
+//	die platziert wurden
+int Solver::calculateAreaUsed(){
+	int sum = 0;
+	for (auto r: rectangles) if (r->x1 > -1) sum += r->getArea();
+	return sum;
+}
+
+// ------------------- SEMI-DEBUGGING ----------------------------------
+
+//diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke
+int Solver::calculateTotalArea(){
+	int sum = 0;
+	for (auto r: rectangles) sum += r->getArea();
+	return sum;
+}
+
+//diese Methode gibt den Wert M zurückt
+int Solver::getM(){
+	return M;
+}
+//diese Methode gibt den Wert N zurückt
+int Solver::getN(){
+	return N;
+}
+//diese Methode gibt den Wert START zurückt
+int Solver::getStart(){
+	return START;
+}
+
+//modes:
+//1 - plain txt
+//2 - TeX tabular
+void Solver::saveResult(string path, bool all, int mode){
+	ofstream file;
+	if (mode == 1)
+		path += ".txt";
+	else if (mode == 2)
+		path += ".tex";
+	file.open(path, ios::out);
+	if (mode == 1) {
+		if (all)
+			file << "All rectangles\n";
+		else 
+			file << "Placed rectangles only\n";
+		file << "begin\tend\tlength\tx1\tx2\n";
+	}
+	for (auto r: rectangles) {
+		if (mode == 1)
+			file << r->getBegin() + START << "\t" << r->getEnd() + START << "\t" 
+			  << r->getSize() << "\t" << r->x1 << "\t" << r->x2 << "\n";
+		else if (mode == 2)
+			file << r->getBegin() + START << "\t&\t" << r->getEnd() + START << "\t&\t" 
+			  << r->getSize() << "\t&\t" << r->x1 << "\t&\t" << r->x2 << "\\\\ \n"; 
+	}
+	file.close();
+}
+
+
+// ------------------------- DEBUGGING -------------------------
+
+//diese Methode prüft, ob die Rechtecke sich nicht überdecken
 bool Solver::checkIfOverlaps(){
 	bool overlap = false;
 	for (int i = 0; i < M; i++){
@@ -529,61 +623,6 @@ bool Solver::checkIfOverlaps(){
 	return overlap;
 	//return false;
 }
-
-
-// ------------------- SEMI-DEBUGGING ----------------------------------
-
-int Solver::calculateAreaUsed(){
-	int sum = 0;
-	for (auto r: rectangles) if (r->x1 > -1) sum += r->getArea();
-	return sum;
-}
-
-int Solver::calculateTotalArea(){
-	int sum = 0;
-	for (auto r: rectangles) sum += r->getArea();
-	return sum;
-}
-
-int Solver::getM(){
-	return M;
-}
-int Solver::getN(){
-	return N;
-}
-int Solver::getStart(){
-	return START;
-}
-
-//modes:
-//1 - plain txt
-//2 - TeX tabular
-void Solver::saveResult(string path, bool all, int mode){
-	ofstream file;
-	if (mode == 1)
-		path += ".txt";
-	else if (mode == 2)
-		path += ".tex";
-	file.open(path, ios::out);
-	if (mode == 1) {
-		if (all)
-			file << "All rectangles\n";
-		else 
-			file << "Placed rectangles only\n";
-		file << "begin\tend\tlength\tx1\tx2\n";
-	}
-	for (auto r: rectangles) {
-		if (mode == 1)
-			file << r->getBegin() + START << "\t" << r->getEnd() + START << "\t" 
-			  << r->getSize() << "\t" << r->x1 << "\t" << r->x2 << "\n";
-		else if (mode == 2)
-			file << r->getBegin() + START << "\t&\t" << r->getEnd() + START << "\t&\t" 
-			  << r->getSize() << "\t&\t" << r->x1 << "\t&\t" << r->x2 << "\\\\ \n"; 
-	}
-	file.close();
-}
-
-// ------------------------- DEBUGGING -------------------------
 
 void Solver::printAllRectangles(){
 	//cout << "\nDEBUG: All rectangles\n";

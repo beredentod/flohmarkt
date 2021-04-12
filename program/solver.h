@@ -94,20 +94,14 @@ class Solver{
 	//der Lauf des heuristischen Verbesserungsverfahrens
 	void runOptimization();
 
-
-//DEBUGGING
-	//diese Methode prüft, ob die Rechtecke sich nicht überdecken
-	bool checkIfOverlaps();
-
 public:
 	Solver(string path){
+		//die Textdatei wird eingelesen
 		readFile(path);
-
 		//die vector werden initialisiert
 		placedRectangles = vector<list<Rec*>> (M);
 		unusedRectangles = vector<vector<Rec*>> (M);
 		holes = vector<list<Hole>> (M);
-
 		//Lauf des Programms
 		run();
 	}
@@ -120,6 +114,8 @@ public:
 	//diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke,
 	//	die platziert wurden
 	int calculateAreaUsed();
+
+// ---------------------- SEMI-DEBUGGING -------------------------
 
 	//diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke
 	int calculateTotalArea();
@@ -135,10 +131,25 @@ public:
 	void saveResult(string path, bool all = true, int mode = 1);
 
 
-//DEBUGGING
+// ------------------------- DEBUGGING -------------------------
+
+private:
+	//diese Methode prüft, ob die Rechtecke sich nicht überdecken
+	bool checkIfOverlaps();
+
+public:
+
+	//diese Methode gibt alle Rechtecken aus
 	void printAllRectangles();
+	//diese Methode gibt alle Rechtecken im Streifen p aus;
+	//	p = -1 steht fuer alle Striefen
 	void printStripes(int p, bool unused = false);
+	//diese Methode gibt alle Luecken im Streifen p aus;
+	//	p = -1 steht fuer alle Striefen
 	void printHoles(int p = -1);
+	//diese Methode gibt alle Rechtecken im Streifen p ab dem x1-Wert "from" aus,
+	//	die platziert wurden;
+	//	p = -1 steht fuer alle Striefen
 	void printPlaced(int from = 0, int p = -1);
 };
 

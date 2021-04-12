@@ -46,7 +46,7 @@
 
 % Für Algorithmen
 \usepackage{algpseudocode}
-\usepackage{algorithm}
+\usepackage[Algorithmus]{algorithm}
 \usepackage{gensymb}
 \usepackage{tikz}
 \usepackage{pgfplots} 
@@ -54,6 +54,7 @@
 \usepackage{subcaption}
 \usepackage{array}
 \usepackage{makecell}
+\usepackage[normalem]{ulem}
 
 \usepackage[backgroundcolor=lightgray]{todonotes}
 \usepackage{minibox}
@@ -118,9 +119,9 @@
 \tableofcontents
 
 \todo[inline,caption={Struktur}]{
-  Program: erweitere Zeiträume um Minuten
+  Program: erweitere Zeiträume um Minuten \checkmark
   \begin{itemize}
-    \item Definitionen, Modellierung des Problems
+    \item Definitionen, Modellierung des Problems \checkmark
     \item (Themenbezogene Arbeiten)
     \item Komplexität
     \begin{itemize}
@@ -129,12 +130,12 @@
     \item Konversion \checkmark
     \item heuristisches Verfahren
     \begin{itemize}
-      \item Greedy--Anlegen am Anfang
-      \item heurostisches Verbesserungsverfahren
+      \item Greedy--Anlegen am Anfang \checkmark
+      \item heuristisches Verbesserungsverfahren
       \begin{itemize}
-        \item welche Methode? 
+        %\item welche Methode? 
         \item hill climbing
-        \item simuliertes Abglühen
+        %\item simuliertes Abglühen
       \end{itemize}      
     \end{itemize}
     \item Diskussion der Ergebnisse
@@ -153,6 +154,14 @@
       \end{itemize}      
     \end{itemize}
     \item Laufzeit
+    \item Umsetzung
+      \begin{itemize}
+        \item Klasse Rec
+        \item Klasse Hole
+        \item Klasse Solver
+        \item Eingabformat!
+      \end{itemize}
+    \item Beispiel s. unten
   \end{itemize}
 }
 
@@ -170,7 +179,7 @@
 
 \subsection{Diskussion der Ergebnisse}
 \subsubsection{Grenzen der Heuristik}
-\subsubsection{Qualität der Ergebnisse}
+\subsubsection{Qualität der Ergebnisse}\label{sec:diskussion_ergebnisse}
 
 \subsection{Laufzeit}
 
@@ -189,12 +198,13 @@
   Weitere Beispiele:
   \begin{itemize}
     \item s. Abschnitt Konversion
-    \item andere Zeiten
-    \item andere Länge
+    \item andere Zeiten \checkmark (Bsp 8)
+    \item andere Länge \checkmark (Bsp 8)
     \item mehrtägiger Flohmarkt
-    \item mehrere Flohmärkte + mehrere Flohmärkte mit unterschiedlichen Längen
-    \item unterbrochener Zeitraum
-    \item unterbrochene Länge
+    \item mehrere Flohmärkte \sout{+ mehrere Flohmärkte mit unterschiedlichen Längen}
+    \item unterbrochener Zeitraum \checkmark (Bsp 10; Pause 12-13)
+    \item unterbrochene Länge 
+    \item Minuten
     \item edge--cases, bei denen der Algorithmus nicht funktioniert
   \end{itemize}
 }

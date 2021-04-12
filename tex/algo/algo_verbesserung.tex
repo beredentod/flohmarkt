@@ -1,0 +1,23 @@
+\begin{algorithm}[h]
+\caption{Das heuristische Verbesserungsvefahren}
+\label{algo:verbesserung}
+\flushleft
+\textbf{Eingabe:} $R$ --- das große Rechteck, $Z$ --- die Liste mit allen kleineren Rechtecken.
+\begin{algorithmic}[1]
+\State $C_A \gets$ Greedy($R, Z$)
+\State $C \gets C_A$
+\State $H \gets$ getAllHoles$(C_A)$
+\State $it \gets H.begin$
+\While{$it \neq H.end$}
+	\State $\Sigma_C \gets |C|$ \Comment{der Gesamtflächeninhalt aller platzierten Rechtecke in $C$}
+	\State $C' \gets$ next$(C, it)$
+	\State $it \gets it + 1$
+	\State $\Sigma_{C'} \gets |C'|$
+	\If {$\Sigma_{C'} > \Sigma_C$}
+		\State $H \gets$ getAllHoles$(C')$
+		\State $it \gets H.begin$
+		\State $C \gets C'$
+	\EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}

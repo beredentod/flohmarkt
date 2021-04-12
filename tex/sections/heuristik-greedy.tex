@@ -10,7 +10,7 @@ Außerdem wurde im \cref{sec:definitionen} festegestellt, dass die Größen $s_i
 des jeweiligen Rechtecks $r_i$ fest sind und dass wir ein Rechteck $r_i$ nur entlang der $x$--Achse,
 also entlang der Seite der Länge $N$ des Rechtecks $R$, bewegen dürfen.
 So bietet sich eine Verteilung der kleinere Rechtecke $r_i$ auf kleinere \textit{\textbf{Streifen}}
-der Länge $N$ im Rechteck $R$ entlang der $x$--Achse (s. \cref{fig:streifen}).
+der Länge $N$ im Rechteck $R$ entlang der $y$--Achse (s. \cref{fig:streifen}).
 Die Breite eines solchen Streifen ist äquidistant für alle Streifen und, da
 man Stände am Flohmarkt nur zu vollständigen Stunden vermietet, 
 beträgt die Breite eines Streifens 1 Stunde.\footnote{Wenn man Zeiten zu
@@ -48,7 +48,16 @@ Die Idee hinter dieser Platzierung ist, dass wir zuerst die breitesten Rechtecke
 „links”, also an niedrigeren $x$--Werten, platzieren, so weit es geht. Dann füllen wir 
 die Lücken „rechts“ (an größeren $x$--Werten) mit schmalleren Rechtecken. 
 Die grobe Idee ist, dass wir das Rechteck $R$ quasi vom Punkt $(0,0)$ bis zum Punkt
-$(N, E)$ mit kleineren Rechtecken füllen.
+$(N, E)$ mit immer schmalleren Rechtecken füllen.
+
+Bevor wir zur Beschreibung des Algorithmus übergehen, legen wir noch fest, was
+eine Lücke ist. Als \textbf{\textit{Lücke}} bezeichnen wir eine Strecke 
+zwischen zwei Rechtecken in einem Streifen. Jede Lücke betrifft einen
+konkreten Streifen $j$ und hat die Koordinaten $x_1$ und $x_2$ (stets: $x_1 < x_2$),
+die den Eckpunkten von zwei Rechtecken in $j$ oder den Seiten des Rechtecks $R$ entsprechen.
+Ma beachte insbesondere, dass es keine Lücke zwischen zwei Rechtecken gibt,
+die eine gemeinsame Seite haben.
+Die \textit{Größe} einer Lücke beträgt: $x_2 - x_1$.
 
 \input{./tex/figures/fig_rechteck-streifen-platzierung}
 
@@ -58,11 +67,14 @@ Wir iterieren durch jede Liste $S_j$ und untersuchen jedes Rechteck $r_i$ in die
 Streifen, ob sein Wert $b_i$ gleich dem Wert $j$ ist, also ob das Rechteck (die Anmeldung) mit dem
 aktuellen Zeitpunkt $j$ beginnt.
 %\TODO{Das is wichtig, weil ...}
-Außerdem prüfen wir, ob ein Rechteck bereits platziert wurde.
+Außerdem prüfen wir, ob das Rechteck bereits platziert wurde.
 Wenn die Werte $b_i$ und $j$ übereinstimmen und $r_i$ noch nicht platziert wurde, 
 suchen wir von $x = 0$ bis $x = N$ nach der ersten freien Lücke im Streifen $j$,
 die mindestens so groß ist wie die Länge des Rechtecks $s_i$. 
 Wenn es so eine Lücke gibt, legen wir $r_i$ ins $R$ und übergehen zum Rechteck $r_{i+1}$.
+Auf der \Cref{fig:platzierung} sieht man den verarbeiteten Streifen $S_0$.
+Insbesondere erkennt man gut die Reihenfolge der Sortierkriterien der Rechtecke
+im Strefen.
 
 Nachdem alle Streifen verarbeitet worden sind, ist unser Ausgangsergebnis erzeugt.
 
@@ -71,7 +83,7 @@ Vorteil, dass beim Streifen $j$ nur ein Rechteck $r_i$ platziert werden kann,
 das an diesem Streifen beginnt --- es gilt: $b_i = j$.
 Natürlich können andere Rechtecke bereits platziert sein,
 aber unsere Vorgehensweise sichert uns, dass es für ein Rechteck $r_i$
-genug Platz, also genau: $s_i$, über diesem Rechteck
+genug Platz über diesem Rechteck (genau: $s_i$)
 in den weiteren Streifen $S_{b_i + 1}, S_{b_i + 2}, ..., S_{e_i - 1}$ 
 gibt, wenn der Algorithmus entscheidet, dieses Rechteck in $R$ zu platzieren.
 Diese Beobachtung ist offensichtlich wahr, da man die Streifen von „unten“ 
@@ -79,8 +91,8 @@ Diese Beobachtung ist offensichtlich wahr, da man die Streifen von „unten“
 verarbeitet und bei jedem Streifen $j$ prüft, ob es eine genug große Lücke für ein Rechteck
 $r_i$ gibt.
 Wenn es eine solche Lücke nicht gibt, bedeutet, dass es im Streifen $j$ und 
-möglicherweise in weiteren Streifen $j+1, j+2...$ ein Rechteck gibt, das 
-die Platzierung von $j$ unmöglich macht.
+möglicherweise in weiteren Streifen $j+1, j+2, ...$ ein Rechteck gibt, das 
+die Platzierung von $r_i$ in $j$ unmöglich macht.
 
 Man kann leicht begründen, dass der vorgestellte Algorithmus als Greedy klassifiziert werden
 kann.
@@ -89,8 +101,5 @@ Der Algorithmus nutzt die sortierte Reihenfolge der Rechtecke im Streifen, um an
 des aktuellen Standes im Streifen eine Entscheidung zu treffen, ob ein Rechteck $r_i$ in $R$
 platziert werden kann.
 
-Auf der \Cref{fig:platzierung} sieht man den verarbeiteten Streifen $S_0$.
-Insbesondere erkennt man gut die Reihenfolge der Sortierkriterien der Rechtecke
-im Strefen.
 
 

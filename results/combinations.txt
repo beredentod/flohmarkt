@@ -1,3 +1,15 @@
+bool smallerx1(Rec *a, Rec *b);
+bool smallerx2(Rec *a, Rec *b);
+bool greaterEnd(Rec *a, Rec *b);
+bool smallerSize(Rec *a, Rec *b);
+bool greaterSize(Rec *a, Rec *b);
+bool smallerArea(Rec *a, Rec *b);
+bool greaterArea(Rec *a, Rec *b);
+
+bool greaterHolesSize(const Hole &a, const Hole &b);
+bool smallerHolesSize(const Hole &a, const Hole &b);
+
+
 Unused: smallerArea
 Holes: greaterSize
 

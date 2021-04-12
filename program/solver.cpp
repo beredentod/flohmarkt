@@ -33,7 +33,7 @@ void Solver::run(){
 	for (int i = 0; i < M; i++)
 		processStripe(i);
 
-	printPlaced();
+	//printPlaced();
 
 	//DEBUG
 	cout << "DEBUG: Overlaps: " << boolalpha << checkIfOverlaps() << "\n\n";
@@ -340,14 +340,6 @@ vector<Rec*> Solver::addNew(Rec* rep){
 		insertPlace(rep, i);
 	added.pb(rep);
 
-	/*cout << "\n\n";
-	printPlaced(950, 3);
-	printPlaced(950, 4);
-	printPlaced(950, 5);
-	printPlaced(950, 6);
-	printPlaced(950, 7);
-	cout << "\n\n";*/
-
 	for (int i = 0; i < M; i++){
 		auto v = processStripeReturn(i);
 		added.insert(added.end(), v.begin(), v.end());
@@ -376,7 +368,7 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	Rec *rec_p = &rep_c;
 
 	for (int i = rep_rec->getBegin(); i < rep_rec->getEnd(); i++){
-		auto it = upper_bound(placedOld[i].begin(), placedOld[i].end(), rec_p, smaller);
+		auto it = upper_bound(placedOld[i].begin(), placedOld[i].end(), rec_p, smallerx2);
 		//cout << "Removing (" << i << "): ";
 		for (; it != placedOld[i].end(); it++){
 			if ((*it)->x1 > rep_rec->x2)

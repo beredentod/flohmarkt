@@ -83,16 +83,13 @@ void Solver::runOptimization(){
 			determineUnused();
 			findHoles();
 
-			//DEBUG
-			//printHoles();
-
-			hole = findNextLargestHole(itH = 0);
+			hole = findNextHole(itH = 0);
 			rep = findReplacement(hole, itR = 0);
 			while (rep.second.second < 0){
 				if (rep.second.second == -1)
 					return;
 				if (rep.second.second == -2){
-					hole = findNextLargestHole(++itH);
+					hole = findNextHole(++itH);
 					rep = findReplacement(hole, itR = 0);
 				}
 				if (rep.second.second == -3)
@@ -112,7 +109,7 @@ void Solver::runOptimization(){
 				if (rep.second.second == -1)
 					return;
 				if (rep.second.second == -2){
-					hole = findNextLargestHole(++itH);
+					hole = findNextHole(++itH);
 					rep = findReplacement(hole, itR = 0);
 				}
 				if (rep.second.second == -3)
@@ -310,12 +307,13 @@ vector<Rec*> Solver::processStripeReturn(int p){
 }
 
 //diese Methode findet die naechste groesste Luecke im ganzen
-//	grossen Rechtek; it ist ein Iterator fuer die Liste all_holes
-Hole Solver::findNextLargestHole(int it){
-	for (; it < int(all_holes.size()); it++)
-		if (!unusedRectangles[all_holes[it].stripe].empty()){
-			//cout << "Largest hole: (S: " << all_holes[it].stripe << ", " << all_holes[it].x1 << ", " << all_holes[it].x2 << ")\n";
-			return all_holes[it];
+//	grossen Rechtek; itH ist ein Iterator fuer die Liste all_holes
+Hole Solver::findNextHole(int itH){
+	for (; itH < int(all_holes.size()); itH++)
+		if (!unusedRectangles[all_holes[itH].stripe].empty()){
+			//cout << "Largest hole: (S: " << all_holes[itH].stripe << ", "
+			//<< all_holes[itH].x1 << ", " << all_holes[itH].x2 << ")\n";
+			return all_holes[itH];
 		}
 
 	Hole h(-1, -1);
@@ -323,36 +321,28 @@ Hole Solver::findNextLargestHole(int it){
 }
 
 //diese Methode findet ein noch nicht platziertes Rechteck 
-// fuer einer Luecke hole; it ist ein Iterator fuer unusedRectangles
-pair<Rec*, iPair> Solver::findReplacement(Hole hole, int it){
+// fuer einer Luecke hole; itR ist ein Iterator fuer unusedRectangles
+pair<Rec*, iPair> Solver::findReplacement(Hole hole, int itR){
 	int stripe = hole.stripe;
 
-	if (stripe == -1) {
+	Rec *rep;
+	Rec a(-1,-1,-1);
+	Rec *a_p = &a;
+
+	if (stripe == -1){
 		cout << "=== No holes applicable. ===\n";
 		Rec a(-1,-1,-1);
 		Rec *a_p = &a;
 		return {a_p, {-1, -1}};
 	}
 
-	Rec *rep;
-	Rec a(-1,-1,-1);
-	Rec *a_p = &a;
-
-	if (unusedRectangles[stripe].empty()){
+	if (unusedRectangles[stripe].empty() || 
+		itR > int(unusedRectangles[stripe].size() -1)){
 		cout << " => No rectangle for replacement.\n";
 		return {a_p, {-2, -2}};		
 	}
 
-	/*for (auto r: unusedRectangles[stripe])
-		cout << "(" << r->x1 << ", " << r->x2 << ", S: "
-			 << r->getSize() << ", A: " << r->getArea() << ") ";*/
-
-	//cout << "it: " << it << ",  size: " << unusedRectangles[stripe].size() << "\n";
-	if (it > int(unusedRectangles[stripe].size() -1)){
-		return {a_p, {-2, -2}};	
-	}
-
-	rep = unusedRectangles[stripe][it];
+	rep = unusedRectangles[stripe][itR];
 
 	if (rep->getSize() > hole.x2)
 		return {a_p, {-3, -3}};
@@ -557,12 +547,15 @@ int Solver::getStart(){
 //modes:
 //1 - plain txt
 //2 - TeX tabular
+//3 - csv
 void Solver::saveResult(string path, bool all, int mode){
 	ofstream file;
 	if (mode == 1)
 		path += ".txt";
 	else if (mode == 2)
 		path += ".tex";
+	else if (mode == 3)
+		path += ".csv";
 	file.open(path, ios::out);
 	if (mode == 1) {
 		if (all)
@@ -571,15 +564,26 @@ void Solver::saveResult(string path, bool all, int mode){
 			file << "Placed rectangles only\n";
 		file << "begin\tend\tlength\tx1\tx2\n";
 	}
+	else if (mode == 2) {
+		if (all)
+			file << "All rectangles\n";
+		else 
+			file << "Placed rectangles only\n";
+		file << "Begin,End,Length,x1,x2\n";		
+	}
 	for (auto r: rectangles) {
 		if (mode == 1)
 			file << r->getBegin() + START << "\t" << r->getEnd() + START << "\t" 
 			  << r->getSize() << "\t" << r->x1 << "\t" << r->x2 << "\n";
 		else if (mode == 2)
 			file << r->getBegin() + START << "\t&\t" << r->getEnd() + START << "\t&\t" 
-			  << r->getSize() << "\t&\t" << r->x1 << "\t&\t" << r->x2 << "\\\\ \n"; 
+			  << r->getSize() << "\t&\t" << r->x1 << "\t&\t" << r->x2 << "\\\\ \n";
+		else if (mode == 3)
+			file << r->getBegin() + START << "," << r->getEnd() + START << "," 
+			  << r->getSize() << "," << r->x1 << "," << r->x2 << "\n"; 
 	}
 	file.close();
+	cout << "File '" << path << "' was successfully created.\n";
 }
 
 

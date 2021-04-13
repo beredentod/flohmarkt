@@ -55,6 +55,7 @@
 \usepackage{array}
 \usepackage{makecell}
 \usepackage[normalem]{ulem}
+\usepackage{longtable}
 
 \usepackage[backgroundcolor=lightgray]{todonotes}
 \usepackage{minibox}
@@ -123,9 +124,9 @@
   \begin{itemize}
     \item Definitionen, Modellierung des Problems \checkmark
     \item (Themenbezogene Arbeiten)
-    \item Komplexität
+    \item Komplexität \checkmark
     \begin{itemize}
-      \item Notwendigkeit einer Heuristik
+      \item Notwendigkeit einer Heuristik \checkmark
     \end{itemize}
     \item Konversion \checkmark
     \item heuristisches Verfahren
@@ -183,32 +184,12 @@
 
 \subsection{Laufzeit}
 
+\printbibliography
+
 \section{Umsetzung}\label{sec:umsetzung}
 \TODO{Eingabeformat von Minuten erwähnen}
 
-\section{Beispiele}
-\subsection{Beispiel 1}\label{ex:1}
-\subsection{Beispiel 2}\label{ex:2}
-\subsection{Beispiel 3}\label{ex:3}
-\subsection{Beispiel 4}\label{ex:4}
-\subsection{Beispiel 5}\label{ex:5}
-\subsection{Beispiel 6}\label{ex:6}
-\subsection{Beispiel 7}\label{ex:7}
-\todo[inline,caption={Beispiele}]{
-  Weitere Beispiele:
-  \begin{itemize}
-    \item s. Abschnitt Konversion
-    \item andere Zeiten \checkmark (Bsp 8)
-    \item andere Länge \checkmark (Bsp 8)
-    \item mehrtägiger Flohmarkt
-    \item mehrere Flohmärkte \sout{+ mehrere Flohmärkte mit unterschiedlichen Längen}
-    \item unterbrochener Zeitraum \checkmark (Bsp 10; Pause 12-13)
-    \item unterbrochene Länge 
-    \item Minuten
-    \item edge--cases, bei denen der Algorithmus nicht funktioniert
-  \end{itemize}
-}
-
+\input{./tex/sections/beispiele}
 
 \section{Quellcode}
 \lstinputlisting[language=C++]{./tex/flohmarkt.m}

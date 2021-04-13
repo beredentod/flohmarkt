@@ -60,7 +60,7 @@ So legen wir für jeden Streifen $j$ eine Liste $U_j$ fest, in der sich alle
 Rechtecke aus $j$ befinden, die nicht platziert wurden.
 Die Liste $U_j$ muss man auf eine Weise sortieren.
 Jedes Rechteck $r_i$ in jeder solchen Liste ordnen wir nach diesen Kriterien:
-1) fallend nach der Länge $s_i$ und 2) aufsteigend nach dem Beginn $b_i$.
+1) aufsteigend nach der Länge $s_i$ und 2) aufsteigend nach dem Beginn $b_i$.
 Die Entscheidung, diese Sortierkriterien zu wählen, ergibt sich experimentell 
 und wird im \cref{sec:diskussion_ergebnisse} beschrieben.
 
@@ -80,16 +80,85 @@ Danach werden alle Listen $H_j$ zu einer Liste $H$ zusammengebracht.
 Diese Liste muss auch auf eine Weise geordnet werden. 
 Experimentell ergeben sich die folgenden Sortierkriterien für jede Lücke $L_i$: 
 1) fallend nach der Größe der Lücke $L_i$ und 2) aufsteigend nach dem
-Index des Streifens.
-
-
-
+Index des Streifens. Diese Entscheidung wird ebenfalls im \cref{sec:diskussion_ergebnisse}
+diskutiert.
 
 \input{./tex/algo/algo_verbesserung}
 
 Der \cref{algo:verbesserung} zeigt eine vereinfachte Vorgehensweise des Verbesserungsverfahrens.
 Die Funktion $getAllHoles(C)$ findet alle Lücken in allen Streifen im Rechteck $R$ in der
-aktuellen Platzierung $C$. 
+aktuellen Platzierung $C$ und bestimmt die Liste $H$.
+Die Funktion $getRecs(C)$ findet alle nicht platzierten Rechtecke und verteilt sie auf
+die Listen $U_j$ für jeden Striefen $j$.
+Die Funktion $next(C, itH, itR)$ in diesem Algorithmus besteht selbst aus drei Funktionen.
+
+Die erste Funktion bestimmt die nächste Lücke, in die ein nicht platziertes Rechteck 
+eingefügt wird. Es gibt einen Iterator $itH$, der am Anfang am Beginn der Liste $H$ gestezt wird.
+Im Laufe des Algorithmus bewegt sich der Iterator und zeigt auf nächste Lücken,
+Eine Lücke bezeichnen wir als \textit{geeignet}, wenn sie sich in einem
+Streifen $j$ befindet, zu dem die entsprechende Liste $U_j$ nicht leer ist, d.h., 
+es mindestens ein Rechteck gibt, das in diese Lücke eingefügt werden kann.
+Somit bewegt sich der Iterator in der Liste $H$ und, wenn er auf eine geeignete Lücke 
+stößt, wird diese Lücke durch die folgenden zwei Funktionen bearbeitet.
+Insbesondere beachte man, dass die While--Schleife in \cref{line:abbruch} abbricht, wenn
+der Iterator $itH$ zum Ende der Liste $H$ gelangt, also dann,
+wenn es keine geeigneten Lücken mehr gibt. 
+
+Die nächste Funktion wählt ein Rechteck $r$, das in eine gewählte geeignete Lücke $L$
+eingefügt wird. Da die gewählte Lücke sich in einem Streifen $j$ befindet, stammt $r$
+aus der Liste $U_j$.
+Es gibt auch einen internen Iterator $itR$ für die Liste $U_j$,
+der bei jeder neuen Lücke ans Anfang der Liste gesetzt wird.
+Wenn ein Rechteck $r$ in einem Lauf $t$ der While--Schleife in $L$ eingefügt wird,
+wird $itR$ danach inkrementiert und im darauf folgenden Lauf der 
+Schleife $t+1$ wird ein unterschiedliches Rechteck in die Lücke $L$ gelegt.
+Wenn der Iterator $itR$ bis zum Ende der Liste $U_j$ gelangt, wird der Iterator $itH$
+in der Liste $H$ inkrementiert und somit eine neue 
+geeignete Lücke gesucht.
+
+Die letzte Funktion nimmt ein unter dem Iterator $itR$ stehendes Rechteck $r$
+und legt es in die unter dem Iterator $itH$ stehende Lücke $L$.
+Diese Funktion bereitet eine neue Platzierung $C'$ vor.
+Seien die Koordinaten der Lücke $x_1$ und $x_2$ und der Streifen, in dem sich $L$ befindet, sei $j$. 
+Seien $x_r$ und $x_r + s_r$ die $x$--Koordinaten von $r$.
+Das Rechteck $r$ wird so gelegt, dass $x_2 = x_r + s_r$. Auf diese Weise beträgt
+der Wert $x_r \coloneqq x_2 - s_r$.\footnote{Die Situation, in der $x_r < 0$ gilt, wird schon in der
+zweiten Funktion dadurch ausgeschlossen, dass der Iterator $itR$ inkrementiert wird und das nächste
+Rechteck gewählt wird.}
+Selbstverstädnlich kann an dieser Stelle zu Kollisionen kommen --- Rechtecke können sich überdecken.
+Vor dem Platzieren prüft man nicht, ob es durchgehend eine Lücke zwischen $x_r$ und $x_r + s_r$ 
+in allen Streifen $k$ gibt, wobei $b_r \leqslant k < e_r$.
+Deshalb entfernt man nun alle Rechtecke, die mit $r$ kollidieren, also all diejnigen, die 
+zumindest zum Teil zwischen $x_r$ und $x_r + s_r$ in allen Streifen $k$ liegen.
+So entstehen auch neue Lücken, deshalb versuchen wir an dieser Stelle 
+die Lücken mit anderen Recktecken zu füllen.
+Dazu verarbeiten wir alle Streifen $k$ ($b_r \leqslant k < e_r$), indem wir
+jedes in $C'$ noch nicht gelegtes Rechteck $r_i$
+in jeder Liste $S_k$ (in der ursrpünglichen Reihenfolge) untersuchen.
+Wie beim Greedy--Algorithmus am Anfang verusuchen wir, ein Rechteck
+$r_i$ im Streifen $g$ zu legen nur, wenn $g = b_i$
+(und wenn es eine Lücke zwischen $x_{r_i}$ und $x_{r_i} + s_i$ gibt).
+Allerdings müssen wir die Streifen $b_i+1, b_i+2, ..., e_i-1$ vor dem Platzieren prüfen,
+ob es in ihnen durchgehend Lücken zwischen $x_{r_i}$ und $x_{r_i} + s_i$ gibt. 
+Nur, wenn in allen Streifen $b_i, b_i + 1, ..., e_i-1$ diese Lücken bestehen,
+kann das Rechteck $r_i$ in die Platzierung $C'$ eingefügt werden. 
+Nachdem alle durch Kollision betroffenen Streifen verarbeitet worden sind,
+ist die Platzierung $C'$ fertig.
+
+Dann erfolgt der Vergleich in \cref{line:vergleich}.
+Wenn der Gesamtflächeninhalt der Platzierung $C'$ größer, also besser, ist als
+der Gesamtflächeninhalt der Platzierung $C$, wird die neue Platzierung vom Algorithmus
+akzeptiert und gilt als die aktuelle Platzierung $C$.
+Danach muss man offensichtlich alle Lücken und alle nicht gelegten Rechtecke neu bestimmen.
+Die Iteratoren $itH$ bzw. $itR$ werden auf $H.begin$ bzw. $U_k.begin$ gesetzt. 
+ 
+
+
+
+
+
+
+
 
 
 

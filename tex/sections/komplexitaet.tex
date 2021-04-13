@@ -1,10 +1,10 @@
 \subsection{Komplexität des Problems}
 
-Betrachten wir das zu \fp{} zugehörige Entscheidungsproblem:
-Gegeben ein umschließendes Rechteck $R$ und eine Liste $Z$
-von Rechtecken mit fixierten Länge, Breite und Anordnung entlang der $y$--Achse,
-können alle Rechtecke aus $Z$ innerhalb von $R$ so platziert werden, dass
-sie sich paarweise nicht überlappen?
+%Betrachten wir das zu \fp{} zugehörige Entscheidungsproblem:
+%Gegeben ein umschließendes Rechteck $R$ und eine Liste $Z$
+%von Rechtecken mit fixierten Länge, Breite und Anordnung entlang der $y$--Achse,
+%können alle Rechtecke aus $Z$ innerhalb von $R$ so platziert werden, dass
+%sie sich paarweise nicht überdecken?
 
 Wir zeigen, dass \fp{} NP--vollständig ist, indem wir zunächst zeigen, dass
 es in NP liegt und auch NP--schwer ist.
@@ -15,14 +15,64 @@ Gegeben sei eine Platzierung der Rechtecke aus $Z$ innerhalb von $R$.
 Man kann leicht einen in Polynomialzeit laufenden Algorithmus entwickeln, der
 anhand der Koordinaten der kleineren Rechtecke überprüft, ob keines
 der Rechtecke über die Grenzen von $R$ hinausreicht und ob
-kein Paar von Rechtecken aus $Z$ sich überlappt.  
+kein Paar von Rechtecken aus $Z$ sich überdeckt.  
 Somit liegt \fp{} in NP.
 
+Um zu beweisen, dass das \fp{} NP--schwer ist, zeigen wir, dass
+das 0/1--Rucksackproblem zum \fp{} reduziert werden kann.
+Das bedeutet: Falls das \fp{} in Polynomialzeit gelöst werden kann,
+so kann auch das Rucksackproblem.
+Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen,
+sowie aus einem Rucksack mit einer fixierten Größe.
+Das Problem besteht darin, die Zahlen in den Rucksack 
+so zu packen, dass ihre Summe maximal ist und sie die Größe des Rucksacks nicht überschreitet.
+Das 0/1--Rucksackproblem ist NP--vollständig.\cite{knapsack}
+\TODO{sprawdzić/zmienić źródło}
 
 
-\TODO{Zeige, das Problem ist NP (überprüfbar in P)\\
-Zeige, das Problem ist NP-schwer: Reduktion zu einem anderen NP-voll. oder NP-schweren Problem.
-Die Reduktionsfunktion muss in Polynomialzeit laufen.\\
-https://stackoverflow.com/questions/4294270/how-to-prove-that-a-problem-is-np-complete}
+Gegeben sei eine Instanz des Rucksackproblems.
+Wir können eine entsprechende Instanz des \fp s auf folgende Weise generieren.
+Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
+dieser Zahl entspricht.
+So bilden wir eine Anmeldung im \fp{}, deren Länge der
+Zahl aus dem Rucksackproblem entspricht und der Unterschied zwischen
+dem Beginn und dem Ende der Anmeldung beträgt eine Stunde.
+Außerdem bilden wir ein großes, umschließendes Rechteck, deren Länge der Größe des Rucksacks entspricht
+und deren Breite ebenfalls 1 beträgt.
+Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und deren 
+Länge der Größe des Rucksacks enspricht.
+In dem hierdurch entstandenen Problem wählen wir die Rechtecke so, 
+dass sie über die Grenzen des umschließenden Rechtecks nicht hinausreichen
+und der Gesamtflächeninhalt der kleineren Rechtecke maximal ist. 
+Insbesondere beachte man, dass man die kleineren Rechtecke nur entalng der längeren
+Seite des großen Rechtecks bewegen darf.
+Somit ist das \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem
+Wenn wir jede Instanz des \fp s in Polynomialzeit lösen können,
+können wir auch jedes 0/1--Rucksackproblem in Polynomialzeit lösen.
+Somit ist das \fp{} NP--schwer und, da es auch in NP liegt, 
+ist somit auch NP--vollständig.
 
-\TODO{Notwendigkeit einer Heuristik}
+
+Da dieses Problem NP--vollständig ist, muss man über einen optimalen Algorithmus zum
+\fp{} nachdenken. 
+Cormen et al. bechreiben, dass es grundsätzlich drei Ansätze zum Lösen eines
+NP--vollständigen gibt.\cite[S.~1106]{cormen}
+Erstens, wenn die Eingabe klein genug ist, reicht ein 
+Algorithmus mit einer exponentieller Laufzeit aus.
+Allerdings lässt sich diese Idee schlecht umsetzen,
+wenn die Anzahl der kleineren Rechtecke in der Eingabe sich in Ordnung von Hunderten befindet.
+Die praktische Laufzeit eines exponentiellen Algorithmus ist wäre in diesem Fall zu groß.
+Zweitens beschreiben die Autoren,
+dass man bestimmte Grenzfälle ausgliedern kann, die sich in Polynomialzeit lösen lassen.
+Diesen Ansatz verwenden wir bei einigen Beispielen und er wird im \cref{sec:diskussion_ergebnisse}
+besprochen.
+Drittens kann man einen Algorithmus liefern, der nahezu optimale Ergebnisse 
+in Polynomialzeit liefert --- eine Heuristik.
+
+
+%\TODO{Zeige, das Problem ist NP (überprüfbar in P)\\
+%Zeige, das Problem ist NP-schwer: Reduktion zu einem anderen NP-voll. oder NP-schweren Problem.
+%Die Reduktionsfunktion muss in Polynomialzeit laufen.\\
+%https://stackoverflow.com/questions/4294270/how-to-prove-that-a-problem-is-np-complete}
+
+%\TODO{Notwendigkeit einer Heuristik}

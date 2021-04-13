@@ -20,5 +20,5 @@ int main () {
 	cout << "Total area of the greater rectangle: " << S.getM()*S.getN() << "\n";
 
 	//das Ergebnis wird unter dieser Adresse gespeichert
-	S.saveResult("../results/flohmarkt" + to_string(n) + "_result");
+	S.saveResult("../results/flohmarkt" + to_string(n) + "_result", true, 3);
 }

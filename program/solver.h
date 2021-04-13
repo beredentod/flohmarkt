@@ -70,13 +70,13 @@ class Solver{
 	//	p = -1 steht fuer alle Streifen
 	void findHoles(int p = -1);
 
-	//diese Methode findet die naechste groesste Luecke im ganzen
-	//	grossen Rechtek; it ist ein Iterator fuer die Liste all_holes
-	Hole findNextLargestHole(int it);
+	//diese Methode findet die naechste Luecke im ganzen
+	//	grossen Rechtek; itH ist ein Iterator fuer die Liste all_holes
+	Hole findNextHole(int itH);
 
 	//diese Methode findet ein noch nicht platziertes Rechteck 
-	// fuer einer Luecke hole; it ist ein Iterator fuer unusedRectangles
-	pair<Rec*, iPair> findReplacement(Hole hole, int it);
+	// fuer einer Luecke hole; itR ist ein Iterator fuer unusedRectangles
+	pair<Rec*, iPair> findReplacement(Hole hole, int itR);
 
 	//die Methode versucht im Verbesserungsverfahren, neue Rechtecke
 	//	ins grosse Rechteck zu legen

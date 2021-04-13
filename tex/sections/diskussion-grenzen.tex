@@ -1,0 +1,41 @@
+\subsubsection{Grenzen der Heuristik}\label{sec:diskussion-grenzen}
+Im \cref{sec:komplexitaet} wurde bewiesen, dass das \fp{} NP--vollständig ist.
+Es gibt $|Z|!$ mögliche Anordnungen der Rechtecke.
+Deshalb für $|Z|$ in der Ordnung von ca. 700 wird eine Brute--Force--Lösungin einer nicht
+akzeptablen Zeit gelöst.
+Das ist auch der Grund, warum wir eine Heurstik verwenden.
+Allerdings, da eine Heuristik ein Approxiamationsalgorithmus ist und
+nur nahezu optimale Ergebnisse liefert, muss es Kompromisse geben.
+Dieser Kompromiss betrifft vor allem die Laufzeit und 
+dafür, dass der Algorithmus in Polynomialzeit läuft, 
+trifft das Programm an vielen Stellen vereinfachte Entscheidungen,
+die nicht zum optimalen Ergebnis führen.
+In diesem Abschnitt diskutieren wir nur über die Grenzen der Heuristiken im Programm
+und im \cref{sec:diskussion-ergebnisse} besprechen wir die Ergebnisse.
+
+
+Im Greedy--Algorithmus am Anfang liegt die Schwierigkeit darin, dass
+die Platzierung der Rechtecke grundsätzlich von ihrer Reihenfolge 
+in Listen $S_j$ abhängt. Diese hängt dann von den Sortierkriterien ab. 
+Obwohl dank der gewählten Sortierkriterien optimale oder sehr gute Ergebnisse
+bei vielen Beispielen herauskommen, ist das nicht der Fall bei allen Beispielen
+(mehr dazu im \cref{sec:diskussion-ergebnisse}).
+Auf jeden Fall liefert der Greedy--Algorithmus kein optimales Ergebnis zum \nameref{ex:2},
+weil dieses Ergebnis im Laufe des Verbesserungsverfahrens verbessert wird.
+
+
+Im Verbesserungsverfahren wurden mehrere Kompromisse zugunsten der Laufzeit gemacht.
+Vor allem liegt die Schwierigkeit zugrunde dem Verfahren --- warum ein Bergsteigeralgorithmus
+und nicht z.B. ein Verfahren mit simuliertem Abglühen oder ein ganz anderer heuristische Ansatz?
+Außerdem liegen die Schwierigkeiten des Verbesserungsverfahrens auch an
+der Reihenfolgen der Listen $U_j$ und der Liste $H$.
+Zum Sortieren dieser Listen nutzt man auch festgelegte Sortierkriterien,
+die nicht zwingend das optimale Ergebnis liefern müssen.
+Dazu liegt das Problem auch beim Platzieren eines Rechtecks in eine Lücke. 
+Wir entscheiden uns, das Rechteck an die Koordinate $x_2$ der Lücke zu legen.
+Man könnte hier eine andere Vorgensweise anwenden, z.B. man könnte das
+Rechteck an die Koordinate $x_1$ orientieren, man könnte auf eine besondere
+Weise vorgehen, wenn das Rechteck deutlich kleiner ist als die Lücke, oder
+man könnte die Rechtecke in darüber und darunter stehenden Streifen in Betracht ziehen.
+Wie beim Greedy--Algorithmus am Anfang, hängt die Reihenfolge der Rechtecke 
+beim Ausfüllen der Lücken von der Reihenfolge in Listen $S_j$ ab. 

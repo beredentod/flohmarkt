@@ -228,7 +228,7 @@ int Solver::findNearestHole(Rec* r, int p){
 		}
 	}
 
-	return -1;	
+	return -1;
 }
 
 //diese Methode verarbeitet den Streifen p beim Lauf

@@ -1,4 +1,4 @@
-\subsection{Komplexität des Problems}
+\subsection{Komplexität des Problems}\label{sec:komplexitaet}
 
 %Betrachten wir das zu \fp{} zugehörige Entscheidungsproblem:
 %Gegeben ein umschließendes Rechteck $R$ und eine Liste $Z$
@@ -18,9 +18,9 @@ der Rechtecke über die Grenzen von $R$ hinausreicht und ob
 kein Paar von Rechtecken aus $Z$ sich überdeckt.  
 Somit liegt \fp{} in NP.
 
-Um zu beweisen, dass das \fp{} NP--schwer ist, zeigen wir, dass
-das 0/1--Rucksackproblem zum \fp{} reduziert werden kann.
-Das bedeutet: Falls das \fp{} in Polynomialzeit gelöst werden kann,
+Um zu beweisen, dass das \fp{} NP--schwer ist, zeigen wir, dass das\break
+0/1--Rucksackproblem zum \fp{} reduziert werden kann.
+Das bedeutet: Falls das\break \fp{} in Polynomialzeit gelöst werden kann,
 so kann auch das Rucksackproblem.
 Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen,
 sowie aus einem Rucksack mit einer fixierten Größe.
@@ -31,7 +31,7 @@ Das 0/1--Rucksackproblem ist NP--vollständig.\cite{knapsack}
 
 
 Gegeben sei eine Instanz des Rucksackproblems.
-Wir können eine entsprechende Instanz des \fp s auf folgende Weise generieren.
+Wir können eine entsprechende Instanz des\break \fp s auf folgende Weise generieren.
 Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
 dieser Zahl entspricht.
 So bilden wir eine Anmeldung im \fp{}, deren Länge der
@@ -64,7 +64,7 @@ wenn die Anzahl der kleineren Rechtecke in der Eingabe sich in Ordnung von Hunde
 Die praktische Laufzeit eines exponentiellen Algorithmus ist wäre in diesem Fall zu groß.
 Zweitens beschreiben die Autoren,
 dass man bestimmte Grenzfälle ausgliedern kann, die sich in Polynomialzeit lösen lassen.
-Diesen Ansatz verwenden wir bei einigen Beispielen und er wird im \cref{sec:diskussion_ergebnisse}
+Diesen Ansatz verwenden wir bei einigen Beispielen und er wird im \cref{sec:diskussion-ergebnisse}
 besprochen.
 Drittens kann man einen Algorithmus liefern, der nahezu optimale Ergebnisse 
 in Polynomialzeit liefert --- eine Heuristik.

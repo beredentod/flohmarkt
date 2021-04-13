@@ -1,0 +1,62 @@
+\subsubsection{Qualität der Ergebnisse}\label{sec:diskussion-ergebnisse}
+Im vorangegangenen Abschnitt werden die Grenzen der Heuristik erkannt. 
+In diese Abschnitt diskutieren wir die Qualität der herausgekommenen Ergebnisse.
+
+Zuerst bestimmen wir die Kriterien, unter denen wir ein Ergebnis auswerten:
+\begin{itemize}
+	\item Der Verhältnis vom Gesamflächeninhalt der ins große Rechteck gelegten Rechtecke 
+	zu Gesamflächeninhalt aller Rechtecke.
+	\item Da Verhältnis vom Gesamflächeninhalt der ins große Rechteck gelegten Rechtecke 
+	zum Flächeninhalt des großen Rechtecks.
+	\item Die praktische Laufzeit des Programms für ein Ergebnis.
+\end{itemize}
+
+Diese Kriterien wurden in Bezug auf die Aufgabenstellung gewählt,
+„um den Veranstaltern des Flohmarkts zu helfen“.
+Das erste Kriterium gibt den Veranstaltern den Einblick darin,
+wie viel sie in Bezug auf die Menge des verfügbaren Geldes verdienen ---
+alle Personen wollen den Veranstaltern Geld anbieten, aber es hängt von den 
+Organisatoren ab, welche Anmeldungen sie ablehnen und welche annehmen.
+Das zweite Kriterium gibt den Einblick darin, wie viel Geld die 
+Veranstalter verdienen in Bezug auf den verfügbaren Platz. 
+Die beiden ersten Kriterien liefern natürlich auch die Erkenntnis über die Verlüste, die 
+mit der Auswahl an Anmeldungen verbunden sind.
+
+Das dritte Kriterium spielt für die Veranstalter eine praktische Rolle.
+Sehr wenigen Personen würde ein Ergebnis interessieren, das vielleicht um ein paar Prozent 
+besser ist, aber dessen Bestimmung mehrere Stunden (oder Tage!) dauert. 
+Deshalb wurde auch die Brute--Force--Lösung ausgeschlossen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|>{\ttfamily}l|>{\ttfamily}l|c|c|c|c|c|c|c|}
+\hline
+\textnormal{Kriterien I} & \textnormal{Kriterien II} & Bsp. 1 & Bsp. 2 & Bsp. 3 & Bsp. 4 & Bsp. 5 & Bsp. 6 & Bsp. 7 \\
+\hline
+greaterHolesSize & smallerSize & 8028 & 9077 & 8778 & 7370 & 8705 & 10000 & 9979 \\
+\hline
+greaterHolesSize & greaterSize & 8028 & 9077 & 8778 & 7370 & 8705 & 10000 & 9973 \\
+\hline
+greaterHolesSize & smallerArea & 8028 & 9077 & 8778 & 7370 & 8705 & 10000 & 9979 \\
+\hline
+greaterHoleaSize & greaterSize & 8028 & 9077 & 8778 & 7370 & 8705 & 10000 & 9973 \\
+\hline
+greaterHoleaSize & greaterEnd & 8028 & 9077 & 8778 & 7370 & 8705 & 10000 & 9973 \\
+\hline
+smallerHolesSize & smallerSize & 8028 & 9077 & 8778 & 7370 & 8599 & 10000 & 9980 \\
+\hline
+smallerHolesSize & greaterSize & 8028 & 9077 & 8778 & 7370 & 8599 & 10000 & 9973 \\
+\hline
+smallerHolesSize & smallerArea & 8028 & 9077 & 8778 & 7370 & 8599 & 10000 & 9980 \\
+\hline
+smallerHolesSize & greaterArea & 8028 & 9077 & 8778 & 7370 & 8599 & 10000 & 9973 \\
+\hline
+smallerHolesSize & greaterEnd & 8028 & 9077 & 8778 & 7370 & 8599 & 10000 & 9991 \\
+\hline
+\end{tabular}
+\end{table}
+
+\TODO{Abglühen\\
+Ergebnisse einzeln beschreiben\\
+Ergebnisse nach dem Greedy-Algo\\
+welches Ergebnis konnte (nicht) verbessert werden?}

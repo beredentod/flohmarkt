@@ -1,1 +1,82 @@
 \subsection{Laufzeit}
+\begin{itemize}
+	\item $N$ --- die Länge des großen Rechtecks $R$
+	\item $M$ --- die Breite des großen Rechtecks $R$, die Anzahl der Streifen 
+	\item $n$ --- $|Z|$, also die Anzahl der kleineren Rechtecke
+\end{itemize}
+
+Die Größe $N$ wird in vollständigen Metern betrachet. 
+Die Größe $M$ in der Aufgabe tritt in vollständigen Stunen vor.
+Wenn die Eingabe zu Minuten konvertiert wird, wird diese Variable
+in vollständigen Minuten betrachtet.
+Im Abschnitt \cref{sec:greedy} wird beschrieben,
+dass jeder Streifen die Breite besitzt, die 1 Stunde bzw. 1 Minute entspricht.
+Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
+
+
+\begin{itemize}
+	\item Vorbereitung der Eingabe: $O(M \cdot n \log n)$ (worst--case)
+	\begin{itemize}
+		\item Einlesen aller Rechtecke und Erstellung der Liste $Z$: $O(n)$
+
+		\item Erstellung von Listen \ttt{placedRectangles}, \ttt{unusedRectangles} und \ttt{holes}
+		für jeden Streifen (s. \nameref{sec:umsetzung}): $O(M)$
+
+		\item Verteilung jedes Rechtecks auf die Streifen, zu denen es gehört: $O(n \cdot M)$ (worst--case)\\
+		Im schlimmsten Fall gehört jedes Rechteck zu jedem Streifen, wenn jede Anmeldung
+		den ganzen Zeitraum eines Flohmarkts betrifft.
+		So muss jedes Rechteck in jeden Streifen hinzugefügt werden.
+
+		\item Sortierung der Listen $S_i$: $O(M \cdot n \log n)$ (worst--case)
+		Es gibt $M$ Listen und in jeder Liste kann es im schlimmsten Fall
+		alle Rechtecke geben. Die linear--logarithmische Laufzeit
+		ist durch das Sortieren verursacht.
+	\end{itemize}
+
+	\item Der Greedy--Algorithmus am Anfang: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)\\
+	Obwohl man die Funktion zur Verarbeitung jedes Streifens $M$--mal 
+	laufen lässt, kann eine Laufzeitanalyse pro Lauf dieser Funktion zu pessimistisch sein.
+	Es ist unmöglich, dass ein Platz für $n$ Rechtecke $M$--mal gesucht wird,
+	da wir voraussetzen, dass jedes Rechteck $r_i$ nur im Streifen $b_i$ gelegt werden kann
+	und außerdem können $n$ Rechtecke nicht $M$--mal platziert werden, da jedes Rechteck
+	nur einmal gelegt werden kann.
+	Stattdessen analysien wir die Laufzeit für das Platzieren jedes Rechtecks allein,
+	deshalb wird die endliche Laufzeit mal $n$ multipliziert, da man alle $n$ Rechtecke ins $R$
+	im schlimmsten Fall legen muss.
+
+	\begin{itemize}
+		\item Das Finden der passenden, freien $x$--Koordinaten: $O(n)$ (worst--case)\\
+		Im schlimmsten Fall muss man in einem Streifen über $n-1$ Rechtecke iterieren,
+		um einen freien Platz für ein Rechteck zu finden.
+
+		\item Das Finden der genauen Stelle in den Listen $S_j$: $O(M \log n)$ (worst--case)\\
+		Nicht in jedem Streifen müssen sich dieselben Rechtecke befinden und ein Rechteck 
+		kann zu mehreren Steifen gehören.
+		In jedem Streifen muss man die genaue Position zum Platzieren des Rechtecks finden.
+		Das erfolgt mittels der eingebauten Funktion \ttt{upper\_bound}, die in $O(\log n)$ läuft.\footnote{\href{https://en.cppreference.com/w/cpp/algorithm/upper_bound}{https://en.cppreference.com/w/cpp/algorithm/upper\_bound}}.
+		Die Einfügen--Operation in eine \ttt{list} erfolgt in $O(1)$.\footnote{\href{https://en.cppreference.com/w/cpp/container/list/insert}{https://en.cppreference.com/w/cpp/container/list/insert}}
+		Im schlimmsten Fall gehört ein Rechteck zu allen Streifen, deshalb muss die endliche Laufzeit
+		mal $M$ multipliziert werden.
+	\end{itemize}
+
+	\item Das Verbesserungsverfahren: 
+
+	\begin{itemize}
+		\item Die Funktion zum Berechnen des Gesamtflächeninhalts aller platzierten Rechtecke: $O(n)$ (worst--case)\\
+		Im schlimmsten Fall können alle Rechtecke ins große Rechteck $R$ gelegt werden.
+
+		\item Die Funktion zur Bestimmung aller nicht gelegten Rechtecke: $O(n(M + \log n))$ (worst--case)\\
+		Im schlimmsten Fall gibt es ein Rechteck $r$, das genauso groß ist wie $R$, und somit
+		alle $n-1$ restlichen kleineren Rechtecke zu Listen $U_j$ gehören. 
+		Im schlimmsten Fall können alle diesen restlichen Rechtecke zu allen Streifen gehören.
+		Die linear--logarithmische Laufzeit ist mit dem Sortieren der Listen $U_j$ verbunden.
+
+		\item Die Funktion zum Auffinden aller Lücken: $O(n(M + \log n))$ (worst--case)\\
+		Im schlimmsten Fall gibt es in jedem Streifen $k+1$ Lücken, wenn kein Paar
+		der Rechtecke eine gemeinsame Seite haben --- dann gibt es Platz auf beiden Seiten
+		jedes Rechtecks. Dazu kann es im schlimmsten Fall $n$ Rechtecke in jedem Streifen geben.
+		Die linear--logarithmische Laufzeit ist mit dem Sortieren der Liste $H$ verbunden.
+
+	\end{itemize}
+
+\end{itemize}

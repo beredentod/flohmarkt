@@ -8,9 +8,6 @@
 
 using namespace std;
 
-const double EulerConstant = exp(1.0);
-
-
 //die Klasse mit einem Rechteck (einer Anmeldung)
 class Rec {
 private:

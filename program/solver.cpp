@@ -68,20 +68,6 @@ void Solver::run(){
 	//	oder das grosse Rechteck nicht vollstaendig mit Rechtecken 
 	//	bedeckt ist, laesst man das heuristische Verbesserungsverfahren laufen
 	runOptimization();
-	for (int i = 0; i < M; i++){
-		int sum = 0;
-		int uns = 0;
-		int uns_sum = 0;
-		for (auto r: placedRectangles[i])
-			sum += r->getSize();
-		for (auto r: rectangles_stripes[i])
-			if (r->x1 == -1){
-				uns++;
-				uns_sum += r->getSize();
-			}
-
-		cout << "Stripe " << i << ": " << sum  <<  " + " << uns_sum  << " (" << uns << ")" << '\n';
-	}
 }
 
 //der Lauf des heuristischen Verbesserungsverfahrens
@@ -345,8 +331,6 @@ pair<Rec*, iPair> Solver::findReplacement(Hole hole, int itR){
 
 	if (stripe == -1){
 		cout << "=== No holes applicable. ===\n";
-		Rec a(-1,-1,-1);
-		Rec *a_p = &a;
 		return {a_p, {-1, -1}};
 	}
 

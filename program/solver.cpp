@@ -196,7 +196,7 @@ void Solver::findHoles(int p){
 }
 
 
-//diese Methode fuegt ein Rechteck in einen Streifen p ein
+//diese Methode fuegt ein Rechteck r in einen Streifen p ein
 void Solver::insertPlace(Rec* r, int p){
 	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
 	placedRectangles[p].insert(it, r);
@@ -208,47 +208,80 @@ void Solver::insertPlace(Rec* r, int p){
 int Solver::findNearestHole(Rec* r, int p){
 	list<Rec*>::iterator it = placedRectangles[p].begin();
 
+	//falls es in einem Streifen p noch keine Rechtecke gibt,
+	//	kann r am Anfang platziert werden
 	if (placedRectangles[p].empty())
 		return 0;
 
+	//falls es eine genug große Lücke am Anfang des Streifens gibt,
+	//	kann r dort platziert werden
 	if ((*it)->x1 >= r->getSize())
 		return 0;
 
+	//es wird über die Rechtecke im Streifen p iteriert
 	for (; it != placedRectangles[p].end(); it++){
 		list<Rec*>::iterator it2 = it;
 		it2++;
+
+		//wenn it das letzte Rechteck im Streifen ist
 		if (it2 == placedRectangles[p].end()) {
+			//es wird geprügt, ob es eine genug Lücke zur Wand 
+			//	des großen Rechtecks gibt
 			if (N - (*it)->x2 >= r->getSize()) 
 				return (*it)->x2;
+			//falls es unmöglich ist, das Rechteck zu platzieren,
+			//	wird -1 ausgegeben
 			else
 				return -1;
 		}
+
+		//falls es eine genug große Lücke zwischen zwei Rechtecken
+		//	im Streifen gibt
 		if ((*it2)->x1 - (*it)->x2 >= r->getSize()){
 			return (*it)->x2;
 		}
 	}
 
+	//falls es unmöglich ist, das Rechteck zu platzieren,
+	//	wird -1 ausgegeben
 	return -1;
 }
 
 //diese Methode verarbeitet den Streifen p beim Lauf
 //	des Greedy-Algorithmus am Anfang
 void Solver::processStripe(int p){
+	//es wird durch die Rechtecke im Streifen p iteriert
 	for(auto r: rectangles_stripes[p]){
+		//falls das REchteck bereits platziert wurde oder
+		//	es nicht mit dem Streifen beginnt,
+		//	wird zum nächten Rechteck übergegangen
 		if (r->x1 > -1 || r->getBegin() < p)
 			continue;
 
+		//falls es noch keine Rechtecke im Streifen gibt,
+		//	wird das Rechteck ans Anfang platziert
 		if (placedRectangles[p].empty())
 			r->x1 = 0;
 		else {
+			//es wird die nächste Lücke im Streifen p für
+			//	dieses Rechteck gesucht
 			int curr = findNearestHole(r, p);
+
+			//falls so eine Lücke gefunden wurde, wird
+			//	die x1 Koordinate des Rechtecks r gesetzt
 			if (curr > -1)
 				r->x1 = curr;
+			//falls so eine Lücke nicht gefunden wurde,
+			//	wird zum nächsten Rechteck übergegangen
 			else
 				continue;
 		}
 
+		//die Koordinate x2 zum Rechteck r wird gesetzt
 		r->x2 = r->x1 + r->getSize();
+
+		//in alle Streifen, zu denen r gehört, wird
+		//	r an der richtigen Stelle eingefügt
 		for (int i = r->getBegin(); i < r->getEnd(); i++)
 			insertPlace(r, i);
 	}
@@ -371,6 +404,7 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
 	vector<int> remove(M);
 	vector<pair<list<Rec*>::iterator, Rec>> rec_remove;
+	vector<pair<int, list<Rec*>::iterator>> to_remove;
 
 	Rec *rep_rec = rep.first;
 	iPair hole = rep.second;
@@ -389,9 +423,9 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	for (int i = rep_rec->getBegin(); i < rep_rec->getEnd(); i++){
 		auto it = upper_bound(placedOld[i].begin(), placedOld[i].end(), rec_p, smallerx2);
 		//cout << "Removing (" << i << "): ";
-		for (; it != placedOld[i].end(); it++){
-			if ((*it)->x1 > rep_rec->x2)
-				break;
+		for (; it != placedOld[i].end() && ((*it)->x1 <= rep_rec->x2); it++){
+			//if ((*it)->x1 > rep_rec->x2)
+			//	break;
 			//cout << "(" << (*it)->getSize() << " -> " << (*it)->getArea() << ") ";
 			Rec &r_copy = *(*it);
 			rec_remove.pb({it, r_copy});
@@ -401,13 +435,12 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 		//cout << "\n";
 	}
 
-	for (auto r: rec_remove){
+	for (auto [it, r_copy]: rec_remove){
 		//cout << "-1: " << (*r.first)->getSize() << "\n";
-		(*r.first)->x1 = -1;
-		(*r.first)->x2 = -1;
+		(*it)->x1 = -1;
+		(*it)->x2 = -1;
 	}
 
-	vector<pair<int, list<Rec*>::iterator>> to_remove;
 
 	for (int i = 0; i < M; i++){
 		if (remove[i]) {
@@ -418,8 +451,8 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 		}
 	}
 
-	for (auto r: to_remove)
-		placedRectangles[r.first].erase(r.second);
+	for (auto [stripe, it]: to_remove)
+		placedRectangles[stripe].erase(it);
 
 	//TODO: check this funtion
 	/*for (int i = 0; i < M; i++){
@@ -459,15 +492,15 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	double diff = new_area - area;
 	if (diff > 0) {
 		cout << "\033[1;32mBETTER!\n\033[0m";
-		placedOld.clear();
-		vector<pair<int, list<Rec*>::iterator>> rem;
-		for (int i = 0; i < M; i++)
-			for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
-				if ((*it)->x1 == -1 || (*it)->x2 == -1)
-					rem.pb({i, it});
+		//placedOld.clear();
+		//vector<pair<int, list<Rec*>::iterator>> rem;
+		//for (int i = 0; i < M; i++)
+		//	for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
+		//		if ((*it)->x1 == -1 || (*it)->x2 == -1)
+		//			rem.pb({i, it});
 
-		for (auto x: rem)
-			placedRectangles[x.first].erase(x.second);
+		//for (auto [stripe, it]: rem)
+		//	placedRectangles[stripe].erase(it);
 
 		return true;
 	}	
@@ -479,22 +512,25 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 			r->x2 = -1;
 		}
 
-		for (auto r: rec_remove){
-			(*r.first)->x1 = r.second.x1;
-			(*r.first)->x2 = r.second.x2;
+		for (auto [it, r_copy]: rec_remove){
+			(*it)->x1 = r_copy.x1;
+			(*it)->x2 = r_copy.x2;
 		}
 
-		placedRectangles.clear();
 		placedRectangles = placedOld;
 
-		vector<pair<int, list<Rec*>::iterator>> rem;
-		for (int i = 0; i < M; i++)
-			for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
-				if ((*it)->x1 == -1 || (*it)->x2 == -1)
-					rem.pb({i, it});
+		//placedRectangles.clear();
 
-		for (auto x: rem)
-			placedRectangles[x.first].erase(x.second);
+		//vector<pair<int, list<Rec*>::iterator>> rem;
+		//for (int i = 0; i < M; i++)
+		//	for (auto it = placedRectangles[i].begin(); it != placedRectangles[i].end(); it++)
+		//		if ((*it)->x1 == -1 || (*it)->x2 == -1)
+		//			rem.pb({i, it});
+
+		//cout << rem.size() << "\n";
+
+		//for (auto [stripe, it]: rem)
+		//	placedRectangles[stripe].erase(it);
 
 		return false;
 	}
@@ -511,7 +547,6 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 }
 
 
-
 //diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke,
 //	die platziert wurden
 int Solver::calculateAreaUsed(){
@@ -519,6 +554,7 @@ int Solver::calculateAreaUsed(){
 	for (auto r: rectangles) if (r->x1 > -1) sum += r->getArea();
 	return sum;
 }
+
 
 // ------------------- SEMI-DEBUGGING ----------------------------------
 
@@ -562,7 +598,7 @@ void Solver::saveResult(string path, bool all, int mode){
 			file << "Placed rectangles only\n";
 		file << "begin\tend\tlength\tx1\tx2\n";
 	}
-	else if (mode == 2) {
+	else if (mode == 3) {
 		if (all)
 			file << "All rectangles\n";
 		else 
@@ -627,13 +663,9 @@ bool Solver::checkIfOverlaps(){
 }
 
 void Solver::printAllRectangles(){
-	//cout << "\nDEBUG: All rectangles\n";
-	//cout << "DEBUG: B\tE\tS\tA\tx1\tx2\n";
 	cout << "\nAll rectangles\n";
 	cout << "B\tE\tS\tA\tx1\tx2\n";
 	for (auto r: rectangles)
-	//	cout << "DEBUG: " << r->getBegin() << "\t" << r->getEnd() << "\t" << r->getSize()
-	//		 << "\t" << r->getArea() << "\t" << r->x1 << "\t" << r->x2 << "\n";
 		cout << r->getBegin() << "\t" << r->getEnd() << "\t" << r->getSize()
 			 << "\t" << r->getArea() << "\t" << r->x1 << "\t" << r->x2 << "\n";
 	cout << "\n"; 	
@@ -646,7 +678,6 @@ void Solver::printStripes(int p, bool unused){
 		cout << "\n";
 	}
 	else {
-		//cout << "DEBUG: Stripe " << p <<":\t";
 		cout << "\033[1;32mStripe " << p <<":   \033[0m";
 		for (auto r: rectangles_stripes[p]){
 			if ((unused && r->x1 == -1) || !unused)
@@ -664,7 +695,6 @@ void Solver::printHoles(int p){
 		cout << "\n";
 	}
 	else {
-		//cout << "DEBUG: Holes Stripe " << p <<": ";
 		cout << "Holes Stripe " << p <<":   ";
 		for (auto h: holes[p])
 			cout << "(" << h.x1 << ", " << h.x2 <<", S: " << h.x2 - h.x1<< ") ";
@@ -679,15 +709,9 @@ void Solver::printPlaced(int beg, int p){
 		cout << "\n";		
 	}
 	else {
-		//cout << "DEBUG: Placed stripe: " << p << "\t";
 		cout << "\033[1;34mPlaced stripe: " << p << "  \033[0m";
 		for (auto r: placedRectangles[p]){
 			if (r->x1 >= beg || r->x1 == -1) {
-				//if (r->x1 == -1 || r->x2 == -1){
-				//	cout << "\033[1;31m(" << r->x1 << ", " << r->x2 << ", S: "
-				//		 << r->getSize() << ", A: " << r->getArea() << ") \033[0m";			
-				//}
-
 				cout << "(" << r->x1 << ", " << r->x2 << ", S: "
 					 << r->getSize() << ", A: " << r->getArea() << ") ";
 			}

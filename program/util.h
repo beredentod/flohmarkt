@@ -6,6 +6,8 @@
 #include<bits/stdc++.h>
 #include"util.h"
 
+#define pb push_back
+
 using namespace std;
 
 //die Klasse mit einem Rechteck (einer Anmeldung)
@@ -74,9 +76,14 @@ public:
 
 };
 
+
 //eine Funktion, die das Eingabeformat erkennt und entsprechend
 //	zu Stunden oder Minuten umwandelt
-int timeToMinutes(string time);
+pair<int, int> timeToMinutes(string time);
+
+int calculateRecess(vector<int> &v);
+
+pair<vector<int>, int> processInput(string line);
 
 
 //Die folgenden Funktionen sind Muster/Kriterien, wie man

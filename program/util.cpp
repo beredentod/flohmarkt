@@ -1,8 +1,9 @@
 #include"util.h"
 
+
 //eine Funktion, die das Eingabeformat erkennt und entsprechend
 //	zu Stunden oder Minuten umwandelt
-int timeToMinutes(string time){
+pair<int, int> timeToMinutes(string time){
 	//falls sich das Zeichen ":" in der Eingabe befindet
 	if (time.find(":") != string::npos) {
 		string s_min = time.substr(time.size() - 2);
@@ -12,12 +13,46 @@ int timeToMinutes(string time){
 		int hours = stoi(s_hours);
 
 		//Stunden werden zu Minuten umgewandelt
-		return hours * 60 + min;
+		return {hours * 60 + min, 1};
 	}
 	else {
 		//es werden einfache Stunden ausgegeben
-		return stoi(time);
+		return {stoi(time), 0};
 	}
+}
+
+int calculateRecess(vector<int> &v){
+	int score = 0;
+
+	for (int i = 1; i < v.size() - 1; i+=2)
+		score += (v[i+1] - v[i]);
+
+	return score;
+}
+
+
+pair<vector<int>, int> processInput(string line){
+	vector<string> data;
+	vector<int> result;
+
+	size_t pos = 0;
+	string token;
+	while ((pos = line.find(" ")) != std::string::npos) {
+	    token = line.substr(0, pos);
+	    data.pb(token);
+	    line.erase(0, pos + string(" ").size());
+	}
+	data.pb(line);
+
+	int mode = -1;
+
+	for (auto x: data){
+		auto res = timeToMinutes(x);
+		mode = res.second;
+		result.pb(res.first);
+	}
+
+	return {result, mode};
 }
 
 //Die folgenden Funktionen sind Muster/Kriterien, wie man

@@ -6,32 +6,33 @@
 %können alle Rechtecke aus $Z$ innerhalb von $R$ so platziert werden, dass
 %sie sich paarweise nicht überdecken?
 
-Wir zeigen, dass \fp{} NP--vollständig ist, indem wir zunächst zeigen, dass
-es in NP liegt und auch NP--schwer ist.
 
-Offensichtlich kann dieses Problem von einer nichtdeterministischen
-Turingmaschine bezüglich der Eingabelänge in Polynomialzeit gelöst werden.
-Gegeben sei eine Platzierung der Rechtecke aus $Z$ innerhalb von $R$. 
-Man kann leicht einen in Polynomialzeit laufenden Algorithmus entwickeln, der
-anhand der Koordinaten der kleineren Rechtecke überprüft, ob keines
-der Rechtecke über die Grenzen von $R$ hinausreicht und ob
-kein Paar von Rechtecken aus $Z$ sich überdeckt.  
-Somit liegt \fp{} in NP.
 
-Um zu beweisen, dass das \fp{} NP--schwer ist, zeigen wir, dass das\break
-0/1--Rucksackproblem zum \fp{} reduziert werden kann.
-Das bedeutet: Falls das\break \fp{} in Polynomialzeit gelöst werden kann,
+%Offensichtlich kann dieses Problem von einer nichtdeterministischen
+%Turingmaschine bezüglich der Eingabelänge in Polynomialzeit gelöst werden.
+%Gegeben sei eine Platzierung der Rechtecke aus $Z$ innerhalb von $R$. 
+%Man kann leicht einen in Polynomialzeit laufenden Algorithmus entwickeln, der
+%anhand der Koordinaten der kleineren Rechtecke überprüft, ob keines
+%der Rechtecke über die Grenzen von $R$ hinausreicht und ob
+%kein Paar von Rechtecken aus $Z$ sich überdeckt.  
+%Somit liegt \fp{} in NP.
+
+In diesem Abschnitt zeigen wir, dass \fp{} ein Optimierungsproblem ist, das NP--schwer ist.
+Es ist unmöglich, einen Algorithmus zu bilden, der in Polynomialzeit prüfen würde,
+ob ein Ergebnis zum \fp{} optimal ist. 
+Um das zu beweisen, zeigen wir, dass das
+0/1--Rucksackproblem zum \textsc{Floh\-markt-\-Pro\-blem} reduziert werden kann.
+Das bedeutet: Falls das \textsc{Floh\-markt-\-Pro\-blem} in Polynomialzeit gelöst werden kann,
 so kann auch das Rucksackproblem.
 Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen,
 sowie aus einem Rucksack mit einer fixierten Größe.
 Das Problem besteht darin, die Zahlen in den Rucksack 
 so zu packen, dass ihre Summe maximal ist und sie die Größe des Rucksacks nicht überschreitet.
-Das 0/1--Rucksackproblem ist NP--vollständig.\cite{knapsack}
-\TODO{sprawdzić/zmienić źródło}
+Das Optimierungsproblem zum 0/1--Rucksackproblem ist NP--schwer.\cite{garey_johnson_2009}
 
 
 Gegeben sei eine Instanz des Rucksackproblems.
-Wir können eine entsprechende Instanz des\break \fp s auf folgende Weise generieren.
+Wir können eine entsprechende Instanz des \textsc{Floh\-markt-\-Pro\-blem}s auf folgende Weise generieren.
 Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
 dieser Zahl entspricht.
 So bilden wir eine Anmeldung im \fp{}, deren Länge der
@@ -40,34 +41,39 @@ dem Beginn und dem Ende der Anmeldung beträgt eine Stunde.
 Außerdem bilden wir ein großes, umschließendes Rechteck, deren Länge der Größe des Rucksacks entspricht
 und deren Breite ebenfalls 1 beträgt.
 Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und deren 
-Länge der Größe des Rucksacks enspricht.
+Länge der Größe des Rucksacks entspricht.
 In dem hierdurch entstandenen Problem wählen wir die Rechtecke so, 
 dass sie über die Grenzen des umschließenden Rechtecks nicht hinausreichen
 und der Gesamtflächeninhalt der kleineren Rechtecke maximal ist. 
-Insbesondere beachte man, dass man die kleineren Rechtecke nur entalng der längeren
+Insbesondere beachte man, dass man die kleineren Rechtecke nur entlang der längeren
 Seite des großen Rechtecks bewegen darf.
-Somit ist das \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem
+Somit ist das \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem.
 Wenn wir jede Instanz des \fp s in Polynomialzeit lösen können,
 können wir auch jedes 0/1--Rucksackproblem in Polynomialzeit lösen.
-Somit ist das \fp{} NP--schwer und, da es auch in NP liegt, 
-ist somit auch NP--vollständig.
+Somit ist das \fp{} NP--schwer.
 
 
-Da dieses Problem NP--vollständig ist, muss man über einen optimalen Algorithmus zum
+Da dieses Problem NP--schwer ist, muss man über einen optimalen Algorithmus zum
 \fp{} nachdenken. 
-Cormen et al. bechreiben, dass es grundsätzlich drei Ansätze zum Lösen eines
-NP--vollständigen gibt.\cite[S.~1106]{cormen}
+Obwohl \fp{} NP--schwer ist, kann es einen parametrisierten Algorithmus geben,
+der dieses Problem in Pseudopolynomialzeit lösen würde.\cite{parametrized}
+Das betrifft beispielsweise das Rucksackproblem, das sich durch einen dynamischen 
+Ansatz in Pseudopolynomialzeit lösen lässt.
+
+Allerdings nutzen wir die Hinweise, die Cormen et al. zum Lösen von NP--vollständigen Problemen
+in ihrem Buch bechreiben. Grundsätzlich gibt es drei Ansätze zum Lösen eines
+solchens Problems.\cite[S.~1106]{cormen}
 Erstens, wenn die Eingabe klein genug ist, reicht ein 
 Algorithmus mit einer exponentieller Laufzeit aus.
 Allerdings lässt sich diese Idee schlecht umsetzen,
-wenn die Anzahl der kleineren Rechtecke in der Eingabe sich in Ordnung von Hunderten befindet.
-Die praktische Laufzeit eines exponentiellen Algorithmus ist wäre in diesem Fall zu groß.
+solange die Anzahl der kleineren Rechtecke in der Eingabe sich in Ordnung von Hunderten befindet.
+Die praktische Laufzeit eines exponentiellen Algorithmus wäre in diesem Fall zu groß.
 Zweitens beschreiben die Autoren,
 dass man bestimmte Grenzfälle ausgliedern kann, die sich in Polynomialzeit lösen lassen.
 Diesen Ansatz verwenden wir bei einigen Beispielen und er wird im \cref{sec:diskussion-ergebnisse}
 besprochen.
 Drittens kann man einen Algorithmus liefern, der nahezu optimale Ergebnisse 
-in Polynomialzeit liefert --- eine Heuristik.
+in Polynomialzeit liefert --- eine Heuristik. 
 
 
 %\TODO{Zeige, das Problem ist NP (überprüfbar in P)\\

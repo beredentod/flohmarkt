@@ -1,4 +1,15 @@
 \section{Beispiele}
+Das Format der Eingabe wurde geändert. 
+Die erste Zeile beinhaltet die Zahl $N$.
+Die zweite Zeile enthält eine Folge von Öffnungszeiten des Flohmarkts.
+Die Uhrzeit mit einem geradem Index ist jeweils der Beginn und die Uhrzeit 
+mit einem ungeraden Index ist jeweils das Ende.\footnote{Indexierung beginnt mit 0.}
+Die dritte Zeile enthält die Anzahl der Anmeldungen $n$ und es folgen $n$ Zeilen mit den Anmeldungen.
+
+Um das Zeitformat zu ändern, müssen die Zahlen im Format \ttt{H:MM} angegeben werden, wobei 
+die \ttt{H} eine beliebige natürliche Zahl (mit 0) sein kann und
+die Minuten \ttt{MM} immer als eine zweistellige Zahl dargestellt werden müssen.
+
 Der Übersichtlichkeit halber befinden sich die genauen Standorte zu Anmeldungen
 zu jedem Beispiel in den angehängten csv--Dateien.
 In den Tabellen entsprechen die Werte $x_1$ und $x_2$ den Werten 
@@ -11,6 +22,9 @@ $x_r$ und $x_r + s_r$ jedes Rechtecks $r$.
 \input{./tex/beispiele/beispiel5}
 \input{./tex/beispiele/beispiel6}
 \input{./tex/beispiele/beispiel7}
+\input{./tex/beispiele/beispiel8}
+\input{./tex/beispiele/beispiel9}
+\input{./tex/beispiele/beispiel10}
 
 \todo[inline,caption={Beispiele}]{
   Weitere Beispiele:
@@ -18,11 +32,8 @@ $x_r$ und $x_r + s_r$ jedes Rechtecks $r$.
     \item s. Abschnitt Konversion
     \item andere Zeiten \checkmark (Bsp 8)
     \item andere Länge \checkmark (Bsp 8)
-    \item mehrtägiger Flohmarkt
-    \item mehrere Flohmärkte \sout{+ mehrere Flohmärkte mit unterschiedlichen Längen}
-    \item unterbrochener Zeitraum \checkmark (Bsp 10; Pause 12-13)
-    \item unterbrochene Länge 
-    \item Minuten
+    \item mehrtägiger Flohmarkt + unterbrochener Zeitraum \checkmark (Bsp 9)
+    \item Minuten \checkmark (Bsp 10)
     \item edge--cases, bei denen der Algorithmus nicht funktioniert
   \end{itemize}
 }

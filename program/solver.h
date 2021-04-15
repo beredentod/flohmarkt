@@ -15,6 +15,8 @@ class Solver{
 	//die Breite und die Laenge des grossen Rechtecks
 	int M, N;
 
+	int recess;
+
 	//der Zeitpunkt, ab dem der Flohmarkt beginnt, also B in der Doku
 	int START;
 
@@ -38,6 +40,9 @@ class Solver{
 
 	//eine Liste mit allen Luecken
 	vector<Hole> all_holes;
+
+	//das Format der Eingabe: Stunden -- 0, Minuten -- 1
+	int format;
 
 
 	//eine Methode zum Einlesen der Textdatei und zur Konversion der Eingabe
@@ -120,12 +125,16 @@ public:
 	//diese Methode gibt den Gesamtflaecheninhalt aller Rechtecke
 	int calculateTotalArea();
 
-	//diese Methode gibt den Wert M zurückt
+	//diese Methode gibt den Wert M zurück
 	int getM();
-	//diese Methode gibt den Wert N zurückt
+	//diese Methode gibt den Wert N zurück
 	int getN();
-	//diese Methode gibt den Wert START zurückt
+	//diese Methode gibt den Wert START zurück
 	int getStart();
+	//diese Methode gibt das Format der Eingabe zurück
+	int getFormat();
+	//diese Methode gibt die Länge der Pause zurück
+	int getRecess();
 
 	//diese Methode speichert die Ergebnisse in einer Textdatei
 	void saveResult(string path, bool all = true, int mode = 1);

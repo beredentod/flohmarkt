@@ -11,21 +11,27 @@ void Solver::readFile(string path){
 	if (file.is_open()) {
 		//eingelesen werden
 		file >> N; //die Laenge des Flohmarkts (Laenge des grossen Rechtecks)
-		string a, b;
-		file >> a >> b; //die Zeitangaben -- Beginn, Ende
+		string line;
+		getline (file, line);
+		getline (file, line);
+		auto [times, mode] = processInput(line);
+		format = mode;
+		recess = calculateRecess(times);
+		int B = times[0], E = times[times.size()-1];
+		//die Zeitangaben -- Beginn, Ende
 		//die Angaben werden zuerst als Strings eingelesen, dann werden
 		//sie gemaess des Formats zu Stunden oder zu Minuten konvertiert
-		int B = timeToMinutes(a), E = timeToMinutes(b);
 		M = E - B; //die Breite des grossen Rechtecks
 		START = B; //der Beginn des Flohmarkts
 		int n;
 		file >> n;	//die Anzahl der Rechtecke (Ameldungen)
 		for (int i = 0; i < n; i++) {
-			a = "", b = "";
+			string a, b;
 			int c;
 			file >> a >> b >> c;
 			//der Beginn und das Ende der Anmeldung
-			int bi = timeToMinutes(a), ei = timeToMinutes(b);
+			auto [bi, m1] = timeToMinutes(a);
+			auto [ei, m2] = timeToMinutes(b);
 			//der Beginn des Flohmarkts wird abgezogen
 			bi -= START, ei -= START;
 			//ein neues Rechteck wird erzeugt
@@ -571,6 +577,14 @@ int Solver::getN(){
 //diese Methode gibt den Wert START zurückt
 int Solver::getStart(){
 	return START;
+}
+
+int Solver::getFormat(){
+	return format;
+}
+
+int Solver::getRecess(){
+	return recess;
 }
 
 //modes:

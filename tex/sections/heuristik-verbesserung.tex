@@ -146,11 +146,23 @@ Nachdem alle durch Kollision betroffenen Streifen verarbeitet worden sind,
 ist die Platzierung $C'$ fertig.
 
 Dann erfolgt der Vergleich in \cref{line:vergleich}.
-Wenn der Gesamtflächeninhalt der Platzierung $C'$ größer, also besser, ist als
+Wenn der Gesamtflächeninhalt der Platzierung $C'$ streng größer ist als
 der Gesamtflächeninhalt der Platzierung $C$, wird die neue Platzierung vom Algorithmus
 akzeptiert und gilt als die aktuelle Platzierung $C$.
 Danach muss man offensichtlich alle Lücken und alle nicht gelegten Rechtecke neu bestimmen.
 Die Iteratoren $itH$ bzw. $itR$ werden auf $H.begin$ bzw. $U_k.begin$ gesetzt. 
+
+Man kann leicht begründen, dass das Programm auf jeden Fall anhält.
+Durch den Bergsteigeralgorithmus wird ein lokales Maximum gefunden, das bestenfalls auch
+das Optimum ist. 
+Jedes lokale Maximum kann das Optimum nicht überschreiten.
+Das Optimum ist auf den Flächeninhalt des großen Rechtecks $R$ beschränkt.
+Wenn ein lokales Maximum erreicht wird, kann der Algorithmus keine neue Platzierungen
+annehmen. 
+Wenn ein lokales Maximum erreicht wird, werden alle geeigenten Lücken und dazu jeweils alle 
+passenden Rechtecke ausprobiert, aber das Programm nimmt keine der neuen Kombinationen an,
+da sie keinen größeren Flächeninhalt bilden als der des lokalen Maximums.
+Somit hält das Programm auf jeden Fall an.
  
 
 

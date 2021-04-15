@@ -125,7 +125,7 @@ void Solver::runOptimization(){
 		}
 
 	} while(rep.second.second > -1);
-	
+
 	return;	
 }
 
@@ -402,7 +402,6 @@ vector<Rec*> Solver::addNew(Rec* rep){
 //	falls es sich ein besserer Gesamtflaecheninhalt ergibt
 bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	auto placedOld = placedRectangles; 
-	vector<int> remove(M);
 	vector<pair<list<Rec*>::iterator, Rec>> rec_remove;
 	vector<pair<int, list<Rec*>::iterator>> to_remove;
 
@@ -429,8 +428,6 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 			//cout << "(" << (*it)->getSize() << " -> " << (*it)->getArea() << ") ";
 			Rec &r_copy = *(*it);
 			rec_remove.pb({it, r_copy});
-			for (int j = (*it)->getBegin(); j < (*it)->getEnd(); j++)
-				remove[j] = 1;
 		}
 		//cout << "\n";
 	}
@@ -443,12 +440,10 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 
 
 	for (int i = 0; i < M; i++){
-		if (remove[i]) {
-			for (list<Rec*>::iterator it = placedRectangles[i].begin(); it != 
-				placedRectangles[i].end(); it++)
-				if ((*it)->x1 == -1)
-					to_remove.pb({i, it});
-		}
+		for (list<Rec*>::iterator it = placedRectangles[i].begin(); it != 
+			placedRectangles[i].end(); it++)
+			if ((*it)->x1 == -1)
+				to_remove.pb({i, it});
 	}
 
 	for (auto [stripe, it]: to_remove)

@@ -2,9 +2,9 @@
 Man kann leicht feststellen, dass, wenn alle Rechtecke aus $Z$ im Laufe des
 Greedy--Algorithmus in $R$ platziert wurden oder wenn die ganze Fläche von $R$ bedeckt wurde, 
 das Problem für diese Eingabe optimal gelöst wurde.
-Allerdings lässt sich nicht nachweisen, dass der vorgestellten Algorithmus 
+Allerdings lässt sich nicht nachweisen, dass der vorgestellte Algorithmus 
 stets eine optimale Platzierung liefert.
-Hingegegen kann man sogar festellen, dass es bessere Ergebnisse gibt als die,
+Hingegen kann man sogar festellen, dass es bessere Ergebnisse gibt als die,
 die am Anfang geliefert werden. 
 
 
@@ -19,9 +19,10 @@ das Ausgangsergebnis nicht optimieren. Wir haben begründet, dass dieser Algorit
 an jeder Stelle stets die aktuell optimale Variante wählt. 
 Außerdem dürfen wir diesen Algorithmus nicht nochmal nutzen,
 da wir voraussetzen, dass die Streifen in der aufsteigender Reihenfolge ein nach dem anderen
-verarbeitet werden. Dann kann es sein, dass es sich eine Lücke zwischen den Punkten $(x_j, j)$ und 
-$(x_j + \ell, j)$ der Länge $\ell$ an einer Stelle in einem Streifen $j$ befindet
-und dass ein Rechteck $r_i$ mit $s_i < \ell$ theorethisch hineinpassen würde, aber
+verarbeitet werden. Dann kann es sein, dass es sich eine Lücke der Länge $\ell$
+zwischen zwei Punkten $(x_j, j)$ und 
+$(x_j + \ell, j)$ in einem Streifen $j$ befindet
+und dass ein Rechteck $r_i$ mit $s_i \leqslant \ell$ theoretisch hineinpassen würde, aber
 es ist nicht mehr gesichert, dass es die Lücken direkt darüber in oberen Streifen $j+1, j+2, ...$
 geben würde.
 
@@ -30,15 +31,20 @@ Deshalb führen wir ein neues Verfahren ein.
 Sei $C$ eine beliebige Platzierung von Rechtecken innerhalb von $R$.
 Nennen wir $C$ \textit{das aktuelle Ergebnis}. 
 Die allgemeine Idee des Verbesserungsverfahrens besteht darin,
-man führt zu einer Veränderung (Mutation) in $C$, d.h., 
-ein nicht platziertes Rechteck $r$ wird in $R$ platziert und es müssen ggf. 
-Rechtecke aus $R$ entfernt werden, die mit $r$ kollidieren.
-So kommt man auf einen neuen Zustand, eine neue Platzierung der Rechtecke $C'$.
+man führt zu einer Veränderung in $C$, indem
+ein nicht platziertes Rechteck $r$ in $R$ platziert wird, ggf. 
+alle Rechtecke, die mit $r$ kollidieren, aus $R$ entfernt werden und
+die neu entstandenen Lücken mit nicht gelegten Rechtecken gefüllt werden. 
+So kommt man auf einen neuen Zustand $C'$, also eine neue Platzierung der Rechtecke.
 Es wird dann überprüft, ob der Gesamtflächeninhalt aller platzierten Rechtecke in der Platzierung $C'$
 größer ist als der in der Platzierung $C$.
 Wenn ja, wird $C'$ das aktuelle Ergebnis und der Vorgang wiederholt sich,
-bis es noch möglich ein Zustand $C$ zu weiter verändern.
-Wir können diesen Ansatz als einen Bersteigeralgorithmus klassifizieren.
+bis es noch möglich ist, ein Zustand $C$ weiter zu verändern.
+Wir sehen, dieser Ansatz nimmt viel Inspiration aus der Idee der Bersteigeralgorithmen,
+dennoch lässt er sich schlecht als einer klassifizieren.
+Unser Algorithmus ist zu deterministisch,
+es fehlen starke Mutation in seinen Lauf, die das Ergebnis deutlich beinflussen könnten,
+und es fehlen Anwendungen der Randomisierung.
 
 
 Wie kommt es zur Veränderung der Platzierung und wann bestimmen wir,
@@ -52,32 +58,31 @@ die mit $r$ kollidieren, aus der Platzierung entfernen
 und somit entstehen neue Lücken,
 die mit anderen nicht gelegten Rechtecken gefüllt werden können.
 So kommt man auf ein neues Ergebnis.
-Man hört auf, wenn es keine mehr Lücken gibt, für die ein Rechteck zum Platzieren zur Verfügung steht.
+Man hört auf, wenn es keine Lücken mehr gibt, für die ein Rechteck zum Platzieren zur Verfügung steht.
 
 
 Zuerst muss man die nicht platzierten Rechtecke für jeden Streifen bestimmen. 
 So legen wir für jeden Streifen $j$ eine Liste $U_j$ fest, in der sich alle 
-Rechtecke aus $j$ befinden, die nicht platziert wurden.
-Die Liste $U_j$ muss man auf eine Weise sortieren.
-Jedes Rechteck $r_i$ in jeder solchen Liste ordnen wir nach diesen Kriterien:
+Rechtecke aus dem Streifen $j$ befinden, die nicht platziert sind.
+Die Liste $U_j$ muss man auf eine Weise ordnen.
+Jedes Rechteck $r_i$ in jeder solchen Liste sortieren wir nach diesen Kriterien:
 1) aufsteigend nach der Länge $s_i$ und 2) aufsteigend nach dem Beginn $b_i$.
 Die Entscheidung, diese Sortierkriterien zu wählen, ergibt sich experimentell 
-und wird im \cref{sec:diskussion-ergebnisse} beschrieben.
+und wird im \cref{sec:diskussion-ergebnisse} diskutiert.
 
 
-Danach muss man die Lücken in einer Platzierung in jedem Streifen finden.
+Danach muss man die Lücken in jedem Streifen in einer Platzierung finden.
 So legen wir eine Liste $H_j$ für jeden Streifen $j$ fest, in der sich alle
 Lücken aus diesem Streifen befinden. Man findet sie, indem
 man durch jedes im Streifen $j$ platziertes Rechteck $r_i$ iteriert und jeweils überprüft,
-ob der Wert $x_i + s_i$ gleich dem Wert $x_{i+1}$ ist. Wenn nicht, gibt es eine Lücke
+ob das Rechteck $r_i$ mit dem Rechteck $r_{i+1}$ eine gemeinsame Seite haben. Wenn nicht, gibt es eine Lücke
 zwischen den Rechtecken $r_i$ und $r_{i+1}$.
-Dazu muss man auch das erste Rechteck untersuchen, ob die Koordinate $x_0$ des Rechtecks $r_0$
-dem Wert 0 entspricht bzw. ob die Koordinate $x_l + s_l$ des letzten Rechtecks $r_l$ in diesem Streifen
-mit dem Wert $N$ übereinstimmt.
-Wenn nicht, enstehen auch Lücken zwischen den Wänden des großen Rechtecks $R$.  
+Dazu muss man auch untersuchen, ob das erste Rechtecks 
+und das letzte Rechteck im Streifen direkt an den Seite des großen Rechtecks liegen. 
+Wenn nicht, enstehen auch Lücken zwischen den Rechtecken und den Seiten des großen Rechtecks $R$.  
 
 Danach werden alle Listen $H_j$ zu einer Liste $H$ zusammengebracht.
-Diese Liste muss auch auf eine Weise geordnet werden. 
+Diese Liste muss auch auf eine Weise geordnet sein. 
 Experimentell ergeben sich die folgenden Sortierkriterien für jede Lücke $L_i$: 
 1) fallend nach der Größe der Lücke $L_i$ und 2) aufsteigend nach dem
 Index des Streifens. Diese Entscheidung wird ebenfalls im \cref{sec:diskussion-ergebnisse}
@@ -89,15 +94,16 @@ Der \cref{algo:verbesserung} zeigt eine vereinfachte Vorgehensweise des Verbesse
 Die Funktion $getAllHoles(C)$ findet alle Lücken in allen Streifen im Rechteck $R$ in der
 aktuellen Platzierung $C$ und bestimmt die Liste $H$.
 Die Funktion $getRecs(C)$ findet alle nicht platzierten Rechtecke und verteilt sie auf
-die Listen $U_j$ für jeden Striefen $j$.
-Die Funktion $next(C, itH, itR)$ in diesem Algorithmus besteht selbst aus drei Funktionen.
+die Listen $U_j$ für jeden Streifen $j$.
+Die Funktion $next(C, itH, itR)$ besteht in diesem Algorithmus selbst aus drei Funktionen,
+die im Folgenden beschrieben werden.
 
 Die erste Funktion bestimmt die nächste Lücke, in die ein nicht platziertes Rechteck 
-eingefügt wird. Es gibt einen Iterator $itH$, der am Anfang am Beginn der Liste $H$ gestezt wird.
-Im Laufe des Algorithmus bewegt sich der Iterator und zeigt auf nächste Lücken,
+eingefügt wird. Es gibt einen Iterator $itH$, der am Anfang am Beginn der Liste $H$ gesetzt wird.
+Im Laufe des Algorithmus bewegt sich der Iterator und zeigt auf nächste Lücken.
 Eine Lücke bezeichnen wir als \textit{geeignet}, wenn sie sich in einem
 Streifen $j$ befindet, zu dem die entsprechende Liste $U_j$ nicht leer ist, d.h., 
-es mindestens ein Rechteck gibt, das in diese Lücke eingefügt werden kann.
+es gibt mindestens ein Rechteck, das in diese Lücke eingefügt werden kann.
 Somit bewegt sich der Iterator in der Liste $H$ und, wenn er auf eine geeignete Lücke 
 stößt, wird diese Lücke durch die folgenden zwei Funktionen bearbeitet.
 Insbesondere beachte man, dass die While--Schleife in \cref{line:abbruch} abbricht, wenn
@@ -116,26 +122,25 @@ Wenn der Iterator $itR$ bis zum Ende der Liste $U_j$ gelangt, wird der Iterator 
 in der Liste $H$ inkrementiert und somit eine neue 
 geeignete Lücke gesucht.
 
-Die letzte Funktion nimmt ein unter dem Iterator $itR$ stehendes Rechteck $r$
+Die letzte Funktion nimmt das unter dem Iterator $itR$ stehende Rechteck $r$
 und legt es in die unter dem Iterator $itH$ stehende Lücke $L$.
 Diese Funktion bereitet eine neue Platzierung $C'$ vor.
 Seien die Koordinaten der Lücke $x_1$ und $x_2$ und der Streifen, in dem sich $L$ befindet, sei $j$. 
 Seien $x_r$ und $x_r + s_r$ die $x$--Koordinaten von $r$.
-Das Rechteck $r$ wird so gelegt, dass $x_2 = x_r + s_r$. Auf diese Weise beträgt
-der Wert $x_r \coloneqq x_2 - s_r$.\footnote{Die Situation, in der $x_r < 0$ gilt, wird schon in der
-zweiten Funktion dadurch ausgeschlossen, dass der Iterator $itR$ inkrementiert wird und das nächste
-Rechteck gewählt wird.}
+Das Rechteck $r$ wird in $R$ so gelegt, dass $x_2 = x_r + s_r$. Auf diese Weise beträgt
+der Wert $x_r \coloneqq x_2 - s_r$.\footnote{Die Situation, in der $x_r < 0$ gilt, wird  in der
+zweiten Funktion ausgeschlossen. Wenn es zu so einem käme, wird der Iterator $itR$ inkrementiert wird und das nächste Rechteck gewählt.}
 Selbstverstädnlich kann an dieser Stelle zu Kollisionen kommen --- Rechtecke können sich überdecken.
-Vor dem Platzieren prüft man nicht, ob es durchgehend eine Lücke zwischen $x_r$ und $x_r + s_r$ 
+Vor dem Platzieren prüft man nicht, ob es durchgehend eine Lücke zwischen den Werten $x_r$ und $x_r + s_r$ 
 in allen Streifen $k$ gibt, wobei $b_r \leqslant k < e_r$.
 Deshalb entfernt man nun alle Rechtecke, die mit $r$ kollidieren, also all diejnigen, die 
-zumindest zum Teil zwischen $x_r$ und $x_r + s_r$ in allen Streifen $k$ liegen.
+zumindest zum Teil zwischen $x_r$ und $x_r + s_r$ in einem Streifen $k$ liegen.
 So entstehen auch neue Lücken, deshalb versuchen wir an dieser Stelle 
 die Lücken mit anderen Recktecken zu füllen.
 Dazu verarbeiten wir alle Streifen $k$ ($b_r \leqslant k < e_r$), indem wir
 jedes in $C'$ noch nicht gelegtes Rechteck $r_i$
 in jeder Liste $S_k$ (in der ursrpünglichen Reihenfolge) untersuchen.
-Wie beim Greedy--Algorithmus am Anfang verusuchen wir, ein Rechteck
+Wie beim Greedy--Algorithmus am Anfang versuchen wir, ein Rechteck
 $r_i$ im Streifen $g$ zu legen nur, wenn $g = b_i$
 (und wenn es eine Lücke zwischen $x_{r_i}$ und $x_{r_i} + s_i$ gibt).
 Allerdings müssen wir die Streifen $b_i+1, b_i+2, ..., e_i-1$ vor dem Platzieren prüfen,
@@ -150,14 +155,14 @@ Wenn der Gesamtflächeninhalt der Platzierung $C'$ streng größer ist als
 der Gesamtflächeninhalt der Platzierung $C$, wird die neue Platzierung vom Algorithmus
 akzeptiert und gilt als die aktuelle Platzierung $C$.
 Danach muss man offensichtlich alle Lücken und alle nicht gelegten Rechtecke neu bestimmen.
-Die Iteratoren $itH$ bzw. $itR$ werden auf $H.begin$ bzw. $U_k.begin$ gesetzt. 
+Die Iteratoren $itH$ bzw. $itR$ werden auf $H.begin$ bzw. auf $U_k.begin$ gesetzt. 
 
 Man kann leicht begründen, dass das Programm auf jeden Fall anhält.
-Durch den Bergsteigeralgorithmus wird ein lokales Maximum gefunden, das bestenfalls auch
+Durch den Quasibergsteigeralgorithmus wird ein lokales Maximum gefunden, das bestenfalls auch
 das Optimum ist. 
 Jedes lokale Maximum kann das Optimum nicht überschreiten.
 Das Optimum ist auf den Flächeninhalt des großen Rechtecks $R$ beschränkt.
-Wenn ein lokales Maximum erreicht wird, kann der Algorithmus keine neue Platzierungen
+Wenn ein lokales Maximum erreicht wird, kann der Algorithmus keine neuen Platzierungen
 annehmen. 
 Wenn ein lokales Maximum erreicht wird, werden alle geeigenten Lücken und dazu jeweils alle 
 passenden Rechtecke ausprobiert, aber das Programm nimmt keine der neuen Kombinationen an,

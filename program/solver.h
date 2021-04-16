@@ -56,6 +56,8 @@ class Solver{
 	//	fuer ein Rechteck r
 	int findNearestHole(Rec* r, int p);
 
+	list<Rec*>::iterator findPlace(Rec* r, int p);
+
 	//diese Methode fuegt ein Rechteck in einen Streifen p ein
 	void insertPlace(Rec* r, int p);
 

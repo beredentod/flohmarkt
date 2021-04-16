@@ -1,18 +1,18 @@
 \subsubsection{Qualität der Ergebnisse}\label{sec:diskussion-ergebnisse}
 Im vorangegangenen Abschnitt werden die Grenzen der Heuristik erkannt. 
-In diese Abschnitt diskutieren wir die Qualität der herausgekommenen Ergebnisse.
+In diesem Abschnitt diskutieren wir die Qualität der herausgekommenen Ergebnisse.
 
 Zuerst bestimmen wir die Kriterien, unter denen wir ein Ergebnis auswerten:
 \begin{itemize}
-	\item Der Verhältnis vom Gesamtflächeninhalt der ins große Rechteck gelegten Rechtecke 
-	zu Gesamtflächeninhalt aller Rechtecke.
-	\item Da Verhältnis vom Gesamtflächeninhalt der ins große Rechteck gelegten Rechtecke 
+	\item Das Verhältnis vom Gesamtflächeninhalt der ins große Rechteck gelegten Rechtecke 
+	zum Gesamtflächeninhalt aller Rechtecke.
+	\item Das Verhältnis vom Gesamtflächeninhalt der ins große Rechteck gelegten Rechtecke 
 	zum Flächeninhalt des großen Rechtecks.
 	\item Die praktische Laufzeit des Programms für ein Ergebnis.
 \end{itemize}
 
 Diese Kriterien wurden in Bezug auf die Aufgabenstellung gewählt,
-„um den Organisatoren des Flohmarkts zu helfen“.
+„um den Organisatoren des Flohmarkts zu helfen.“
 Das erste Kriterium gibt den Veranstaltern den Einblick darin,
 wie viel sie in Bezug auf die Menge des verfügbaren Geldes verdienen ---
 alle Vermieter wollen den Veranstaltern Geld anbieten, aber es hängt von den 
@@ -22,7 +22,7 @@ Veranstalter verdienen in Bezug auf den verfügbaren Platz.
 Die beiden ersten Kriterien liefern natürlich auch die Erkenntnis über die Verlüste, die 
 mit der Auswahl an Anmeldungen verbunden sind.
 Das dritte Kriterium spielt für die Veranstalter eine praktische Rolle.
-Sehr wenige Personen würde ein Ergebnis interessieren, das vielleicht um ein paar Prozent 
+Sehr wenige Personen würde ein Ergebnis interessieren, das vielleicht um ein paar Promile 
 besser ist, aber dessen Bestimmung mehrere Stunden (oder Tage!) dauert. 
 Deshalb wurde auch die Brute--Force--Lösung ausgeschlossen.
 
@@ -53,14 +53,14 @@ Rechtecke aus dem Beispiel platziert und die Fläche des großen Rechtecks volls
 
 Das Beispiel 3 ist ein sehr interessanter Fall. 
 Weder werden alle Rechtecke aus diesem Beispiel platziert (das ist sowieso unmöglich, da der Gesamtflächeninhalt aller Rechtecke 10010 beträgt), noch ist 
-die Fläche nicht des großen Rechtecks völlig bedeckt. 
+die Fläche des großen Rechtecks völlig bedeckt. 
 Allerdings, wenn wir die Ergebnisse jedes Streifens einzeln betrachten, stellen wir fest,
 dass der Flohmarkt von 11:00 bis 17:00 vollständig durchgehend ausgebucht ist, also beträgt
-der Flächeninhalt jedes Streifens von $S_3$ bis $S_8$ (einschließlich) 1000.
+der Flächeninhalt jedes Streifens von 3 bis 8 (einschließlich) 1000.
 Das bedeutet, man kann das Ergebnis für diese Streifen nicht verbessern. 
-Man kann auch feststellen, dass alle Rechtecke, die zu den Streifen $S_0, S_1, S_2, S_9$ gehören,
+Man kann auch feststellen, dass alle Rechtecke, die zu den Streifen 0, 1, 2, 9 gehören,
 platziert wurden.
-Das bedeutet, dass der restliche Flächeninhalt (von 1000 subtrahiert) 
+Das bedeutet, dass die restliche Fläche
 mit keinen Rechtecken bedeckt werden kann. Das bedeutet, dass 8778 das optimale Ergebnis für dieses
 Beispiel ist, weil man dieses Ergebnis nicht verbessern kann.
 
@@ -91,7 +91,7 @@ Der Wert 90,7\% ist akzeptabel in Bezug auf die möglichen Einkommen und auf den
 und aus praktischer Sicht ist es schwer, sich ein besseres Ergebnis innerhalb von 20 Sekunden zu wünschen,
 solange die Ermittlung eines qualitativen Ergbnises per Hand sehr lange dauern würde.
 Es ist anhand der \cref{tab:ergebnisse} festzustellen, dass das Ergebnis sich nach dem Lauf des
-Verbesserungsalgorithmus unter Verwendung von allen Kriterien um denselben Wert verbessert.
+Verbesserungsalgorithmus unter Verwendung von beliebigen Kriterien um denselben Wert verbessert.
 
 Das Anfangsergebnis zum Beispiel 7 ist 9959 und beträgt genau 99,59\% des Flächeninhalts
 des Rechtecks $R$ und des Gesamtflächeninhalts aller Rechtecke. In diesem Beispiel
@@ -100,10 +100,10 @@ im Vergleich zum Beispiel 2 gibt Rechtecke, die einen Wert $s_i$ im Bereich 10--
 Wenn man die Sortierkriterien \texttt{greaterHolesSize} und \texttt{smallerSize} wählt,
 also diejenigen, die für das Program gewählt wurden und die im \cref{sec:verbesserung} beschrieben werden,
 liefert das Verbesserungsverfahren ein Ergebnis um 0,2 Prozentpunkte besser.
-Wir stellen fest, die andere Kombinatione der Sortierkriterien und insbesondere die Kombination
+Wir stellen fest, die anderen Kombinationen der Sortierkriterien und insbesondere die Kombination
 aus der letzen Zeile der Tabelle liefert ein besseres Ergebnis.
-Da bedeutets, dass der Wert 9979 auf jeden Fall nicht optimal ist. 
-Allgeimein ist der Wert 9979 völlig akzeptabel aus praktischer Sicht.
+Das bedeutet, dass der Wert 9979 auf jeden Fall nicht optimal ist. 
+Allgeimein ist der Wert 9979 aus praktischer Sicht völlig akzeptabel.
 Es ist kaum möglich, innerhalb von einer Sekunde so einen Wert zu erreichen,
 wenn man eine Platzierung der Rechtecke per Hand bestimmt.
 Aus praktischer Sicht ist der Wert 9991 auch nicht von einem bedeutenden Unterschied zu 9979 und
@@ -120,15 +120,22 @@ Hingegen beträgt das verbesserte Ergebnis nur 8599, wenn man
 die Sortierkriterien \texttt{smalllerHolesSize} verwendet. 
 Es ist schwer zu beurteilen, wie weit das Ergebnis vom Optimum abweicht. 
 Allerdings ist 87\% des Flächeninhalts des großen Rechtecks, also des verfügbaren Platzes,
-noch in Ordnung und so ein Wert ist aus praktischer Sicht wünschenswrt. 
+noch in Ordnung und so ein Wert ist aus praktischer Sicht wünschenswert. 
+\TODO{s. TeX-Datei dazu}
+%dodać motyw z kwotą wolną od podatku
 
 Die deutlichste Verbesserung im Beispiel 5 liegt zugrunde der Entscheidung,
 die Sortierkriterien\break \texttt{greaterHolesSize} und \texttt{smallerSize} zu wählen.
+Eventuell könnte man den Algorithmus so entwickeln, dass man ihn 10--mal laufen lässt
+und in jedem Lauf andere Kriterien wählt. Dann könnte einfach das Maxmimum aus 
+diesen Ergebnissen gezogen werden. In vielen Heuristiken ist es genau die Idee, verschiedene Methoden
+zusammen zu verknüpfen.
 Bei allen Beispielen außer 2 dauert die Laufzeit des ganzen Programm etwa eine Sekunde,
 was praktisch eine sehr gute Laufzeit darstellt, und die Qualität der Ergebnisse 
 ist in diesem Zusammenhang sehr gut, wenn man dies mit einer faktoriellen Laufzeit 
 eines Brute--Force--Lösung vergleicht. Die durch den Bergsteigerlagorithmus 
 gefundenen Maxima liegen höchstwahrscheinlich sehr nah an den Optima.
 
-Zum Vergleich wurde auch ein Ansatz mit simulierten Abglühen ausprobiert, aber
-die Ergebnisse war allgemein schlechter als die, die der Bergsteigeralgorithmus liefert.
+Zum Vergleich wurde auch ein Ansatz mit simulierten Abglühen und ein Ansatz, in
+dem die Reihenfolgen der Rechtecke in den Listen zufällig war, ausprobiert, aber
+die Ergebnisse waren allgemein schlechter als die, die der Quasibergsteigeralgorithmus liefert.

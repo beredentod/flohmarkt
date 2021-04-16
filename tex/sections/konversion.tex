@@ -9,19 +9,21 @@ Analog müssen wir die Eingabe für die kleineren Rechtecke $r_i$ entsprechend k
 von jedem $b_i$ und $e_i$ den Wert $B$ abziehen. Für die Aufgabe selbst hat diese Konversion keine
 Bedeutung und funktioniert auch, wenn ein angegebener Zeitraum sich vom ursprünglichen Zeitraum unterscheidet.
 
-Mit dieser Konversion können wir ebenfalls mehrtägige Flohmärkte oder
-sogar mehrere unterschiedlichen Flohmärkte behandeln.
+Mit dieser Konversion können wir ebenfalls mehrtägige Flohmärkte behandeln.
 Zur Darstellung eines mehrtägigen Flohmarktes kann man die gesamte Öffnungszeiten des Flohmarkts in Stunden angeben,
 z.B. der Zeitraum eines Flohmarkts, der zwei Tage von 10:00 bis 17:00 dauert,
-kann als von 10:00 bis 41:00 (17:00 + 24 Stunden) dargestellt werden. 
-Dann ist der Zeitraum von 17:00 bis 34:00 an keiner Stelle besetzt.
-Ebenfalls, wenn ein angegebener Zeitraum an einer Stelle unterbrochen ist,
-etwa dauert der Flohmarkt von 7:00 bis 9:00 und dann von 12:00 bis 15:00, kann der
-Zeitraum von 7:00 bis 15:00 angegeben werden und alle Anmeldungen, die zumindest zum Teil
-in der Pausenzeit liegen, können aus der Eingabe entfernt werden oder können gar nicht
-angegeben werden.
+kann als von 10:00 bis 17:00 und von 34:00 bis 41:00 dargestellt werden. 
+%Dann ist der Zeitraum von 17:00 bis 34:00 an keiner Stelle besetzt.
+Ebenfalls, wenn der Zeitraum eines eintägigen Flohmarkts an einer Stelle unterbrochen ist,
+etwa dauert der Flohmarkt von 7:00 bis 9:00 und dann von 12:00 bis 15:00, können die 
+beiden Zeiträume in einem Beispiel angegeben werden. Wir können dann diese Instanz lösen,
+indem wir den ganzen Zeitraum von 7:00 bis 15:00 betrachten und in der Pausenzeit
+wird keine Anmeldung angenommen.
 Mehrere unterschiedlichen Flohmärkte mit derselben Länge $N$ kann man analog kodieren.
-Es hängt nur von der Eingabe ab.
+Beispielsweise gründet man eine Firma, die Flohmärkte an vielen Orten organisiert, aber
+die Firma verfügt nur über Stände mit einer festen Länge. Dann muss man die Eingabe nur
+entsprechend kodieren.
+%Es hängt nur von der Eingabe ab.
 
 
 Außerdem werden im ursprünglichen Problem alle Zeiten in vollständigen Stunden angegeben.

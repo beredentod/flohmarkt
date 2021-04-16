@@ -8,7 +8,7 @@ In diesem Problem werden Strecken in volltändigen Metern behandelt
 und alle Zeiten werden in vollständigen Stunden angegeben.
 Obwohl $N$ auf 1000 Meter, $B$ auf 8:00 und $E$ auf 18:00 in der ursprünglichen Aufgabe festgelegt sind,
 kann die folgende Lösungidee auf beliebige Größen, die die Aufgabenbedingungen erfüllen, übertragen werden.
-Das gelieferte Programm kann auch mit unterschiedlichen Werten umgehen.
+Das gelieferte Programm kann somit mit unterschiedlichen Werten umgehen.
 
 Die Aufgabe ist ein Optimierungsproblem.
 Man soll so eine Teilfolge von $k$ Anmeldugen wählen,
@@ -30,7 +30,9 @@ dass kein Paar der Rechtecke in $Z'$ sich überdeckt und
 der Gesamtflächeninhalt aller Rechtecke in $Z'$ maximal ist.
 Als Fläche eines kleineren Rechtecks $r_i$ bezeichnen wir das Produkt $m_i \times s_i$.
 
-Genauer gesagt: Jedes Rechteck $r_i$ in $Z'$ besitzt 4 Ecken,
+Genauer gesagt: Wenn wir das große Rechteck und die kleineren platzierten Rechtecken
+an einem Koordinatensystem abbilden,
+besitzt jedes Rechteck $r_i$ in $Z'$ 4 Ecken,
 die den folgenden Punkten entsprechen:
 $(x_i, b_i), (x_i, e_i), (x_i + s_i, e_i), (x_i + s_i, b_i)$.
 Man beachte, dass $b_i$, $e_i$ und $s_i$ fixiert sind. 

@@ -201,10 +201,20 @@ void Solver::findHoles(int p){
 	}
 }
 
+list<Rec*>::iterator Solver::findPlace(Rec* r, int p){
+	int x1 = r->x1, x2 = r->x2;
+	auto it = placedRectangles[p].begin();
+
+	while (it != placedRectangles[p].end() && (*it)->x2 < x2)
+		it++;
+
+	return it;
+}
+
 
 //diese Methode fuegt ein Rechteck r in einen Streifen p ein
 void Solver::insertPlace(Rec* r, int p){
-	auto it = upper_bound(placedRectangles[p].begin(), placedRectangles[p].end(), r, smallerx2);
+	auto it = findPlace(r, p);
 	placedRectangles[p].insert(it, r);
 }
 
@@ -310,8 +320,7 @@ vector<Rec*> Solver::processStripeReturn(int p){
 			//cout << "(S: " << rr.getSize() << ", A: " << rr.getArea() << ") -> "
 			// << rr.x1 << ",  " << rr.x2 << "\n";
 			for (int i = r->getBegin()+1; i < r->getEnd(); i++){
-				auto it = upper_bound(placedRectangles[i].begin(),
-					placedRectangles[i].end(), rr_p, smallerx2);
+				auto it = findPlace(rr_p, i);
 				int curr_x1, prev_x2;
 				if (it != placedRectangles[i].end())
 					curr_x1 = (*it)->x1;
@@ -426,7 +435,10 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	Rec *rec_p = &rep_c;
 
 	for (int i = rep_rec->getBegin(); i < rep_rec->getEnd(); i++){
-		auto it = upper_bound(placedOld[i].begin(), placedOld[i].end(), rec_p, smallerx2);
+		auto it = placedOld[i].begin();
+		while (it != placedOld[i].end() && (*it)->x2 < rec_p->x2)
+			it++;
+
 		//cout << "Removing (" << i << "): ";
 		for (; it != placedOld[i].end() && ((*it)->x1 <= rep_rec->x2); it++){
 			//if ((*it)->x1 > rep_rec->x2)

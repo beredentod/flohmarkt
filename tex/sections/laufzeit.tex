@@ -7,7 +7,7 @@
 Die Größe $M$ in der Aufgabe tritt in vollständigen Stunden vor.
 Wenn die Eingabe zu Minuten konvertiert wird, wird diese Variable
 in vollständigen Minuten betrachtet.
-Im Abschnitt \cref{sec:greedy} wird beschrieben,
+Im \cref{sec:greedy} wird beschrieben,
 dass die Breite jedes Streifens 1 Stunde bzw. 1 Minute entspricht.
 Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 
@@ -20,18 +20,18 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		\item Erstellung von Listen \ttt{placedRectangles}, \ttt{unusedRectangles} und \ttt{holes}
 		für jeden Streifen (s. \nameref{sec:umsetzung}): $O(M)$
 
-		\item Verteilung jedes Rechtecks auf die Streifen, zu denen es gehört: $O(M \cdot n)$ (worst--case)\\
-		Im schlimmsten Fall gehört jedes Rechteck zu jedem Streifen, wenn jede Anmeldung
+		\item Verteilung jedes Rechtecks auf die Listen $S_j$, zu denen sie gehören: $O(M \cdot n)$ (worst--case)\\
+		Im schlimmsten Fall gehört jedes Rechteck zu jeder Liste $S_j$, wenn jede Anmeldung
 		den ganzen Zeitraum eines Flohmarkts betrifft.
-		So muss jedes Rechteck in jeden Streifen hinzugefügt werden.
+		So muss jedes Rechteck in jede Liste $S_j$ hinzugefügt werden.
 
-		\item Sortierung der Listen $S_i$: $O(M \cdot n \log n)$ (worst--case)\\
+		\item Sortierung der Listen $S_j$: $O(M \cdot n \log n)$ (worst--case)\\
 		Es gibt $M$ Listen und in jeder Liste kann es im schlimmsten Fall
 		alle Rechtecke geben. Die linear--logarithmische Laufzeit
 		ist durch das Sortieren verursacht.
 	\end{itemize}
 
-	\item Der Greedy--Algorithmus am Anfang: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)\\
+	\item Der Greedy--Algorithmus am Anfang: $O(M \cdot n^2)$ (worst--case, amortisierte Laufzeit)\\
 	Obwohl man die Funktion zur Verarbeitung eines Streifens $M$--mal 
 	laufen lässt, kann eine Laufzeitanalyse pro Lauf dieser Funktion zu pessimistisch sein.
 	Es ist unmöglich, dass ein Platz für $n$ Rechtecke $M$--mal gesucht wird,
@@ -47,17 +47,21 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		Im schlimmsten Fall muss man in einem Streifen über $n-1$ Rechtecke iterieren,
 		um einen freien Platz für ein Rechteck zu finden.
 
-		\item Das Finden der genauen Stelle in den Listen $S_j$: $O(M \log n)$ (worst--case)\\
+		\item Das Finden der genauen Stelle in den restlichen Streifen: $O(M \cdot n)$ (worst--case)\\
 		Nicht in jedem Streifen müssen sich dieselben Rechtecke befinden und ein Rechteck 
 		kann zu mehreren Steifen gehören.
-		In jedem Streifen muss man die genaue Position zum Platzieren des Rechtecks finden.
-		Das erfolgt mittels der eingebauten Funktion \ttt{upper\_bound}, die in C++ in $O(\log n)$ läuft.\footnote{\href{https://en.cppreference.com/w/cpp/algorithm/upper_bound}{https://en.cppreference.com/w/cpp/algorithm/upper\_bound}}.
-		Die Einfügen--Operation in eine \ttt{list} in C++ erfolgt in $O(1)$.\footnote{\href{https://en.cppreference.com/w/cpp/container/list/insert}{https://en.cppreference.com/w/cpp/container/list/insert}}
+		In jedem Streifen muss man die genaue Position zum Platzieren des Rechtecks finden
+		und dazu muss man im schlimmsten Fall über $n-1$ Rechtecke im Streifen iterieren.
+		Wenn man die richtige Stelle im Streifen findet, erfolgt die
+		Einfügen--Operation in eine \ttt{list} in C++ erfolgt in $O(1)$.\footnote{\href{https://en.cppreference.com/w/cpp/container/list/insert}{https://en.cppreference.com/w/cpp/container/list/insert}}
 		Im schlimmsten Fall gehört ein Rechteck zu allen Streifen, deshalb muss die endliche Laufzeit
 		mal $M$ multipliziert werden.
+
+		%Das erfolgt mittels der eingebauten Funktion \ttt{upper\_bound}, die in C++ in $O(\log n)$ läuft.\footnote{\href{https://en.cppreference.com/w/cpp/algorithm/upper_bound}{https://en.cppreference.com/w/cpp/algorithm/upper\_bound}}.
+
 	\end{itemize}
 
-	\item Ein Lauf des Verbesserungsalgorithmus pro ein Paar Lücke--Rechteck: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)
+	\item Ein Lauf des Verbesserungsalgorithmus pro ein Paar Lücke--Rechteck: $O(M \cdot n^2)$ (worst--case, amortisierte Laufzeit)
 
 	\begin{itemize}
 		\item Berechnung des Gesamtflächeninhalts aller platzierten Rechtecke: $O(n)$ (worst--case)\\
@@ -66,7 +70,7 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		\item Bestimmung aller nicht gelegten Rechtecke: $O(M \cdot n \log n)$ (worst--case)\\
 		Im schlimmsten Fall gibt es ein gelegtes Rechteck, das genauso groß ist wie $R$, und somit
 		alle $n-1$ restlichen kleineren Rechtecke zu Listen $U_j$ gehören. 
-		Im schlimmsten Fall können alle diese restlichen Rechtecke zu allen Streifen gehören.
+		Im schlimmsten Fall können alle diese restlichen Rechtecke zu allen Listen $U_j$ gehören.
 		Die linear--logarithmische Laufzeit ist mit dem Sortieren der Listen $U_j$ verbunden.
 
 		\item Auffinden aller Lücken: $O(M \cdot n \log n)$ (worst--case)\\
@@ -82,7 +86,8 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		Im schlimmsten Fall gehört ein Rechteck zu allen $M$ Streifen und man muss in allen
 		Streifen $n-1$ Rechtecke entfernen.
 
-		\item Einfügen neuer Rechtecke in neue Lücken: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)\\
+		\item Einfügen neuer Rechtecke in neue Lücken: $O(M \cdot n^2)$
+		(worst--case, amortisierte Laufzeit)\\
 		In diesem Teil lohnt es sich mehr, eine amortisierte Laufzeitanalyse pro Rechteck durchzuführen.
 		Im schlimmsten Fall muss man $n-1$ Rechtecke ins Rechteck $R$ einfügen.
 		Im schlimmsten Fall gehört jedes Rechteck zu jedem der $M$ Streifen.
@@ -90,10 +95,11 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		für $r$ im Streifen $b_r$ finden. Dazu kann man im schlimmsten Fall über $n-1$ Rechtecke iterieren.
 		Dann muss man in jedem Streifen, zu dem $r$ gehört, 
 		prüfen, ob es genug Platz dafür gibt.
-		Das wird wieder mittels der Funktion \ttt{upper\_bound} ermittelt,
-		die in logarithmischer Zeit läuft.
+		Dazu muss man im schlimmsten über alle Rechtecke im Streifen iterieren.
+		%Das wird wieder mittels der Funktion \ttt{upper\_bound} ermittelt,
+		%die in logarithmischer Zeit läuft.
 		Dann wird das Rechteck zu allen Streifen eingefügt, zu denen es gehört.
-		Somit ergibt sich pro Rechteck $r$ die Laufzeit: $O(n + M \log n))$
+		Somit ergibt sich pro Rechteck $r$ die Laufzeit: $O(M \cdot n)$
 
 		\item Zurücksetzung der ursprünglichen Platzierung: $O(M \cdot n)$ (worst--case)\\
 		Wenn eine Platzierung einen niedrigeren Flächeninhalt besitzt als 
@@ -116,7 +122,7 @@ Laufzeiten als die Gesamtlaufzeit der restlichen Prozesse, deshalb unterscheiden
 nicht zwischen den Laufzeiten der Laüfe des While--Schleife, in denen ein Ergebnis 
 angenommen wird, und denjenigen, in denen das nicht der Fall ist.
 Somit ergibt sich die folgende Laufzeit für ein Paar von einer Lücke $L$ und einem Rechteck $r$,
-wobei $r$ in $L$ eingefügt werden soll: $O(n(n + M \log n))$ (worst--case).
+wobei $r$ in $L$ eingefügt werden soll: $O(M \cdot n^2)$ (worst--case).
 
 Nun bestimmen wir die Anzahl an Paaren Lücke--Rechteck, die vom Verbesserungsalgorithmus
 verarbeitet werden. Die Funktion zur Bestimmung aller nicht gelegten Rechtecke kann
@@ -127,23 +133,23 @@ Wenn die Anzahl der Lücken wächst, sinkt die Anzahl der nicht gelegten Rechtec
 Deshalb gibt es am meisten Möglichkeiten, wenn die beiden Anzahlen halbiert werden.
 So gibt es am meisten $O(M \cdot n/2 \cdot n/2) = O(M \cdot n^2)$ Möglichkeiten.
 
-Im schlimmsten Fall muss man alle diese Kombinationen durchgehen, bis man
+Im schlimmsten Fall muss man alle diesen Kombinationen durchgehen, bis man
 bei einem Ergebnis gelangt, das vom Verbesserungsalgorithmus angenommen wird.
 So legen wir fest, die Laufzeit des Verbesserungsalgorithmus
 für jede Kombination der Lücken und Rechtecke aus einem Paar von Listen $H$ und $U_j$
 beträgt im worst--case:
 \[
-	O(n(n + M \log n) \cdot M \cdot n^2) = O(M \cdot n^4).
+	O(M \cdot n^2 \cdot M \cdot n^2) = O(M^2 \cdot n^4).
 \]
 
 Es bleibt noch die Abschätzung, wie viel mal man die Listen $H$ und $U_j$ bestimmt.
-Allgemein kann man die Läufzeit eines Bergsteigeralgorithmus schwer abschätzen.
+Allgemein kann man die Laufzeit eines Bergsteigeralgorithmus schwer abschätzen.
 Allerdings ist ein Ergebnis auf den Flächeninhalt des großen Rechtecks $R$ beschränkt
 und die Einheiten in dieser Aufgabe sind ganzzahlig (vollständige Meter, vollständige Stunden/Minuten).
 So können wir feststellen, dass die Ergebnisse des Verbesserungsalgorithmus mit jeder
 neuen Bestimmung der Listen $H$ und $U_j$ eine streng monoton wachsende Funktion bilden.
 Es gibt also eine feste Anzahl an möglichen Verbesserungen.
-Theoretisch könnte es einen Fall geben, in dem das Aufgangsergebnis nach dem Lauf
+Theoretisch könnte es einen Fall geben, in dem das Anfangsergebnis nach dem Lauf
 des Greedy--Algorithmus 1 beträgt und in dem dieses Ergebnis mit jeder 
 neuen Bestimmung der Listen $H$ und $U_j$ um 1 verbessert wird,
 aber diese Situation ist aus praktischer Sicht kaum vorstellbar. 
@@ -152,5 +158,5 @@ dafür steht, wie oft die Listen $H$ und $U_j$ bestimmt werden müssen.
 In den Beispielen \hyperref[ex:1]{1}--\hyperref[ex:7]{7} überschreitet $k$ nicht 10.
 So beträgt die finale Laufzeit im worst--case:
 \[
-	O(k \cdot M \cdot n^4).
+	O(k \cdot M^2 \cdot n^4).
 \]

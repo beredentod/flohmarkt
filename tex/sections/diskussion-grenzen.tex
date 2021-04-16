@@ -1,16 +1,19 @@
 \subsubsection{Grenzen der Heuristik}\label{sec:diskussion-grenzen}
-Im \cref{sec:komplexitaet} wurde bewiesen, dass das \fp{} NP--vollständig ist.
+Im \cref{sec:komplexitaet} wurde bewiesen, dass das \fp{} NP--schwer ist.
 Es gibt faktoriell viele möglichen Anordnungen der Rechtecke.
-Deshalb für $|Z|$ in der Ordnung von ca. 700 wird eine Brute--Force--Lösungin in einer nicht
+Deshalb für $|Z|$ in der Ordnung von ca. 700 wird eine Brute--Force--Lösung in einer nicht
 akzeptablen Zeit gelöst.
-Das ist auch der Grund, warum wir eine Heurstik verwenden.
-Allerdings, da eine Heuristik ein Approximationsalgorithmus ist und
+Die Komplexität des \fp{}s setzt Schranken auf die optimale Lösung des Problems.
+Man kann keinen in Polynomialzeit laufenden Algorithmus entwicklen, der jede Instanz dieses
+Problems lösen würde.
+Das ist der Hauptgrund, warum wir eine Heurstik verwenden.
+Allerdings, da eine Heuristik nur ein Approximationsalgorithmus ist und
 nur nahezu optimale Ergebnisse liefert, muss es Kompromisse geben.
 Dieser Kompromiss betrifft vor allem die Laufzeit und 
-dafür, dass der Algorithmus in Polynomialzeit läuft, 
+dafür, dass das hier vorgestellte Verfahren in Polynomialzeit läuft, 
 trifft das Programm an vielen Stellen vereinfachte Entscheidungen,
-die nicht zum optimalen Ergebnis führen.
-In diesem Abschnitt diskutieren wir nur über die Grenzen der beiden Heuristiken im Programm 
+die nicht zum optimalen Ergebnis führen können.
+In diesem Abschnitt diskutieren wir nur über die Grenzen der beiden Greedy--Algorithmen im Programm 
 --- über den Greedy--Algorithmus am Anfang und über das heuristische 
 Verbesserungsverfahren ---
 und im \cref{sec:diskussion-ergebnisse} besprechen wir die Ergebnisse.
@@ -22,12 +25,13 @@ in Listen $S_j$ abhängt. Diese hängt dann von den Sortierkriterien ab.
 Obwohl dank der gewählten Sortierkriterien optimale oder sehr gute Ergebnisse
 bei vielen Beispielen herauskommen, ist das nicht der Fall bei allen Beispielen
 (mehr dazu im \cref{sec:diskussion-ergebnisse}).
-Auf jeden Fall liefert der Greedy--Algorithmus kein optimales Ergebnis zum \nameref{ex:2},
-weil dieses Ergebnis im Laufe des Verbesserungsverfahrens verbessert wird.
+Auf jeden Fall liefert der Greedy--Algorithmus am Anfang kein optimales Ergebnis zum \nameref{ex:2},
+weil dieses Ergebnis im Laufe des Verbesserungsverfahrens optimiert wird.
 
 
 Im Verbesserungsverfahren wurden mehrere Kompromisse zugunsten der Laufzeit gemacht.
-Vor allem liegt die Schwierigkeit zugrunde dem Verfahren --- warum wird ein Bergsteigeralgorithmus verwendet
+Vor allem liegt die Schwierigkeit zugrunde dem Verfahren --- warum wird ein Verfahren verwendet, das
+einen Bergsteigeralgorithmus nachahmt 
 und nicht z. B. ein Verfahren mit simuliertem Abglühen oder ein ganz anderer heuristische Ansatz?
 Außerdem liegen die Schwierigkeiten des Verbesserungsverfahrens auch an
 den Reihenfolgen der Listen $U_j$ und der Liste $H$.
@@ -37,11 +41,11 @@ Dazu liegt das Problem auch beim Platzieren eines Rechtecks in eine Lücke.
 Wir entscheiden uns, das Rechteck an die Koordinate $x_2$ der Lücke zu legen.
 Man könnte hier eine andere Vorgehensweise anwenden, z. B. man könnte das
 Rechteck an die Koordinate $x_1$ orientieren; man könnte auf eine besondere
-Weise vorgehen, wenn das Rechteck deutlich kleiner ist als die Lücke; oder
+Weise vorgehen, wenn es Rechtecke gibt, die deutlich kleiner sind als eine Lücke; oder
 man könnte die Rechtecke in darüber und darunter stehenden Streifen in Betracht ziehen, 
 was im Programm nicht gemacht wird.
 Wie beim Greedy--Algorithmus am Anfang, hängt die Reihenfolge der Rechtecke 
 beim Ausfüllen der Lücken von der Reihenfolge in Listen $S_j$ ab. 
-Weiterhin ist die Weise, auf die Lücken bestimmt werden, nicht optimal. 
-Man nimmt keinen Bezug darauf, wie breit ein Lücke ist, also wie viele Streifen sie umfasst.
+Weiterhin ist die Weise, auf die Lücken bestimmt werden, ist sehr stark vereinfacht. 
+Man nimmt keinen Bezug darauf, wie breit eine Lücke ist, also wie viele Streifen sie umfasst.
 Das ist auf jeden Fall eine Schwachstelle des Programms.

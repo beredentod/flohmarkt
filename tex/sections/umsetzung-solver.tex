@@ -1,0 +1,222 @@
+\subsection{Klasse \ttt{Solver}}
+In dieser Klasse wird das vorgestellte Verfahren implementiert.
+
+Die Attribute \ttt{N} und \ttt{M} entsprechen den Zahlen $N$ und $M$
+aus dem \cref{sec:definitionen}. Es gibt das Attribut \ttt{START}, das dem
+Wert $B$ entspricht. Die Variable \ttt{recess} entspricht der
+Dauer der Schließungszeit des Flohmarkts, wenn sein Zeitraum unterbrochen ist.
+Der Integer \ttt{format} speichert das Zeitformat, das in der Eingabedatei
+auftriit. Die Kodierung ist dieselbe wie oben.
+
+An dieser Stelle muss man erwähnen, dass kleinere Rechtecke im Programm als Zeiger zu 
+den Objekten von \ttt{Rec} dargestellt werden.
+Diese Entscheidung wurde aus diesem Grund getroffen, damit 
+es nur eine Kopie eines Rechtecks in der Klasse \ttt{Solver} gibt und
+damit jeder Prozess im Programm einen direkten Zugriff auf jedes Rechteck hat.
+
+In der Klasse \ttt{Solver} gibt es einen \ttt{vector<Rec*>} namens \ttt{rectangles},
+der alle Rechtecke aus diesem Beispiel speichert und der der Liste $Z$
+aus dem \cref{sec:definitionen} entspricht.
+Es gibt zwei \ttt{vector} von \ttt{vector<Rec*>} mit den Namen 
+\ttt{rectangles\_stripes} und \ttt{unusedRectangles}. Die beiden 
+haben die Größe \ttt{M} und der erste entspricht den Listen $S_j$ und
+der zweite den Listen $U_j$.
+Dazu gibt es einen \ttt{vector} von \ttt{list<Rec*>} der Größe \ttt{M} namens \ttt{placedRectangles},
+in dem alle Rechtecke auftreten, die in den Streifen platziert sind.
+Es gibt noch einen \ttt{vector} von \ttt{vector<Hole>} der Größe \ttt{M} namens \ttt{holes},
+in dem alle Lücken aus jedem Streifen gespeichert werden. 
+Dazu gibt es noch einen \ttt{vector} mit dem Namen \ttt{all\_holes}, in dem alle Lücken
+aus allen Streifen hinzugefügt werden.
+
+Die Methode \ttt{readFile()} liest die Daten aus der Textdatei ein.
+Diese Methode nimmt als Argument einen String mit der Adresse der Datei in dem Rechner.
+Das Eingabeformat in den Textdateien mit den Beispielen wurde geändert.
+Die erste Zeile beinhaltet die Zahl $N$. Die zweite Zeile enthält
+eine Folge von Öffnungszeiten des Flohmarkts. Die Uhrzeit mit einem geraden Index ist jeweils der
+Beginn und die Uhrzeit mit einem ungeraden Index ist jeweils die Schließungszeit.
+Die dritte Zeile enthält die Anzahl der Anmeldungen $n$ und es folgen $n$ Zeilen mit den Anmeldungen.
+So wird zuerst die Zahl \ttt{N} eingelesen. 
+Danach folgt ein String mit einer geraden Anzahl an Öffnugs-- und Schließungszeiten des Flohmarkts.
+Dies wird mittels der Funktion \ttt{processInput()} eingelesen.
+Dann wird die gesamte Pausenzeit des Flohmarkts mithilfe der Funktion \ttt{calculateRecess()} ermittelt
+und in der Variable \ttt{recess} gespeichert. 
+Dann werden die Variablen \ttt{M} und \ttt{START} bestimmt.
+Es folgen danach die $n$ Anmeldungen,
+die jeweils mittels der Funktion \ttt{timeToMinutes()} verarbeitet und
+in \ttt{rectangles} gespeichert werden.
+
+Im Programm gibt es die Methode \ttt{run()}, die den Lauf des Programms ausführt.
+In dieser Funktion wird die Methode \ttt{distributeToStripes()} ausgeführt, die alle
+Rechtecke aus \ttt{rectangles} auf die \ttt{vector}
+\ttt{rectangles\_stripes} verteilt und die diese Listen danach unter Verwendung
+von den Sortierkriterien \ttt{greaterEnd} einzeln sortiert.
+Danach folgt der Lauf der Methode \ttt{processStripe()} für jeden Streifen.
+Hier werden die Streifen im Greedy--Algorithmus verarbeitet.
+Es wird durch jedes Rechteck \ttt{r} in jedem \ttt{vector} \ttt{rectangles\_stripes} iteriert.
+Es wird geprüft, ob die Koordinaten des Rechtecks \ttt{r} $-1$ betragen und ob das Rechteck
+in dem verarbeiteten Streifen beginnt.
+Dann wird es für \ttt{r} nach einer Lücke in \ttt{placedRectangles} gesucht.
+Die Funktion \ttt{findNearestHole()} gibt die Koordinate \ttt{x1} für \ttt{r} aus,
+wenn es Platz für dieses Rechteck gibt. Sonst wird $-1$ ausgegeben.
+Wenn \ttt{x1} ausgegeben wird, wird dann auch \ttt{x2} gesetzt und 
+das Rechteck \ttt{r} wird in alle Streifen in \ttt{placedRectangles} eingefügt, 
+zu denen es gehört.
+
+Nachdem die Methode \ttt{processStripe()} für alle Streifen ausgeführt worden ist,
+wird der Gesamtflächeninhalt aller platzierten Rechtecke mittels der Methode 
+\ttt{calculateAreaUsed()} bestimmt und es wird geprüft, ob 
+die Koordinaten aller Rechtecke in \ttt{rectangles} größer sind als $-1$.
+Wenn entweder der Gesamtflächeninhalt gleich dem Produkt $\ttt{N} \times \ttt{M}$ ist
+oder wenn alle Rechtecke platziert wurden, wird das Programm an dieser Stelle abgebrochen.
+Wenn nicht, wird die Methode \ttt{runOptimization()} laufen lassen, die
+das Verbesserungsverfahren ausführt.
+
+
+In der Methode \ttt{runOptimization()} gibt es eine Variable \ttt{area},
+in der der Gesamtflächeninhalt einer Platzierung gespeichert wird, und 
+eine boolsche Variable \ttt{result}, die dafür steht,
+ob eine neue Platzierung vom Algorithmus angenommen wird.
+Am Anfang hat \ttt{result} den Wert \ttt{true}, da das Ausgangsergebnis
+angenommen werden muss.
+Außerdem gibt es ein Objekt \ttt{hole} der Klasse \ttt{Hole}, das 
+der aktuellen Lücke entspricht, in die ein nicht gelegtes Rechteck eingefügt wird.
+Dazu gibt es ein Paar aus \ttt{Rec*} und \ttt{pair<int, int>} namens \ttt{rep}.
+In dieser Variable wird ein Rechteck zum Einfügen in die Lücke \ttt{hole} gespeichert.
+\ttt{pair<int, int>} enthält die Koordinaten der Lücke, in die \ttt{Rec*} eingefügt
+werden soll.
+Weiterhin gibt es zwei Iteratoren \ttt{itH} und \ttt{itR} wie im \cref{algo:verbesserung}.
+
+Dann beginnt die Do--While--Schleife, die solange läuft, bis es eine Lücke gibt,
+in die ein Rechteck eingefügt werden könnte.
+In der Schleife gibt es eine Fallunterscheidung: Wenn \ttt{result} den Wert \ttt{true} hat und wenn
+nicht.
+Wenn die ursprüngliche Platzierung vom Algorithmus angenommen wurde,
+werden zuerst der Wert \ttt{area} mittels der Funktion \ttt{calculateAreaUsed()}, 
+die Listen \ttt{unusedRectangles} mittels der Methode \ttt{determineUnused()} und
+die Liste \ttt{all\_holes} mittels der Funktion \ttt{findHoles()} bestimmt.
+Da wir die Lücken und die nicht gelegten Rechtecke gerade bestimmten, 
+werden \ttt{itH} und \ttt{itR} auf an die Anfänge der Liste
+\ttt{all\_holes} und der Liste \ttt{unusedRectangles} im Streifen, zu
+dem die Lücke unter dem Iterator \ttt{itH} gehört, gesetzt.
+Dann wird die nächste Lücke \ttt{hole} mittels der Methode \ttt{findNextHole()} 
+bestimmt und das nächste Rechteck \ttt{rep} mittels der Methode \ttt{findReplacement()}.
+Bevor man \ttt{rep} in \ttt{hole} einfügt, muss man prüfen,
+ob die Ausgabe der beiden genannten Funktionen richtig ist. 
+Es kann beispielsweise sein, dass \ttt{hole} in so einem Streifen liegt, in dem alle Rechtecke 
+platziert wurden und somit kann man kein Rechteck in \ttt{hole} einfügen.
+Dazu ist die folgende While--Schleife.
+Wenn mit dem Rechteck oder mit der Lücke etwas falsch ist, wird in \ttt{pair<int,int>} 
+in \ttt{rep} ein negativer Wert ausgegeben. Der Wert $-1$ steht dafür, 
+dass es keine Lücken mehr gibt, in die ein Rechteck eingefügt werden kann, also
+wird an dieser Stelle die Do--While--Schleife abgebrochen.
+Der Wert $-2$ steht dafür, dass der Iterator ans Ende von \ttt{unusedRectangles} in diesem
+Streifen gelangt ist und dass der Iterator \ttt{itH} inkrementiert werden muss und eine 
+neue Lücke gefunden werden muss.
+Der Wert $-3$ bedeutet, dass das Rechteck in \ttt{hole} nicht eingefügt werden kann, 
+da die Koordinate \ttt{x2} der Lücke kleiner ist als die Länge des Rechtecks \ttt{size}.
+So würde das Recheck über die Grenzen des großen Rechtecks hinausreichen, wenn
+es in diese Lücke platziert würde.
+Diese While--Schleife wiederholt sich solange, bis eine Lücke gefunden wird,
+in die man ein Rechteck platzieren kann. 
+Dann wird die Methode \ttt{removeCollisions} ausgeführt, die 
+die mit dem eingefügten Rechteck kollidierenden Rechtecke aus der Platzierung entfernt und 
+in der eine neue Platzierung mit neuen Rechtecken generiert wird. 
+Diese Methode gibt einen boolschen Wert aus, der besagt, ob die neue Platzierung besser
+ist als die vorherige. Danach wiederholt sich die Do--While--Schleife.
+
+Der Fall in der Do--While--Schleife für den Wert \ttt{result = false} ist analog 
+zum ersten Fall, mit der Ausnahme, dass die Funktionen \ttt{calculateAreaUsed},
+\ttt{determineUnused()} und \ttt{findHoles()} nicht ausgeführt werden.
+
+Die Methode \ttt{findHoles()} findet alle Lücken
+in allen Listen \ttt{placedRectangles}. 
+Sie nimmt als Argument den Index des Streifens \ttt{p}.
+Wenn \ttt{p = -1}, wird die Funktion auf allen Streifen ausgeführt. 
+Es wird über jedes Rechteck im jedem Streifen iteriert und es wird geprüft,
+ob der Wert \ttt{x2} eines Rechtecks mit dem Wert \ttt{x1} des darauffolgenden
+Rechtecks übereinstimmt und ob das erste Rechteck im Streifen
+den Wert \ttt{x1 = 0} und das letzte Rechteck im Streifen den Wert \ttt{x2 = N} besitzen.
+Wenn nicht, wird eine Lücke mit den Koordinaten, die den Koordinaten 
+der genannten Rechtecke entsprechen, und der Nummer des Streifens als ein Objekt
+der Klasse \ttt{Hole} in die Liste \ttt{holes} zu diesem Streifen hinzugefügt.
+Am Ende werden die Listen \ttt{holes} aus jedem Streifen zu einer gemeinsamen 
+Liste \ttt{all\_holes} zusammengebracht und nach den Sortierkriterien 
+\ttt{greaterHolesSize} sortiert.
+
+Die Methode \ttt{findNextHole()} nimmt als Argument den Iterator \ttt{itH}.
+In der Liste \ttt{all\_holes} wird geprüft, ob sich unter dem Iterator eine Lücke
+befindet, zu der es ein Rechteck im Streifen, in dem sich die Lücke befindet,
+in der Liste \ttt{unusedRectangles} gibt. Wenn nicht, wird \ttt{itH} inkrementiert,
+bis so eine Lücke gefunden wird.
+Wenn der Iterator zum Ende der Liste \ttt{all\_holes} gelangt, wird
+eine Lücke mit Koordinaten $-1$ als Objekt der Klasse \ttt{Hole} ausgegeben,
+was bedeutet, dass die Do--While--Schleife abgebrochen werden soll.
+
+Die Methode \ttt{findReplacement()} nimmt zwei Argumente:
+ein Objekt \ttt{hole} der Klasse \ttt{Hole}, also eine Lücke,
+die von der Funktion \ttt{findNextHole()} ausgegeben wurde, und
+den Iterator \ttt{itR}. 
+In dieser Methode wird geprüft, ob \ttt{hole} den Wert $-1$ hat.
+Wenn ja, wird ebenfalls der Wert $-1$ ausgegeben.
+Danach wird geprüft, ob der Iterator \ttt{itR} das Ende der Liste
+\ttt{unusedRectangles} in dem in \ttt{hole} angegebenen Streifen 
+erreichte. Wenn ja, wird der Wert $-2$ ausgegeben.
+Ansonsten wird eine Variable \ttt{rep} erstellt, die 
+auf das Rechteck unter dem Iterator \ttt{itR} in \ttt{unusedRectangles}
+gesetzt wird.
+Anschließend wird geprüft, ob die Koordinate \ttt{x2} der Lücke \ttt{hole} 
+nicht kleiner ist als die Größe \ttt{size} von \ttt{rep}.
+Wenn doch, wird $-3$ ausgegeben. 
+Sonst wird \ttt{rep} mit den Koordinaten der Lücke \ttt{x2} ausgegeben.
+
+In der Methode \ttt{removeCollisions()} wird ein Paar bestehend
+aus einem Rechteck und den Koordinaten einer Lücke als Argument genommen.
+Es wird eine Kopie des ganzen \ttt{vector} \ttt{placedRectangles} gemacht
+und \ttt{placedOld} genannt. 
+Das Rechteck, das in die Lücke eingefügt wird, nennen wir \ttt{rr} und
+die Lücke \ttt{hole}.
+Dann werden die Koordinaten von \ttt{rr} gesetzt: \ttt{rr->x2 = hole.second} und
+\ttt{rr->x1 = rr->x2 - getSize}.
+Danach werden in \ttt{oldPlaced} alle Rechtecke gesucht, die mit
+\ttt{rr} kollidieren, also wird es geprüft, ob es Rechtecke gibt, deren
+Wert \ttt{x1} kleiner ist als der Wert \ttt{x2} des Rechtecks \ttt{rr}, 
+wobei \ttt{rr} vor einem solchen Rechteck steht.
+Alle kollidierenden Rechtecke werden in eine Liste \ttt{rec\_remove}
+hinzugefügt. 
+Danach werden die Werte \ttt{x1} und \ttt{x2} aller Rechtecke, die zu \ttt{rec\_remove}
+gehören, zu $-1$ gesetzt.
+Als Nächstes werden alle Rechtecke, deren Koordinaten $-1$ betragen, aus \ttt{placedRectangles}
+entfernt.
+Danach wird die Funktion \ttt{addNew} ausgeführt, die das Rechteck \ttt{rr} und ggf.
+die neuen anderen Rechtecke in \ttt{placedRectangles} einfügt.
+Sie gibt eine Liste mit Rechtecken aus, die neu platziert werden. Sie heißt \ttt{added}.
+Danach wird der Gesamtflächeninhalt mittels der Funktion \ttt{calculateAreaUsed()}
+bestimmt.
+Wenn der neue Gesamtflächeninhalt größer ist als der vorherige,
+wird die Methode \ttt{removeCollisions()} mit dem ausgegebenen Wert \ttt{true} abgebrochen.
+Falls nicht, werden die Koordinaten
+aller neu eingefügten Rechtecke aus der Liste \ttt{added}
+zu $-1$ gesetzt und die 
+ursprünglichen Koordinaten der kollidierenden Rechtecke werden zurückgesetzt. 
+\ttt{placedRectangles} wird zu \ttt{oldPlaced} gesetzt, die Funktion gibt den Wert \ttt{false} 
+aus und bricht ab.
+
+Die Methode \ttt{addNew()} nimmt als Argument das Rechteck zum Einfügen in eine Lücke.
+Es wird in dieser Funktion in \ttt{placedRectangles} an der richtigen Stelle platziert.
+Dann lässt man die Funktion \ttt{processStripeReturn()},
+die probiert, neue Rechtecke in \ttt{placedRectangles} zu platzieren, für jeden Streifen laufen. 
+Die Methode \ttt{placedRectangles} funktioniert ähnlich wie die Methode \ttt{processStripe}.
+Es wird für jeden Streifen die Liste \ttt{rectangles\_stripes} iteriert und bei jedem
+iterierten Rechteck \ttt{r} wird geprüft, ob er mit dem verarbeiteten Streifen beginnt und
+ob er nicht platziert wurde.
+Dann wird mittels der Funktion \ttt{findNearestHole()} die nächste Lücke in diesem Streifen
+in \ttt{placedRectangles} gesucht.
+Wenn es so eine Lücke gibt, wird geprüft, ob die Lücken in allen Streifen in \ttt{placedRectangles}
+bestehen, zu denen das iterierte Rechteck gehört.
+Wenn ja, wird dieses Rechteck in alle diesen Streifen in \ttt{placedRectangles} eingefügt.
+Diese Methode gibt eine Liste \ttt{added} aus, in der sich alle neu eingefügten Rechtecke 
+befinden.
+In der Methode \ttt{addNew} wird die Liste \ttt{added} aus
+allen Streifen zusammengebracht und ausgegeben.
+
+

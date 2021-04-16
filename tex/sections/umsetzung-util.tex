@@ -1,0 +1,50 @@
+\subsection{Klasse \ttt{Rec}}
+Rechtecke werden im Programm als Objekte der Klasse \ttt{Rec} dargestellt.
+Diese Klasse besitzt 5 Attribute.
+Es gibt: \ttt{b}, \ttt{e} und \ttt{size},
+die den Werten $b_i$, $e_i$ und $s_i$ eines Rechtecks $r_i$ entsprechen.
+Außerdem gibt es die Attribute \ttt{x1} und \ttt{x2},
+die den $x$--Koordinaten eines Rechtecks entsprechen.
+Wenn ein Rechteck gelegt wird, werden die beiden Koordinaten festgelegt und 
+es gilt dann immer: $\ttt{x1} + \ttt{size} = \ttt{x2}$. 
+Wenn ein Rechteck nicht platziert ist, sind die beiden Variablen zu $-1$ gesetzt.
+
+Außer den standardmäßigen Getter-- und Setter--Methoden gibt es auch eine Methode
+\ttt{getArea()}, die den Flächeninhalt des Rechtecks ausgibt, indem $(\ttt{e}-\ttt{b})\times \ttt{m}$
+ausgerechnet wird. 
+
+\subsection{Klasse \ttt{Hole}}
+Die Lücken stellt man als Objekte der Klasse \ttt{Hole} dar. 
+In dieser Klasse gibt es 3 Attribute: \ttt{x1}, \ttt{x2} und \ttt{stripe}.
+Sie stellen die Koordinaten $x_1$ und $x_2$ einer Lücke dar und
+\ttt{stripe} ist der Index des Streifens, in dem die Lücke auftritt.
+
+
+\subsection{Hilfsfunktionen}
+Es gibt drei Hilfsfunktionen, die die Eingabe verarbeiten und die zu keiner Klasse gehören.
+
+Es gibt eine Funktion \ttt{timeToMinutes()}, die zur Umwandlung der Zeitangaben dient.
+Sie nimmt einen String als Argument, das entweder im Format \ttt{"H"} oder \ttt{"H:MM"} ist.
+\ttt{H} ist dabei ein beliebiger Integer, der
+Stunden angibt, und \ttt{MM} ist eine zweistellige Zahl, die Minuten angibt. 
+Wenn die Eingabe Minuten enthält, wird die als String eingegebene Zeit zu Minuten umgewandelt,
+indem \ttt{H} mal 60 multipliziert wird. Sonst erfolgt keine Konversion und \ttt{H} wird nur 
+zu einem Integer umgewandelt.
+Ausgegeben wird ein Paar bestehend aus der umgewandelten Zeit und einem Integer, in dem 
+das Eingabeformat kodiert wird:\break 0 steht für Stunden und 1 für Minuten.
+
+Die Funktion \ttt{processInput()} verarbeitet den String mit den Öffnungszeiten 
+des Flohmarkts.
+Diese Funktion nimmt als Argument einen String, der aus $2k$ Zahlen besteht.
+Die Funktion teilt den String in eingeständige Uhrzeiten auf.
+Jede Uhrzeiten wird mithilfe der Funktion \ttt{timeToMinutes()} zu Stunden bzw. zu Minuten umgewandelt.
+Dann wird diese Folge von Zahlen als ein \ttt{vector<int>} mit dem Eingabeformat (wie oben) ausgegeben.
+
+Es gibt noch die Funktion \ttt{calculateRecess()}. 
+Diese Funktion nimmt als Argument einen \ttt{vector} von Integers, in dem
+die Uhrzeiten gespeichert sind.
+In diesem \ttt{vector} steht jede gerade bzw. ungerade Zahl für die Öffnungs-- bzw. Schließungszeit. 
+Ausgegeben wird ein Integer --- die Summe der Unterschiede zwischen jedem $k$--ten Schließungs--
+und jedem $k+1$--ten Öffnungszeitpunkt.
+Diese Summe ist wichtig, weil man die Schließungszeit des Flohmarkts vom Endergebnis abziehen soll,
+wenn der Zeitraum des Flohmarkts unterbrochen ist.

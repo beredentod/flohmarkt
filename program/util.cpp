@@ -1,6 +1,5 @@
 #include"util.h"
 
-
 //eine Funktion, die das Eingabeformat erkennt und entsprechend
 //	zu Stunden oder Minuten umwandelt
 pair<int, int> timeToMinutes(string time){
@@ -21,20 +20,28 @@ pair<int, int> timeToMinutes(string time){
 	}
 }
 
+//eine Funktion, die aus der Reihenfolgen von OEffnungs-
+//	und Schliessungszeiten die Dauer der Pause des
+//	Flohmarkts ausrechnet
 int calculateRecess(vector<int> &v){
-	int score = 0;
+	int recess = 0;
 
 	for (int i = 1; i < v.size() - 1; i+=2)
-		score += (v[i+1] - v[i]);
+		recess += (v[i+1] - v[i]);
 
-	return score;
+	return recess;
 }
 
-
+//eine Funkttion, die einen String mit der
+//	der Reihenfolge von OEffnungs- und Schliessungszeiten
+//	in einzelne Uhrzeiten aufsplittet
 pair<vector<int>, int> processInput(string line){
 	vector<string> data;
+
+	//der vector mit den verarbeiteten Zeiten
 	vector<int> result;
 
+	//der String line wird auf kleine Strings aufgeteilt
 	size_t pos = 0;
 	string token;
 	while ((pos = line.find(" ")) != std::string::npos) {
@@ -44,6 +51,9 @@ pair<vector<int>, int> processInput(string line){
 	}
 	data.pb(line);
 
+	//das Eingabeformat 
+	//	0 -- Stunden
+	//	1 -- Minuten
 	int mode = -1;
 
 	for (auto x: data){
@@ -52,20 +62,16 @@ pair<vector<int>, int> processInput(string line){
 		result.pb(res.first);
 	}
 
+	//der vector mit den Uhrzeiten und das Eingabeformat
 	return {result, mode};
 }
 
 //Die folgenden Funktionen sind Muster/Kriterien, wie man
 //	die Rechtecken in den Streifen sortiert
 
-//kleinere Werte x1 zuerst
-bool smallerx1(Rec *a, Rec *b) {
-	return (a->x1 < b->x1);
-}
-
-//kleinere Werte x2 zuerst
-bool smallerx2(Rec *a, Rec *b) {
-	return (a->x2 < b->x2);
+//dies wird fuer die Funktion upper_bound verwendet
+bool smallerx2(Rec* a, Rec *b){
+	return a->x2 < b->x2;
 }
 
 //1) groesseres Ende, 2) kleinerer Beginn, groesserer Flaecheninhalt

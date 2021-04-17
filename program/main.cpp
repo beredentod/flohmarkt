@@ -10,21 +10,23 @@ int main () {
 
 	//der Gesamtflächeninhalt der platzierten Rechtecke
 	double used = S.calculateAreaUsed();
-	//der Gesamtflächeninhalt aller platzierten Rechtecke
+	//der Gesamtflächeninhalt aller Rechtecke
 	double total = S.calculateTotalArea();
 
+	//das Eingabeformat
 	int format = S.getFormat();
 	string unit = "[m * h]";
 	if (format)
 		unit = "[m * min]";
 
+	//der Flächeninhalt des großen Rechtecks
 	int area = S.getM()*S.getN() - S.getRecess()*S.getN();
 	
-	cout << "\nArea used: " << used << " " << unit << ", which is "
-	<< (used/area)*100 << "% of the total area and which is "
-	<< used/total*100 << "% of all rectangles.\n";
-	cout << "Total area of all rectangles: " << total << "\n";
-	cout << "Total area of the greater rectangle: " << area << "\n";
+	cout << "\nDer Gesamtflächeninhalt der platzierten Rechtecke: " << used << " " << unit <<
+	",\nwas " << (used/area)*100 << "% des Flächeninhalts des umschließenden Rechtecks\nund "
+	<< used/total*100 << "% des Gesamtflächeninhalts aller Rechtecke entspricht.\n";
+	cout << "Der Gesamtflächeninhalt aller Rechtecke: " << total << "\n";
+	cout << "Des Flächeninhalt des umschließenden Rechtecks: " << area << "\n\n";
 
 	//das Ergebnis wird unter dieser Adresse gespeichert
 	S.saveResult("../results/flohmarkt" + to_string(n) + "_result", true, 3);

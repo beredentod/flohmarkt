@@ -15,6 +15,8 @@ class Solver{
 	//die Breite und die Laenge des grossen Rechtecks
 	int M, N;
 
+	//die Dauer der Schließungszeit des Flohmarkt, 
+	//	wenn sein Zeitraum unterbochen ist
 	int recess;
 
 	//der Zeitpunkt, ab dem der Flohmarkt beginnt, also B in der Doku
@@ -31,19 +33,18 @@ class Solver{
 	// i verlaufen und nicht ins grosse Rechteck platziert wurden
 	vector<vector<Rec*>> unusedRectangles;
 
-	//jede i-te Liste enthaelt alle Rechtecken, die durch den Streifen
+	//jede i-te Menge enthaelt alle Rechtecken, die durch den Streifen
 	// i verlaufen und die ins grosse Rechteck platziert wurden
-	vector<list<Rec*>> placedRectangles;
+	vector<set<Rec*, setRecSort>> placed;
 
 	//jede i-te Liste enthaelt alle Luecken, die im Streifen i auftreten
-	vector<list<Hole>> holes;
+	vector<vector<Hole>> holes;
 
 	//eine Liste mit allen Luecken
 	vector<Hole> all_holes;
 
 	//das Format der Eingabe: Stunden -- 0, Minuten -- 1
 	int format;
-
 
 	//eine Methode zum Einlesen der Textdatei und zur Konversion der Eingabe
 	void readFile(string path);
@@ -55,11 +56,6 @@ class Solver{
 	//diese Methode findet die naechste leere Luecke im Streifen p
 	//	fuer ein Rechteck r
 	int findNearestHole(Rec* r, int p);
-
-	list<Rec*>::iterator findPlace(Rec* r, int p);
-
-	//diese Methode fuegt ein Rechteck in einen Streifen p ein
-	void insertPlace(Rec* r, int p);
 
 	//diese Methode verarbeitet den Streifen p beim Lauf
 	//	des Greedy-Algorithmus am Anfang
@@ -106,9 +102,9 @@ public:
 		//die Textdatei wird eingelesen
 		readFile(path);
 		//die vector werden initialisiert
-		placedRectangles = vector<list<Rec*>> (M);
+		placed = vector<set<Rec*, setRecSort>> (M);
 		unusedRectangles = vector<vector<Rec*>> (M);
-		holes = vector<list<Hole>> (M);
+		holes = vector<vector<Hole>> (M);
 		//Lauf des Programms
 		run();
 	}
@@ -131,11 +127,9 @@ public:
 	int getM();
 	//diese Methode gibt den Wert N zurück
 	int getN();
-	//diese Methode gibt den Wert START zurück
-	int getStart();
 	//diese Methode gibt das Format der Eingabe zurück
 	int getFormat();
-	//diese Methode gibt die Länge der Pause zurück
+	//diese Methode gibt die Laenge der Pause zurück
 	int getRecess();
 
 	//diese Methode speichert die Ergebnisse in einer Textdatei
@@ -145,7 +139,7 @@ public:
 // ------------------------- DEBUGGING -------------------------
 
 private:
-	//diese Methode prüft, ob die Rechtecke sich nicht überdecken
+	//diese Methode prueft, ob die Rechtecke sich nicht ueberdecken
 	bool checkIfOverlaps();
 
 public:

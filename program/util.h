@@ -45,11 +45,6 @@ public:
 		return (e-b)*size;
 	}
 
-	//die Breite des Rechtecks (Unterschied der y-Koordinaten)
-	int getWidth(){
-		return (e-b);
-	}
-
 	//die x-Koordinaten des Rechtecks
 	int x1, x2;
 };
@@ -77,23 +72,38 @@ public:
 };
 
 
+//dies wird zum Sortieren innerhalb des Containers set von 
+//	Rec* verwendet
+struct setRecSort{
+    bool operator() (Rec* a, Rec* b) const
+    {
+        return a->x2 < b->x2;
+    }	
+};
+
+
 //eine Funktion, die das Eingabeformat erkennt und entsprechend
 //	zu Stunden oder Minuten umwandelt
 pair<int, int> timeToMinutes(string time);
 
+
+//eine Funktion, die aus der Reihenfolgen von OEffnungs-
+//	und Schliessungszeiten die Dauer der Pause des
+//	Flohmarkts ausrechnet
 int calculateRecess(vector<int> &v);
 
+
+//eine Funkttion, die einen String mit der
+//	der Reihenfolge von OEffnungs- und Schliessungszeiten
+//	in einzelne Uhrzeiten aufsplittet
 pair<vector<int>, int> processInput(string line);
 
 
 //Die folgenden Funktionen sind Muster/Kriterien, wie man
 //	die Rechtecken in den Streifen sortiert
 
-//kleinere Werte x1 zuerst
-bool smallerx1(Rec *a, Rec *b);
-
-//kleinere Werte x2 zuerst
-bool smallerx2(Rec *a, Rec *b);
+//dies wird fuer die Funktion upper_bound verwendet
+bool smallerx2(Rec* a, Rec *b);
 
 //1) groesseres Ende, 2) kleinerer Beginn, groesserer Flaecheninhalt
 bool greaterEnd(Rec *a, Rec *b);

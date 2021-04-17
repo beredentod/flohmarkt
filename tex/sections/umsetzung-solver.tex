@@ -21,8 +21,11 @@ Es gibt zwei \ttt{vector} von \ttt{vector<Rec*>} mit den Namen
 \ttt{rectangles\_stripes} und \ttt{unusedRectangles}. Die beiden 
 haben die Größe \ttt{M} und der erste entspricht den Listen $S_j$ und
 der zweite den Listen $U_j$.
-Dazu gibt es einen \ttt{vector} von \ttt{list<Rec*>} der Größe \ttt{M} namens \ttt{placedRectangles},
+Dazu gibt es einen \ttt{vector} von \ttt{set<Rec*>} der Größe \ttt{M} namens \ttt{placed},
 in dem alle Rechtecke auftreten, die in den Streifen platziert sind.
+Wir verwenden \ttt{set<Rec*>} aus dem Grund, dass die Rechtecke in diesem Container 
+automatisch in der sortierten Reihenfolge der Koordinaten \ttt{x2} behalten werden.
+Außerdem kann man Rechtecke in \ttt{set} sehr einfach einfügen.
 Es gibt noch einen \ttt{vector} von \ttt{vector<Hole>} der Größe \ttt{M} namens \ttt{holes},
 in dem alle Lücken aus jedem Streifen gespeichert werden. 
 Dazu gibt es noch einen \ttt{vector} mit dem Namen \ttt{all\_holes}, in dem alle Lücken
@@ -55,11 +58,11 @@ Hier werden die Streifen im Greedy--Algorithmus verarbeitet.
 Es wird durch jedes Rechteck \ttt{r} in jedem \ttt{vector} \ttt{rectangles\_stripes} iteriert.
 Es wird geprüft, ob die Koordinaten des Rechtecks \ttt{r} $-1$ betragen und ob das Rechteck
 in dem verarbeiteten Streifen beginnt.
-Dann wird es für \ttt{r} nach einer Lücke in \ttt{placedRectangles} gesucht.
+Dann wird es für \ttt{r} nach einer Lücke im Streifen in \ttt{placed} gesucht.
 Die Funktion \ttt{findNearestHole()} gibt die Koordinate \ttt{x1} für \ttt{r} aus,
 wenn es Platz für dieses Rechteck gibt. Sonst wird $-1$ ausgegeben.
 Wenn \ttt{x1} ausgegeben wird, wird dann auch \ttt{x2} gesetzt und 
-das Rechteck \ttt{r} wird in alle Streifen in \ttt{placedRectangles} eingefügt, 
+das Rechteck \ttt{r} wird in alle Streifen in \ttt{placed} eingefügt, 
 zu denen es gehört.
 
 Nachdem die Methode \ttt{processStripe()} für alle Streifen ausgeführt worden ist,
@@ -129,7 +132,7 @@ zum ersten Fall, mit der Ausnahme, dass die Funktionen \ttt{calculateAreaUsed},
 \ttt{determineUnused()} und \ttt{findHoles()} nicht ausgeführt werden.
 
 Die Methode \ttt{findHoles()} findet alle Lücken
-in allen Listen \ttt{placedRectangles}. 
+in allen Listen \ttt{placed}. 
 Sie nimmt als Argument den Index des Streifens \ttt{p}.
 Wenn \ttt{p = -1}, wird die Funktion auf allen Streifen ausgeführt. 
 Es wird über jedes Rechteck im jedem Streifen iteriert und es wird geprüft,
@@ -171,7 +174,7 @@ Sonst wird \ttt{rep} mit den Koordinaten der Lücke \ttt{x2} ausgegeben.
 
 In der Methode \ttt{removeCollisions()} wird ein Paar bestehend
 aus einem Rechteck und den Koordinaten einer Lücke als Argument genommen.
-Es wird eine Kopie des ganzen \ttt{vector} \ttt{placedRectangles} gemacht
+Es wird eine Kopie des ganzen \ttt{vector} \ttt{placed} gemacht
 und \ttt{placedOld} genannt. 
 Das Rechteck, das in die Lücke eingefügt wird, nennen wir \ttt{rr} und
 die Lücke \ttt{hole}.
@@ -181,14 +184,14 @@ Danach werden in \ttt{oldPlaced} alle Rechtecke gesucht, die mit
 \ttt{rr} kollidieren, also wird es geprüft, ob es Rechtecke gibt, deren
 Wert \ttt{x1} kleiner ist als der Wert \ttt{x2} des Rechtecks \ttt{rr}, 
 wobei \ttt{rr} vor einem solchen Rechteck steht.
-Alle kollidierenden Rechtecke werden in eine Liste \ttt{rec\_remove}
+Alle kollidierenden Rechtecke werden in eine Liste \ttt{collisions}
 hinzugefügt. 
-Danach werden die Werte \ttt{x1} und \ttt{x2} aller Rechtecke, die zu \ttt{rec\_remove}
+Danach werden die Werte \ttt{x1} und \ttt{x2} aller Rechtecke, die zu \ttt{collisions}
 gehören, zu $-1$ gesetzt.
-Als Nächstes werden alle Rechtecke, deren Koordinaten $-1$ betragen, aus \ttt{placedRectangles}
+Als Nächstes werden alle Rechtecke, deren Koordinaten $-1$ betragen, aus \ttt{placed}
 entfernt.
 Danach wird die Funktion \ttt{addNew} ausgeführt, die das Rechteck \ttt{rr} und ggf.
-die neuen anderen Rechtecke in \ttt{placedRectangles} einfügt.
+die neuen anderen Rechtecke in \ttt{placed} einfügt.
 Sie gibt eine Liste mit Rechtecken aus, die neu platziert werden. Sie heißt \ttt{added}.
 Danach wird der Gesamtflächeninhalt mittels der Funktion \ttt{calculateAreaUsed()}
 bestimmt.
@@ -198,22 +201,22 @@ Falls nicht, werden die Koordinaten
 aller neu eingefügten Rechtecke aus der Liste \ttt{added}
 zu $-1$ gesetzt und die 
 ursprünglichen Koordinaten der kollidierenden Rechtecke werden zurückgesetzt. 
-\ttt{placedRectangles} wird zu \ttt{oldPlaced} gesetzt, die Funktion gibt den Wert \ttt{false} 
+\ttt{placed} wird zu \ttt{oldPlaced} gesetzt, die Funktion gibt den Wert \ttt{false} 
 aus und bricht ab.
 
 Die Methode \ttt{addNew()} nimmt als Argument das Rechteck zum Einfügen in eine Lücke.
-Es wird in dieser Funktion in \ttt{placedRectangles} an der richtigen Stelle platziert.
+Es wird in dieser Funktion in \ttt{placed} an der richtigen Stelle platziert.
 Dann lässt man die Funktion \ttt{processStripeReturn()},
-die probiert, neue Rechtecke in \ttt{placedRectangles} zu platzieren, für jeden Streifen laufen. 
-Die Methode \ttt{placedRectangles} funktioniert ähnlich wie die Methode \ttt{processStripe}.
+die probiert, neue Rechtecke in \ttt{placed} zu platzieren, für jeden Streifen laufen. 
+Die Methode \ttt{placed} funktioniert ähnlich wie die Methode \ttt{processStripe}.
 Es wird für jeden Streifen die Liste \ttt{rectangles\_stripes} iteriert und bei jedem
 iterierten Rechteck \ttt{r} wird geprüft, ob er mit dem verarbeiteten Streifen beginnt und
 ob er nicht platziert wurde.
 Dann wird mittels der Funktion \ttt{findNearestHole()} die nächste Lücke in diesem Streifen
-in \ttt{placedRectangles} gesucht.
-Wenn es so eine Lücke gibt, wird geprüft, ob die Lücken in allen Streifen in \ttt{placedRectangles}
+in \ttt{placed} gesucht.
+Wenn es so eine Lücke gibt, wird geprüft, ob die Lücken in allen Streifen in \ttt{placed}
 bestehen, zu denen das iterierte Rechteck gehört.
-Wenn ja, wird dieses Rechteck in alle diesen Streifen in \ttt{placedRectangles} eingefügt.
+Wenn ja, wird dieses Rechteck in alle diesen Streifen in \ttt{placed} eingefügt.
 Diese Methode gibt eine Liste \ttt{added} aus, in der sich alle neu eingefügten Rechtecke 
 befinden.
 In der Methode \ttt{addNew} wird die Liste \ttt{added} aus

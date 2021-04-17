@@ -17,7 +17,7 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 	\begin{itemize}
 		\item Einlesen aller Rechtecke und Erstellung der Liste $Z$: $O(n)$
 
-		\item Erstellung von Listen \ttt{placedRectangles}, \ttt{unusedRectangles} und \ttt{holes}
+		\item Erstellung von Listen \ttt{placed}, \ttt{unusedRectangles} und \ttt{holes}
 		für jeden Streifen (s. \nameref{sec:umsetzung}): $O(M)$
 
 		\item Verteilung jedes Rechtecks auf die Listen $S_j$, zu denen sie gehören: $O(M \cdot n)$ (worst--case)\\
@@ -31,15 +31,15 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		ist durch das Sortieren verursacht.
 	\end{itemize}
 
-	\item Der Greedy--Algorithmus am Anfang: $O(M \cdot n^2)$ (worst--case, amortisierte Laufzeit)\\
+	\item Der Greedy--Algorithmus am Anfang: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)\\
 	Obwohl man die Funktion zur Verarbeitung eines Streifens $M$--mal 
 	laufen lässt, kann eine Laufzeitanalyse pro Lauf dieser Funktion zu pessimistisch sein.
-	Es ist unmöglich, dass ein Platz für $n$ Rechtecke $M$--mal gesucht wird,
+	Es ist unmöglich, dass ein Platz für $n$ Rechtecke in jedem Streifen $M$--mal gesucht wird,
 	da wir voraussetzen, dass jedes Rechteck $r_i$ nur im Streifen $b_i$ gelegt werden kann
 	und außerdem können $n$ Rechtecke nicht $M$--mal platziert werden, da jedes Rechteck
 	nur einmal gelegt werden kann.
-	Stattdessen analysieren wir die Laufzeit für das Platzieren jedes Rechtecks allein,
-	deshalb wird die endliche Laufzeit mal $n$ multipliziert, da man im schlimmsten Fall
+	Stattdessen analysieren wir die amortisierte Laufzeit für das Platzieren jedes Rechtecks allein,
+	deshalb wird die endliche Laufzeit mit dem Faktor $n$ multipliziert, da man im schlimmsten Fall
 	alle $n$ Rechtecke ins $R$ legen muss.
 
 	\begin{itemize}
@@ -47,21 +47,24 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		Im schlimmsten Fall muss man in einem Streifen über $n-1$ Rechtecke iterieren,
 		um einen freien Platz für ein Rechteck zu finden.
 
-		\item Das Finden der genauen Stelle in den restlichen Streifen: $O(M \cdot n)$ (worst--case)\\
+		\item Das Finden der genauen Stelle in den restlichen Streifen: $O(M \log n)$ (worst--case)\\
 		Nicht in jedem Streifen müssen sich dieselben Rechtecke befinden und ein Rechteck 
 		kann zu mehreren Steifen gehören.
-		In jedem Streifen muss man die genaue Position zum Platzieren des Rechtecks finden
-		und dazu muss man im schlimmsten Fall über $n-1$ Rechtecke im Streifen iterieren.
-		Wenn man die richtige Stelle im Streifen findet, erfolgt die
-		Einfügen--Operation in eine \ttt{list} in C++ erfolgt in $O(1)$.\footnote{\href{https://en.cppreference.com/w/cpp/container/list/insert}{https://en.cppreference.com/w/cpp/container/list/insert}}
+		In jedem Streifen muss man die genaue Position zum Platzieren des Rechtecks finden.
+		Da man im Programm \ttt{set} verwendet, sind alle Rechtecke im Streifen
+		immer in aufsteigender Reihenfolge ihrer Koordinaten $x_i$. 
+		So kann ein Rechteck mittels der eingebauten Funktion \ttt{insert} 
+		in \ttt{set} einfügt werden. Die Einfügen--Operation erfolgt in logarithmischer Laufzeit
+		bezüglich der Anzahl der Rechtecke im Streifen: $O(\log n)$.\footnote{
+		\href{https://en.cppreference.com/w/cpp/container/set/insert}{https://en.cppreference.com/w/cpp/container/set/insert}}
 		Im schlimmsten Fall gehört ein Rechteck zu allen Streifen, deshalb muss die endliche Laufzeit
-		mal $M$ multipliziert werden.
+		mal $M$ multipliziert werden: $O(M \log n)$.
 
 		%Das erfolgt mittels der eingebauten Funktion \ttt{upper\_bound}, die in C++ in $O(\log n)$ läuft.\footnote{\href{https://en.cppreference.com/w/cpp/algorithm/upper_bound}{https://en.cppreference.com/w/cpp/algorithm/upper\_bound}}.
 
 	\end{itemize}
 
-	\item Ein Lauf des Verbesserungsalgorithmus pro ein Paar Lücke--Rechteck: $O(M \cdot n^2)$ (worst--case, amortisierte Laufzeit)
+	\item Ein Lauf des Verbesserungsalgorithmus pro ein Paar Lücke--Rechteck: $O(n(n + M \log n))$ (worst--case, amortisierte Laufzeit)
 
 	\begin{itemize}
 		\item Berechnung des Gesamtflächeninhalts aller platzierten Rechtecke: $O(n)$ (worst--case)\\
@@ -86,20 +89,26 @@ Somit kann man die Größe $M$ auch als die Anzahl der Streifen betrachten.
 		Im schlimmsten Fall gehört ein Rechteck zu allen $M$ Streifen und man muss in allen
 		Streifen $n-1$ Rechtecke entfernen.
 
-		\item Einfügen neuer Rechtecke in neue Lücken: $O(M \cdot n^2)$
+		\item Einfügen neuer Rechtecke in neue Lücken: $O(n(n + M \log n))$
 		(worst--case, amortisierte Laufzeit)\\
 		In diesem Teil lohnt es sich mehr, eine amortisierte Laufzeitanalyse pro Rechteck durchzuführen.
-		Im schlimmsten Fall muss man $n-1$ Rechtecke ins Rechteck $R$ einfügen.
+		Im schlimmsten Fall muss man $n-1$ Rechtecke ins Rechteck $R$ einfügen, deshalb
+		wird die endliche Laufzeit mit dem Faktor $n$ multipliziert.
 		Im schlimmsten Fall gehört jedes Rechteck zu jedem der $M$ Streifen.
 		Beim Einfügen jedes Rechtecks $r$ muss man zuerst die potenziellen Koordinaten
-		für $r$ im Streifen $b_r$ finden. Dazu kann man im schlimmsten Fall über $n-1$ Rechtecke iterieren.
+		für $r$ im Streifen $b_r$ finden.
+		Dazu kann man im schlimmsten Fall über $n-1$ Rechtecke iterieren: $O(n)$.
 		Dann muss man in jedem Streifen, zu dem $r$ gehört, 
 		prüfen, ob es genug Platz dafür gibt.
-		Dazu muss man im schlimmsten über alle Rechtecke im Streifen iterieren.
+		Das erfolgt mittels der eingebauten Funktion \ttt{upper\_bound},
+		die in logarithmischer Zeit bezüglich der Anzahl der Rechtecke im
+		Streifen läuft: $O(\log n)$.\footnote{\href{https://en.cppreference.com/w/cpp/algorithm/upper_bound}{https://en.cppreference.com/w/cpp/algorithm/upper\_bound}}
 		%Das wird wieder mittels der Funktion \ttt{upper\_bound} ermittelt,
 		%die in logarithmischer Zeit läuft.
 		Dann wird das Rechteck zu allen Streifen eingefügt, zu denen es gehört.
-		Somit ergibt sich pro Rechteck $r$ die Laufzeit: $O(M \cdot n)$
+		Diese Operation erfolgt mithilfe der Funktion \ttt{insert}, die in
+		logarithmischer Zeit läuft: $O(M \log n)$.
+		Somit ergibt sich pro Rechteck $r$ die Laufzeit: $O(n + M \log n)$
 
 		\item Zurücksetzung der ursprünglichen Platzierung: $O(M \cdot n)$ (worst--case)\\
 		Wenn eine Platzierung einen niedrigeren Flächeninhalt besitzt als 
@@ -122,7 +131,7 @@ Laufzeiten als die Gesamtlaufzeit der restlichen Prozesse, deshalb unterscheiden
 nicht zwischen den Laufzeiten der Laüfe des While--Schleife, in denen ein Ergebnis 
 angenommen wird, und denjenigen, in denen das nicht der Fall ist.
 Somit ergibt sich die folgende Laufzeit für ein Paar von einer Lücke $L$ und einem Rechteck $r$,
-wobei $r$ in $L$ eingefügt werden soll: $O(M \cdot n^2)$ (worst--case).
+wobei $r$ in $L$ eingefügt werden soll: $O(n(n + M \log n))$ (worst--case).
 
 Nun bestimmen wir die Anzahl an Paaren Lücke--Rechteck, die vom Verbesserungsalgorithmus
 verarbeitet werden. Die Funktion zur Bestimmung aller nicht gelegten Rechtecke kann
@@ -139,7 +148,8 @@ So legen wir fest, die Laufzeit des Verbesserungsalgorithmus
 für jede Kombination der Lücken und Rechtecke aus einem Paar von Listen $H$ und $U_j$
 beträgt im worst--case:
 \[
-	O(M \cdot n^2 \cdot M \cdot n^2) = O(M^2 \cdot n^4).
+	O(n(n + M \log n) \cdot M \cdot n^2) = O((n^2 + M \cdot n \log n) \cdot M \cdot n^2)
+	= O(M \cdot n^4 + M^2 \cdot n^3 \log n).
 \]
 
 Es bleibt noch die Abschätzung, wie viel mal man die Listen $H$ und $U_j$ bestimmt.
@@ -158,5 +168,5 @@ dafür steht, wie oft die Listen $H$ und $U_j$ bestimmt werden müssen.
 In den Beispielen \hyperref[ex:1]{1}--\hyperref[ex:7]{7} überschreitet $k$ nicht 10.
 So beträgt die finale Laufzeit im worst--case:
 \[
-	O(k \cdot M^2 \cdot n^4).
+	O(k(M \cdot n^4 + M^2 \cdot n^3 \log n)).
 \]

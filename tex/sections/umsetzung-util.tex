@@ -7,7 +7,7 @@ Außerdem gibt es die Attribute \ttt{x1} und \ttt{x2},
 die den $x$--Koordinaten eines Rechtecks entsprechen.
 Wenn ein Rechteck gelegt wird, werden die beiden Koordinaten festgelegt und 
 es gilt dann immer: $\ttt{x1} + \ttt{size} = \ttt{x2}$. 
-Wenn ein Rechteck nicht platziert ist, sind die beiden Variablen zu $-1$ gesetzt.
+Wenn ein Rechteck nicht platziert ist, sind die beiden Variablen auf $-1$ gesetzt.
 
 Außer den standardmäßigen Getter-- und Setter--Methoden gibt es auch eine Methode
 \ttt{getArea()}, die den Flächeninhalt des Rechtecks ausgibt, indem $(\ttt{e}-\ttt{b})\times \ttt{m}$
@@ -36,14 +36,14 @@ das Eingabeformat kodiert wird:\break 0 steht für Stunden und 1 für Minuten.
 Die Funktion \ttt{processInput()} verarbeitet den String mit den Öffnungszeiten 
 des Flohmarkts.
 Diese Funktion nimmt als Argument einen String, der aus $2k$ Zahlen besteht.
-Die Funktion teilt den String in eingeständige Uhrzeiten auf.
-Jede Uhrzeiten wird mithilfe der Funktion \ttt{timeToMinutes()} zu Stunden bzw. zu Minuten umgewandelt.
+Die Funktion teilt den String in eigenständige Uhrzeiten auf.
+Jede Uhrzeit wird mithilfe der Funktion \ttt{timeToMinutes()} zu Stunden bzw. zu Minuten umgewandelt.
 Dann wird diese Folge von Zahlen als ein \ttt{vector<int>} mit dem Eingabeformat (wie oben) ausgegeben.
 
 Es gibt noch die Funktion \ttt{calculateRecess()}. 
 Diese Funktion nimmt als Argument einen \ttt{vector} von Integers, in dem
 die Uhrzeiten gespeichert sind.
-In diesem \ttt{vector} steht jede gerade bzw. ungerade Zahl für die Öffnungs-- bzw. Schließungszeit. 
+In diesem \ttt{vector} steht jede Zahl mit einem geraden bzw. ungeraden Index für die Öffnungs-- bzw. Schließungszeit.\footnote{Indexierung ab 0.} 
 Ausgegeben wird ein Integer --- die Summe der Unterschiede zwischen jedem $k$--ten Schließungs--
 und jedem $k+1$--ten Öffnungszeitpunkt.
 Diese Summe ist wichtig, weil man die Schließungszeit des Flohmarkts vom Endergebnis abziehen soll,

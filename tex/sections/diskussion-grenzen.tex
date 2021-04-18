@@ -1,10 +1,10 @@
 \subsubsection{Grenzen der Heuristik}\label{sec:diskussion-grenzen}
 Im \cref{sec:komplexitaet} wurde bewiesen, dass das \fp{} NP--schwer ist.
 Es gibt faktoriell viele möglichen Anordnungen der Rechtecke.
-Deshalb für $|Z|$ in der Ordnung von ca. 700 wird eine Brute--Force--Lösung in einer nicht
+Für $|Z|$ in der Ordnung von ca. 700 wird eine Brute--Force--Lösung deshalb nicht in einer
 akzeptablen Zeit gelöst.
 Die Komplexität des \fp{}s setzt Schranken auf die optimale Lösung des Problems.
-Man kann keinen in Polynomialzeit laufenden Algorithmus entwicklen, der jede Instanz dieses
+Man kann keinen in Polynomialzeit laufenden Algorithmus entwickeln, der jede Instanz dieses
 Problems lösen würde.
 Das ist der Hauptgrund, warum wir eine Heurstik verwenden.
 Allerdings, da eine Heuristik nur ein Approximationsalgorithmus ist und
@@ -30,9 +30,9 @@ weil dieses Ergebnis im Laufe des Verbesserungsverfahrens optimiert wird.
 
 
 Im Verbesserungsverfahren wurden mehrere Kompromisse zugunsten der Laufzeit gemacht.
-Vor allem liegt die Schwierigkeit zugrunde dem Verfahren --- warum wird ein Verfahren verwendet, das
+Vor allem liegt die Schwierigkeit im Verfahren selbst --- warum wird ein Verfahren verwendet, das
 einen Bergsteigeralgorithmus nachahmt 
-und nicht z. B. ein Verfahren mit simuliertem Abglühen oder ein ganz anderer heuristische Ansatz?
+und nicht z.\,B. ein Verfahren mit der simulierten Abkühlung oder ein ganz anderer heuristischer Ansatz?
 Außerdem liegen die Schwierigkeiten des Verbesserungsverfahrens auch an
 den Reihenfolgen der Listen $U_j$ und der Liste $H$.
 Zum Sortieren dieser Listen nutzt man auch festgelegte Sortierkriterien,
@@ -45,7 +45,7 @@ Weise vorgehen, wenn es Rechtecke gibt, die deutlich kleiner sind als eine Lück
 man könnte die Rechtecke in darüber und darunter stehenden Streifen in Betracht ziehen, 
 was im Programm nicht gemacht wird.
 Wie beim Greedy--Algorithmus am Anfang, hängt die Reihenfolge der Rechtecke 
-beim Ausfüllen der Lücken von der Reihenfolge in Listen $S_j$ ab. 
-Weiterhin ist die Weise, auf die Lücken bestimmt werden, ist sehr stark vereinfacht. 
+beim Ausfüllen der Lücken von der Reihenfolge in den Listen $S_j$ ab. 
+Weiterhin ist die Weise, auf die Lücken bestimmt werden, sehr stark vereinfacht. 
 Man nimmt keinen Bezug darauf, wie breit eine Lücke ist, also wie viele Streifen sie umfasst.
 Das ist auf jeden Fall eine Schwachstelle des Programms.

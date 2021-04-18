@@ -6,7 +6,7 @@ aus dem \cref{sec:definitionen}. Es gibt das Attribut \ttt{START}, das dem
 Wert $B$ entspricht. Die Variable \ttt{recess} entspricht der
 Dauer der Schließungszeit des Flohmarkts, wenn sein Zeitraum unterbrochen ist.
 Der Integer \ttt{format} speichert das Zeitformat, das in der Eingabedatei
-auftriit. Die Kodierung ist dieselbe wie oben.
+auftritt. Die Kodierung ist dieselbe wie oben.
 
 An dieser Stelle muss man erwähnen, dass kleinere Rechtecke im Programm als Zeiger zu 
 den Objekten von \ttt{Rec} dargestellt werden.
@@ -58,7 +58,7 @@ Hier werden die Streifen im Greedy--Algorithmus verarbeitet.
 Es wird durch jedes Rechteck \ttt{r} in jedem \ttt{vector} \ttt{rectangles\_stripes} iteriert.
 Es wird geprüft, ob die Koordinaten des Rechtecks \ttt{r} $-1$ betragen und ob das Rechteck
 in dem verarbeiteten Streifen beginnt.
-Dann wird es für \ttt{r} nach einer Lücke im Streifen in \ttt{placed} gesucht.
+Dann wird für \ttt{r} nach einer Lücke im Streifen in \ttt{placed} gesucht.
 Die Funktion \ttt{findNearestHole()} gibt die Koordinate \ttt{x1} für \ttt{r} aus,
 wenn es Platz für dieses Rechteck gibt. Sonst wird $-1$ ausgegeben.
 Wenn \ttt{x1} ausgegeben wird, wird dann auch \ttt{x2} gesetzt und 
@@ -71,7 +71,7 @@ wird der Gesamtflächeninhalt aller platzierten Rechtecke mittels der Methode
 die Koordinaten aller Rechtecke in \ttt{rectangles} größer sind als $-1$.
 Wenn entweder der Gesamtflächeninhalt gleich dem Produkt $\ttt{N} \times \ttt{M}$ ist
 oder wenn alle Rechtecke platziert wurden, wird das Programm an dieser Stelle abgebrochen.
-Wenn nicht, wird die Methode \ttt{runOptimization()} laufen lassen, die
+Wenn nicht, wird die Methode \ttt{runOptimization()} laufen gelassen, die
 das Verbesserungsverfahren ausführt.
 
 
@@ -98,7 +98,7 @@ werden zuerst der Wert \ttt{area} mittels der Funktion \ttt{calculateAreaUsed()}
 die Listen \ttt{unusedRectangles} mittels der Methode \ttt{determineUnused()} und
 die Liste \ttt{all\_holes} mittels der Funktion \ttt{findHoles()} bestimmt.
 Da wir die Lücken und die nicht gelegten Rechtecke gerade bestimmten, 
-werden \ttt{itH} und \ttt{itR} auf an die Anfänge der Liste
+werden \ttt{itH} und \ttt{itR} an die Anfänge der Liste
 \ttt{all\_holes} und der Liste \ttt{unusedRectangles} im Streifen, zu
 dem die Lücke unter dem Iterator \ttt{itH} gehört, gesetzt.
 Dann wird die nächste Lücke \ttt{hole} mittels der Methode \ttt{findNextHole()} 
@@ -181,13 +181,13 @@ die Lücke \ttt{hole}.
 Dann werden die Koordinaten von \ttt{rr} gesetzt: \ttt{rr->x2 = hole.second} und
 \ttt{rr->x1 = rr->x2 - getSize}.
 Danach werden in \ttt{oldPlaced} alle Rechtecke gesucht, die mit
-\ttt{rr} kollidieren, also wird es geprüft, ob es Rechtecke gibt, deren
+\ttt{rr} kollidieren, also wird geprüft, ob es Rechtecke gibt, deren
 Wert \ttt{x1} kleiner ist als der Wert \ttt{x2} des Rechtecks \ttt{rr}, 
 wobei \ttt{rr} vor einem solchen Rechteck steht.
-Alle kollidierenden Rechtecke werden in eine Liste \ttt{collisions}
+Alle kollidierenden Rechtecke werden einer Liste \ttt{collisions}
 hinzugefügt. 
 Danach werden die Werte \ttt{x1} und \ttt{x2} aller Rechtecke, die zu \ttt{collisions}
-gehören, zu $-1$ gesetzt.
+gehören, auf $-1$ gesetzt.
 Als Nächstes werden alle Rechtecke, deren Koordinaten $-1$ betragen, aus \ttt{placed}
 entfernt.
 Danach wird die Funktion \ttt{addNew} ausgeführt, die das Rechteck \ttt{rr} und ggf.
@@ -199,7 +199,7 @@ Wenn der neue Gesamtflächeninhalt größer ist als der vorherige,
 wird die Methode \ttt{removeCollisions()} mit dem ausgegebenen Wert \ttt{true} abgebrochen.
 Falls nicht, werden die Koordinaten
 aller neu eingefügten Rechtecke aus der Liste \ttt{added}
-zu $-1$ gesetzt und die 
+auf $-1$ gesetzt und die 
 ursprünglichen Koordinaten der kollidierenden Rechtecke werden zurückgesetzt. 
 \ttt{placed} wird zu \ttt{oldPlaced} gesetzt, die Funktion gibt den Wert \ttt{false} 
 aus und bricht ab.
@@ -210,13 +210,13 @@ Dann lässt man die Funktion \ttt{processStripeReturn()},
 die probiert, neue Rechtecke in \ttt{placed} zu platzieren, für jeden Streifen laufen. 
 Die Methode \ttt{placed} funktioniert ähnlich wie die Methode \ttt{processStripe}.
 Es wird für jeden Streifen die Liste \ttt{rectangles\_stripes} iteriert und bei jedem
-iterierten Rechteck \ttt{r} wird geprüft, ob er mit dem verarbeiteten Streifen beginnt und
-ob er nicht platziert wurde.
+iterierten Rechteck \ttt{r} wird geprüft, ob es mit dem verarbeiteten Streifen beginnt und
+ob es nicht platziert wurde.
 Dann wird mittels der Funktion \ttt{findNearestHole()} die nächste Lücke in diesem Streifen
 in \ttt{placed} gesucht.
 Wenn es so eine Lücke gibt, wird geprüft, ob die Lücken in allen Streifen in \ttt{placed}
 bestehen, zu denen das iterierte Rechteck gehört.
-Wenn ja, wird dieses Rechteck in alle diesen Streifen in \ttt{placed} eingefügt.
+Wenn ja, wird dieses Rechteck in alle diese Streifen in \ttt{placed} eingefügt.
 Diese Methode gibt eine Liste \ttt{added} aus, in der sich alle neu eingefügten Rechtecke 
 befinden.
 In der Methode \ttt{addNew} wird die Liste \ttt{added} aus

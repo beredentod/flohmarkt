@@ -6,12 +6,12 @@ $M$ entlang der $y$--Achse.
 Der Wert $B$ (nach der Konversion) wird entsprechend am Punkt $(0, 0)$ abgebildet (s. \cref{fig:rechteck-streifen-platzierung})
 
 Die Größen $N$ und $M$ sind im Programm fest, unabhängig davon, wie viel sie betragen.
-Außerdem wurde im \cref{sec:definitionen} festegestellt, dass die Größen $s_i$, $b_i$ und $e_i$
+Außerdem wurde im \cref{sec:definitionen} festgestellt, dass die Größen $s_i$, $b_i$ und $e_i$
 des jeweiligen Rechtecks $r_i$ fest sind und dass wir ein Rechteck $r_i$ nur entlang der $x$--Achse,
 also entlang der Seite der Länge $N$ des Rechtecks $R$, bewegen dürfen.
-So bietet sich eine Verteilung der kleinere Rechtecke $r_i$ auf kleinere \textit{\textbf{Streifen}}
-der Länge $N$ im Rechteck $R$ entlang der $y$--Achse (s. \cref{fig:streifen}).
-Die Breite eines solchen Streifen ist äquidistant für alle Streifen und, da
+So bietet sich eine Verteilung der kleineren Rechtecke $r_i$ auf kleinere \textit{\textbf{Streifen}}
+der Länge $N$ im Rechteck $R$ entlang der $y$--Achse an (s. \cref{fig:streifen}).
+Die Breite eines solchen Streifens ist äquidistant für alle Streifen und, da
 man Stände am Flohmarkt nur zu vollständigen Stunden vermietet, 
 beträgt die Breite eines Streifens 1 Stunde.\footnote{Wenn man Zeiten zu
 vollständigen Minuten betrachtet,
@@ -25,11 +25,11 @@ Zu dieser Liste gehören alle kleineren Rechtecke, die zum Streifen $k$ gehören
 
 Nach der Konversion der Eingabe bilden wir eine Liste $Z$, in der jedes
 Rechteck $r_i$ mit seinen genannten Größen $s_i, b_i, e_i$ gespeichert wird.
-Dann iterieren wir über jedes Rechteck $m_i$ in $Z$ und fügen wir es in jede Liste $S_j$ fïr alle
+Dann iterieren wir über jedes Rechteck $m_i$ in $Z$ und fügen es in jede Liste $S_j$ für alle
 $j$ hinzu, die die folgende Bedingung erfüllen: $b_i \leqslant j < e_i$.
-Das bedeutet, dass ein Rechteck von $b_i = 1$ (nach Konversion, in vollständigen Stunden)
-bis $e_i = 5$ in den folgenden Listen enthalten wird: $S_1, S_2, S_3, S_4$.
-In $S_5$ wird er nicht enthalten, da die Miete mit dem Anfang der 5. Stunde endet.
+Das bedeutet, dass z. B. ein Rechteck von $b_i = 1$ (nach Konversion, in vollständigen Stunden)
+bis $e_i = 5$ in den folgenden Listen enthalten ist: $S_1, S_2, S_3, S_4$.
+In $S_5$ wird es nicht enthalten sein, da die Miete mit dem Anfang der 5. Stunde endet.
 Wie die Listen $S_j$ implementiert werden, lesen Sie in der \nameref{sec:umsetzung}.
 
 
@@ -44,17 +44,17 @@ in dieser Reihenfolge:
 Somit sind die ersten Rechtecke in jeder Liste $S_j$ diejenigen,
 deren Wert $e_i$ am größten ist --- oft diejenigen, die am breitesten in $S_j$ sind.
 %\TODO{warum diese Reihenfolge? najpierw załatwaimy od lewej największe, po prawej upychamy najmniejszymi}
-Die Reihenfolge wurde so gewählt, damit wir in dieser Reihefolge versuchen,
+Die Reihenfolge wurde so gewählt, damit wir in dieser Reihenfolge versuchen,
 die Rechtecke aus den Listen in die Streifen im großen Rechteck $R$ zu platzieren.
 Die Idee hinter dieser Platzierung ist, dass wir zuerst die breitesten Rechtecke in einer Liste $S_j$
 „links”, also an niedrigeren $x$--Werten, platzieren, so weit es geht. Dann füllen wir 
-die Lücken „rechts“ (an größeren $x$--Werten) mit schmalleren Rechtecken. 
+die Lücken „rechts“ (an größeren $x$--Werten) mit schmaleren Rechtecken. 
 Die grobe Idee ist, dass wir das Rechteck $R$ quasi vom Punkt $(0,0)$ bis zum Punkt
-$(N, E)$ Streifen für Streifen mit immer schmalleren Rechtecken füllen.
+$(N, E)$ Streifen für Streifen mit immer schmaleren Rechtecken füllen.
 
 Bevor wir zur Beschreibung des Algorithmus übergehen, legen wir noch fest, was
 eine Lücke ist. Als \textbf{\textit{Lücke}} bezeichnen wir eine Strecke 
-zwischen zwei Rechtecken in einem Streifen. Jede Lücke betrifft einen
+zwischen zwei Rechtecke in einem Streifen. Jede Lücke betrifft einen
 konkreten Streifen $j$ und hat die Koordinaten $x_1$ und $x_2$ (stets: $x_1 < x_2$),
 die den Eckpunkten der zwei Rechtecken in $j$ bzw. den Seiten des Rechtecks $R$ entsprechen.
 Man beachte insbesondere, dass es keine Lücke zwischen zwei Rechtecken gibt,
@@ -64,19 +64,19 @@ Als \textit{Größe} oder \textit{Länge} einer Lücke bezeichnen wir: $x_2 - x_
 \input{./tex/figures/fig_rechteck-streifen-platzierung}
 
 Wir verarbeiten Streifen für Streifen in der
-aufsteigenden Reihenfolge der $y$--Werte, beginned mit dem 0--ten Streifen.
+aufsteigenden Reihenfolge der $y$--Werte, beginnend mit dem 0--ten Streifen.
 Wir iterieren durch jede Liste $S_j$ und untersuchen jedes Rechteck $r_i$ in $S_j$, ob sein Wert $b_i$ gleich dem Wert $j$ ist, also ob das Rechteck (die Anmeldung) im Streifen $j$ beginnt.
 %\TODO{Das is wichtig, weil ...}
 Außerdem prüfen wir, ob das Rechteck bereits platziert wurde.
 Wenn die Werte $b_i$ und $j$ übereinstimmen und $r_i$ noch nicht platziert wurde, 
 suchen wir von $x = 0$ bis $x = N$ nach der ersten freien Lücke im Streifen $j$,
 die mindestens so groß ist wie die Länge des Rechtecks $s_i$. 
-Wenn es so eine Lücke gibt, legen wir $r_i$ ins $R$ und übergehen zum Rechteck $r_{i+1}$.
+Wenn es so eine Lücke gibt, legen wir $r_i$ ins Rechteck $R$ und gehen zum Rechteck $r_{i+1}$.
 Man beachte, wenn ein Rechteck $r_i$ in $R$ platziert wird, muss ein in alle Streifen,
 zu denen es gehört, eingefügt werden.
 Auf der \Cref{fig:platzierung} sieht man den verarbeiteten Streifen $S_0$.
 Insbesondere erkennt man gut die Reihenfolge der Sortierkriterien der Rechtecke
-im Strefen.
+im Streifen.
 
 In diesem einfachen Algorithmus nutzt man beim Platzieren eines Rechtecks den
 Vorteil, dass beim Streifen $j$ nur ein Rechteck $r_i$ platziert werden kann, 
@@ -88,10 +88,10 @@ in den weiteren Streifen ${b_i + 1}, b_i + 2, ..., e_i - 1$
 gibt, wenn der Algorithmus entscheidet, dieses Rechteck in $R$ zu platzieren.
 Diese Beobachtung ist offensichtlich wahr, da man die Streifen von „unten“ 
 (beginnend mit den niedrigeren $y$--Werten im Koordinatensystem) nach „oben“
-verarbeitet und bei jedem Streifen $j$ prüft, ob es eine genug große Lücke für ein Rechteck
+verarbeitet und bei jedem Streifen $j$ prüft, ob es eine genügend große Lücke für ein Rechteck
 $r_i$ gibt.
 Wenn es eine Lücke im Streifen $j$ für ein Rechteck $r_i$ mit $b_i = j$ nicht gibt,
-bedeutet, dass es im Streifen $j$ und 
+bedeutet das, dass es im Streifen $j$ und 
 möglicherweise in weiteren Streifen $j+1, j+2, ...$ ein Rechteck gibt, das 
 die Platzierung von $r_i$ in $j$ unmöglich macht.
 

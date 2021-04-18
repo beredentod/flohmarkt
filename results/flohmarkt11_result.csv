@@ -1,0 +1,5 @@
+All rectangles
+Begin,End,Length,x1,x2
+8,18,50,0,50
+8,11,50,-1,-1
+10,18,50,50,100

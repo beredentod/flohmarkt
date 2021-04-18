@@ -23,8 +23,8 @@ ob ein Ergebnis zum \fp{} optimal ist.
 Um das zu beweisen, zeigen wir, dass das
 0/1--Rucksackproblem zum \textsc{Floh\-markt-\-Pro\-blem} reduziert werden kann.
 Das bedeutet: Falls das \textsc{Floh\-markt-\-Pro\-blem} in Polynomialzeit gelöst werden kann,
-so kann auch das Rucksackproblem.
-Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen,
+so auch das Rucksackproblem.
+Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen
 sowie aus einem Rucksack mit einer fixierten Größe.
 Das Problem besteht darin, die Zahlen in den Rucksack 
 so zu packen, dass ihre Summe maximal ist und sie die Größe des Rucksacks nicht überschreitet.
@@ -32,33 +32,39 @@ Das Optimierungsproblem zum 0/1--Rucksackproblem ist NP--schwer.\cite{garey_john
 
 
 Gegeben sei eine Instanz des Rucksackproblems.
-Wir können eine entsprechende Instanz des \textsc{Floh\-markt-\-Pro\-blem}s auf folgende Weise generieren.
+Wir können daraus eine entsprechende Instanz des \textsc{Floh\-markt-\-Pro\-blem}s auf folgende Weise generieren.
 Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
 dieser Zahl entspricht.
 So bilden wir eine Anmeldung im \fp{}, deren Länge der
 Zahl aus dem Rucksackproblem entspricht und der Unterschied zwischen
 dem Beginn und dem Ende der Anmeldung beträgt eine Stunde.
-Außerdem bilden wir ein großes, umschließendes Rechteck, deren Länge der Größe des Rucksacks entspricht
-und deren Breite ebenfalls 1 beträgt.
-Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und deren 
+Außerdem bilden wir ein großes, umschließendes Rechteck, dessen Länge der Größe des Rucksacks entspricht
+und dessen Breite ebenfalls 1 beträgt.
+Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und dessen 
 Länge der Größe des Rucksacks entspricht.
 In dem hierdurch entstandenen Problem wählen wir die Rechtecke so, 
 dass sie über die Grenzen des umschließenden Rechtecks nicht hinausreichen
 und der Gesamtflächeninhalt der kleineren Rechtecke maximal ist. 
 Insbesondere beachte man, dass man die kleineren Rechtecke nur entlang der längeren
 Seite des großen Rechtecks bewegen darf.
-Somit ist das \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem.
-Wenn wir jede Instanz des \fp s in Polynomialzeit lösen können,
-können wir auch jedes 0/1--Rucksackproblem in Polynomialzeit lösen.
+Somit ist dieses spezielle \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem.
+Wenn wir jede Instanz des \fp s in Polynomialzeit lösen könnten,
+könnten wir auch jedes 0/1--Rucksackproblem in Polynomialzeit lösen.
 Somit ist das \fp{} NP--schwer.
 
+Korf beschreibt ein sehr ähnliches Problem wie das \fp.\cite{korf} 
+In seinem Artikel schildert der Autor das \textit{rectangle packing problem}.
+In diesem Problem gibt es eine Menge von kleineren Rechtecken und man soll
+ein umschließendes Rechteck mit der minimalen Fläche für alle Rechtecke finden,
+sodass die Rechtecke sich nicht überdecken.
+In diesem Problem dürfen die Rechtecke nicht gedreht werden.
+Der Autor beweist, dass das \textit{rectangle packing problem} NP--vollständig ist.
 
-Da dieses Problem NP--schwer ist, muss man über einen optimalen Algorithmus zum
-\fp{} nachdenken. 
-Obwohl \fp{} NP--schwer ist, kann es einen parametrisierten Algorithmus geben,
-der dieses Problem in Pseudopolynomialzeit lösen würde.\cite{parametrized}
+Da das \fp{} NP--schwer ist, muss man über einen optimalen Algorithmus nachdenken. 
+Obwohl unser Problem NP--schwer ist, kann es einen parametrisierten Algorithmus geben,
+der dieses Problem in Pseudopolynomialzeit lösen würde.
 Das betrifft beispielsweise das Rucksackproblem, das sich durch einen dynamischen 
-Ansatz in Pseudopolynomialzeit lösen lässt.
+Ansatz in Pseudopolynomialzeit lösen lässt.\cite{parametrized}
 
 Allerdings nutzen wir die Hinweise, die Cormen et al. zum Lösen von NP--vollständigen Problemen
 in ihrem Buch bechreiben. Grundsätzlich gibt es drei Ansätze zum Lösen eines
@@ -66,7 +72,7 @@ solchens Problems.\cite[S.~1106]{cormen}
 Erstens, wenn die Eingabe klein genug ist, reicht ein 
 Algorithmus mit einer exponentieller Laufzeit aus.
 Allerdings lässt sich diese Idee schlecht umsetzen,
-solange die Anzahl der kleineren Rechtecke in der Eingabe sich in Ordnung von Hunderten befindet.
+sobald die Anzahl der kleineren Rechtecke in der Eingabe sich in der Ordnung von Hunderten befindet.
 Die praktische Laufzeit eines exponentiellen Algorithmus wäre in diesem Fall zu groß.
 Zweitens beschreiben die Autoren,
 dass man bestimmte Grenzfälle ausgliedern kann, die sich in Polynomialzeit lösen lassen.

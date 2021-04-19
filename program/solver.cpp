@@ -87,6 +87,8 @@ void Solver::run(){
 	//	oder das grosse Rechteck nicht vollstaendig mit Rechtecken 
 	//	bedeckt ist, laesst man das heuristische Verbesserungsverfahren laufen
 	runOptimization();
+	if (checkIfOverlaps())
+		cout << "STOP!\n";
 }
 
 //der Lauf des heuristischen Verbesserungsverfahrens
@@ -107,6 +109,8 @@ void Solver::runOptimization(){
 	//die Iteratoren zur Liste unusedRectangles und zur
 	//	Liste all_holes
 	int itR = 0, itH = 0;
+
+	int temp = 10000;
 	do {
 		//falls die vorherige Platzierung vom Algorithmus
 		//	angenommen wurde
@@ -127,6 +131,8 @@ void Solver::runOptimization(){
 
 			//wenn es Probleme mit dem Rechteck oder mit
 			//	der Luecke gibt
+
+			temp--;
 			while (rep.second.second < 0){
 				//es gibt keine Luecken mehr
 				if (rep.second.second == -1)
@@ -142,15 +148,18 @@ void Solver::runOptimization(){
 				//	eingefuegt werden
 				if (rep.second.second == -3)
 					rep = findReplacement(hole, ++itR);
+
+				temp--;
 			}
 			//das Rechteck wird in die gewaehlte Luecke platziert, 
 			//	Kollisionen werden behoben, neue Rechtecke werden
 			//	eingefuegt, eine Platzierung wird angenommen oder abgelehnt
-			result = removeCollisions(area, rep);
+			result = removeCollisions(area, rep, temp);
 		}
 		else {
 			//ein Rechteck wird anhand der Luecke gewaehlt
 			rep = findReplacement(hole, ++itR);
+			temp--;
 			//wenn es Probleme mit dem Rechteck oder mit
 			//	der Luecke gibt
 			while (rep.second.second < 0){
@@ -168,11 +177,13 @@ void Solver::runOptimization(){
 				//	eingefuegt werden
 				if (rep.second.second == -3)
 					rep = findReplacement(hole, ++itR);
+
+				temp--;
 			}
 			//das Rechteck wird in die gewaehlte Luecke platziert, 
 			//	Kollisionen werden behoben, neue Rechtecke werden
 			//	eingefuegt, eine Platzierung wird angenommen oder abgelehnt
-			result = removeCollisions(area, rep);
+			result = removeCollisions(area, rep, temp);
 		}
 
 	} while(rep.second.second > -1);
@@ -212,8 +223,8 @@ void Solver::determineUnused(int p){
 
 		//jede der Liste wird sortiert
 		for (int i = 0; i < M; i++)
-			//sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), greaterEnd);
-			shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), g);
+			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
+			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
 	}
 	else {
 		//in jedem Streifen wird jedes Rechteck
@@ -509,7 +520,7 @@ vector<Rec*> Solver::addNew(Rec* rep){
 //diese Methode entfernt alle Rechtecke, die mit einem im Verbesserungsverfahren
 //	gelegten Rechteck kollidieren und aktualisiert die Platzierung,
 //	falls es sich ein besserer Gesamtflaecheninhalt ergibt
-bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
+bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep, int temp){
 	//alle Streifen mit allen platzierten Rechtecken werden kopiert
 	auto placedOld = placed; 
 
@@ -563,6 +574,12 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep){
 	//	wird berechnet
 	int new_area = calculateAreaUsed();
 	double diff = new_area - area;
+
+	uniform_real_distribution<double> dist(0.0,1.0);
+	if (temp < 2)
+		temp = 1;
+	double random_num = dist(rd);
+	double exponent = (diff*1000)/temp;
 
 	//die neue Platzierung wird angenommen
 	if (diff > 0) {

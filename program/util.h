@@ -10,6 +10,9 @@
 
 using namespace std;
 
+//die Eulerische Konstante e
+const double EulerConstant = exp(1.0);
+
 //die Klasse mit einem Rechteck (einer Anmeldung)
 class Rec {
 private:

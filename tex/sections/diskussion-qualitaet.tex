@@ -139,8 +139,32 @@ ist in diesem Zusammenhang sehr gut, wenn man dies mit einer faktoriellen Laufze
 eines Brute--Force--Lösung vergleicht. Die durch den Bergsteigerlagorithmus 
 gefundenen Maxima liegen höchstwahrscheinlich sehr nah an den Optima.
 
+\input{./tex/other/tab_random}
+
 Zum Vergleich wurde auch ein Ansatz mit der simulierten Abkühlung und ein Ansatz, in
 dem die Reihenfolgen der Rechtecke in den Listen zufällig war, ausprobiert, aber
 die Ergebnisse waren allgemein schlechter oder genauso gut wie die, die der Quasibergsteigeralgorithmus liefert.
+Die Ergebnisse mit den zufälligen Reihenfolgen werden im Folgenden beschrieben.
 
-\input{./tex/other/tab_random}
+Anstatt dass die obengenannten Sortierkriterien verwendet werden, um die Liste $H$ und die Listen $U_j$
+zu sortieren, kann man die Lücken und die Rechtecke in diesen Listen zufällig ordnen.
+Dazu wurde der eingebaute Zufallszahlengenerator \ttt{random\_device} und die Funktion
+\ttt{shuffle} verwendet. 
+In der \cref{tab:random} sind die Ergebnisse zu den Beispielen 5 und 7 zu sehen.
+Wie man feststellen kann, sind die Maxima aus allen Kombinationen nicht größer
+als die Ergebnisse in der \cref{tab:ergebnisse}, aber die Minima sind 
+nicht größer als die Minima der Ergbenisse ohne Zufallszahlengenerator.
+Dank der Zufälligkeit kann man zum Beispiel 7 ein um 12 besseres oder ein um 11 schlechteres
+Ergebnis im Vergleich zur Kombination \ttt{greaterHolesSize}---\ttt{smallerSize} erzielen.
+Das Ergebnis Zum Beispiel 5 kann dank der zufälligen Reihenfolge nicht verbessert werden,
+aber kann im schlimmsten Fall um 193, also um 1,8 Prozentpunkte, verschlechtert werden.
+Die mittels des Zufallszahlengenerators generierten Ergebnisse zu den anderen Beispielen
+sind dieselben wie in der \cref{tab:ergebnisse}.
+
+
+
+
+
+
+
+

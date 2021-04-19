@@ -88,7 +88,7 @@ class Solver{
 	//diese Methode entfernt alle Rechtecke, die mit einem im Verbesserungsverfahren
 	//	gelegten Rechteck kollidieren und aktualisiert die Platzierung,
 	//	falls es sich ein besserer Gesamtflaecheninhalt ergibt
-	bool removeCollisions(int area, pair<Rec*, iPair> rep);
+	bool removeCollisions(int area, pair<Rec*, iPair> rep, int temp);
 
 
 	//der Lauf des Programms
@@ -97,6 +97,7 @@ class Solver{
 	//der Lauf des heuristischen Verbesserungsverfahrens
 	void runOptimization();
 
+	//zum Zufallszahlengenerator
 	random_device rd;
 	
 public:

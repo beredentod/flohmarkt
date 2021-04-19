@@ -72,6 +72,8 @@ void Solver::run(){
 	for (int i = 0; i < M; i++)
 		processStripe(i);
 
+	printPlaced();
+
 	//Indikator dafuer, ob alle Rechtecke platziert wurden
 	bool all = true;
 	for (auto r: rectangles)
@@ -87,8 +89,8 @@ void Solver::run(){
 	//	oder das grosse Rechteck nicht vollstaendig mit Rechtecken 
 	//	bedeckt ist, laesst man das heuristische Verbesserungsverfahren laufen
 	runOptimization();
-	if (checkIfOverlaps())
-		cout << "STOP!\n";
+
+	printPlaced();
 }
 
 //der Lauf des heuristischen Verbesserungsverfahrens
@@ -224,7 +226,7 @@ void Solver::determineUnused(int p){
 		//jede der Liste wird sortiert
 		for (int i = 0; i < M; i++)
 			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
-			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
+			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), g);
 	}
 	else {
 		//in jedem Streifen wird jedes Rechteck
@@ -251,12 +253,16 @@ void Solver::findHoles(int p){
 		mt19937 g(rd());
 
 		//die Luecken werden sortiert
-		sort(all_holes.begin(), all_holes.end(), smallerHolesSize);
+		sort(all_holes.begin(), all_holes.end(), greaterHolesSize);
 		//shuffle(all_holes.begin(), all_holes.end(), g);
 	}
 	else {
 		//es wird geprueft, ob es Luecken zwischen
 		//zwei nebeneinander stehenden Rechtecken gibt
+
+		//falls ein Streifen leer ist
+		if (placed[p].empty())
+			holes[p].emplace_back(0, N, p);
 
 		//1. Rechteck
 		auto it = placed[p].begin();
@@ -492,6 +498,9 @@ pair<Rec*, iPair> Solver::findReplacement(Hole hole, int itR){
 	if (rep->getSize() > hole.x2)
 		return {a_p, {-3, -3}};
 
+	cout << "B: " << rep->getBegin() << ", E: " << rep->getEnd() << ", S: " << 
+	rep->getSize() << ", Stripe: " << stripe << "\n";
+
 	//zurueckgegeben wird das Rechteck und die Koordinaten der Luecke
 	return make_pair(rep, make_pair(hole.x1, hole.x2));
 }
@@ -566,9 +575,13 @@ bool Solver::removeCollisions(int area, pair<Rec*, iPair> rep, int temp){
 	}
 	for (auto [stripe, it]: to_remove)
 		placed[stripe].erase(it);
+
+	printPlaced();
 	
 	//neue Rechtecke werden in die Platzierung eingefuegt
 	vector<Rec*> added = addNew(rr);
+
+	printPlaced();
 
 	//der Gesamtflaecheninhalt aller neu platzierten Rechtecke
 	//	wird berechnet

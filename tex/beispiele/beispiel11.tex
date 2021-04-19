@@ -1,0 +1,30 @@
+\subsection{Beispiel 11}\label{ex:11}
+Besonderheit: Das ist ein Grenzfall, der betont, dass die Reihenfolge der sortierten Rechtecke in den Listen $U_j$ eine wichtige Rolle spielt.
+Dieser Fall zeigt auch, dass das vorgestellte Verfahren stark vereinfacht ist.
+\vspace{.4cm}
+
+Der Greedy--Algorithmus am Anfang liefert die Platzierung, die auf der \cref{fig:example11-1}
+zu sehen ist. Das gelbe Rechteck wurde gewählt, da sein Wert $e_i$ am größten in der Liste 
+$S_0$ ist. Als Nächstes wird die Lücke im Streifen 13, also direkt über dem gelben Rechteck,
+im Verbesserungsverfahren gewählt, damit man in sie ein nicht gelegtes Rechteck platziert.
+Das ist die einzelne Lücke in der Platzierung, die in einem Streifen liegt, in dem
+mindestens ein Rechteck nocht nicht platziert ist.
+In die gewählte Lücke wird das grüne Rechteck platziert.
+So muss das gelbe kollidierende Rechteck entfernt sein. 
+Es ensteht Platz für neue Rechtecke.
+Nur aus dem Grund, dass das blaue Rechteck als erstes in der Liste $U_0$ steht, 
+wird es platziert. So kommt es zur Platzierung aus der \cref{fig:example11-2}.
+Da die Summe der Flächeninhalte der neuen Platzierung kleiner ist als die Summe 
+der Flächeninhalte der alten Platzierung, wird die neue Platzierung vom Algorithmus abgelehnt.
+Da dieser Algorithmus sehr stark vereinfacht ist, sucht man nicht nach Alernativen für
+das blaue Rechteck. Die Lücke im Streifen 13 war die einzelne in der Platzierung und das grüne Rechteck
+war das einzelne, das in diese Lücke eingefügt werden konnte. 
+Aus diesem Grund bricht das Programm an dieser Stelle mit der Anfangsplatzierung als Endergebnis ab.
+Die optimale Platzierung für dieses Beispiel ist auf der \cref{fig:example11-3} zu sehen.
+\newpage
+
+\noindent Der Flächeninhalt des großen Rechtecks: \framebox[1.1\width]{16 [m $\cdot$ h]}\\
+Der Gesamtflächeninhalt aller platzierten Rechtecke: \framebox[1.1\width]{12 [m $\cdot$ h]}\\
+Der Gesamtflächeninhalt aller Rechtecke: \framebox[1.1\width]{32 [m $\cdot$ h]}
+
+\input{./tex/figures/fig_beispiel11}

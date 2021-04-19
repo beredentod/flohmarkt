@@ -150,7 +150,7 @@ void Solver::determineUnused(int p){
 		//jede der Liste wird sortiert
 		for (int i = 0; i < M; i++)
 			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
-			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
+			//shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), g);
 	}
 	else {
 		//in jedem Streifen wird jedes Rechteck
@@ -183,6 +183,10 @@ void Solver::findHoles(int p){
 	else {
 		//es wird geprueft, ob es Luecken zwischen
 		//zwei nebeneinander stehenden Rechtecken gibt
+		
+		//falls ein Streifen leer ist
+		if (placed[p].empty())
+			holes[p].emplace_back(0, N, p);
 
 		//1. Rechteck
 		auto it = placed[p].begin();

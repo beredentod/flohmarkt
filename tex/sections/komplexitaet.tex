@@ -22,33 +22,55 @@ Um das zu beweisen, zeigen wir, dass das
 0/1--Rucksackproblem zum \textsc{Floh\-markt-\-Pro\-blem} reduziert werden kann.
 Das bedeutet: Falls das \textsc{Floh\-markt-\-Pro\-blem} in Polynomialzeit gelöst werden kann,
 so auch das Rucksackproblem.
-Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen
-sowie aus einem Rucksack mit einer fixierten Größe.
-Das Problem besteht darin, die Zahlen in den Rucksack 
-so zu packen, dass ihre Summe maximal ist und sie die Größe des Rucksacks nicht überschreitet.
+
+Eine Instanz des Rucksackproblems besteht aus einer Rucksackgröße $G$ und aus zwei Listen 
+$L_1$ und $L_2$ der Länge $n$. $L_1$ enthält die Größen $g_i$ von $n$ Gegenständen,
+$L_2$ enthält ihre Werte $v_i$ $(i=1,...,n)$.
+Gesucht ist eine Liste mit $n$ boolschen Werten $a_1, ..., a_n$ mit folgender Eigenschaft:
+Die Summe $a_i \times g_i$ $(i=1,...,n)$ ist nicht größer als $G$ und die Summe
+$a_i \times v_i$ $(i=1,...,n)$ ist maximal.
 Das Optimierungsproblem zum 0/1--Rucksackproblem ist NP--schwer.\cite{garey_johnson_2009}
+
+%Eine Instanz des Rucksackproblems besteht aus einer Liste von Zahlen
+%sowie aus einem Rucksack mit einer fixierten Größe.
+%Das Problem besteht darin, die Zahlen in den Rucksack 
+%so zu packen, dass ihre Summe maximal ist und sie die Größe des Rucksacks nicht überschreitet.
 
 
 Gegeben sei eine Instanz des Rucksackproblems.
-Wir können daraus eine entsprechende Instanz des \textsc{Floh\-markt-\-Pro\-blem}s auf folgende Weise generieren.
-Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
-dieser Zahl entspricht.
-So bilden wir eine Anmeldung im \fp{}, deren Länge der
-Zahl aus dem Rucksackproblem entspricht und der Unterschied zwischen
-dem Beginn und dem Ende der Anmeldung beträgt eine Stunde.
-Außerdem bilden wir ein großes, umschließendes Rechteck, dessen Länge der Größe des Rucksacks entspricht
-und dessen Breite ebenfalls 1 beträgt.
-Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und dessen 
-Länge der Größe des Rucksacks entspricht.
-In dem hierdurch entstandenen Problem wählen wir die Rechtecke so, 
-dass sie über die Grenzen des umschließenden Rechtecks nicht hinausreichen
-und der Gesamtflächeninhalt der kleineren Rechtecke maximal ist. 
-Insbesondere beachte man, dass man die kleineren Rechtecke nur entlang der längeren
-Seite des großen Rechtecks bewegen darf.
+Wir können daraus eine Instanz eines speziellen \fp s
+auf folgende Weise generieren. Der Flohmarkt hat die Länge $G$.
+Es gibt $n$ Anbieter, die jeweils eine Teillänge $l_i$ des Flohmarkts 
+und einen Zeitraum $t_i$ $(i=1,...,n)$ beantragen. 
+Wir setzen $l_i\coloneqq g_i$ und $t_i\coloneqq v_i/g_i$.
+Alle Anbieter wollen zu demselben Zeitpunkt beginnen. 
+Da jeder Mieter an seinem Platz beibt, besteht die Aufgabe darin,
+eine solche Auswahl aus der Liste der Anbieter zu finden,
+für die die Summe der $l_i$ die Länge $G$ nicht übersteigt und
+für die die Summe der Produkte $l_i\times t_i$ maximal wird.
+Da $l_i \times t_i = v_i$ ist,
+wird die Summe der $l_i\times t_i$ genau dann maximal,
+wenn die Summe der $v_i$ maximal wird.
 Somit ist dieses spezielle \fp{} äquivalent zum ursprünglichen 0/1--Rucksackproblem.
-Wenn wir jede Instanz des \fp s in Polynomialzeit lösen könnten,
+Wenn wir jede beliebige Instanz des \fp s in Polynomialzeit lösen könnten,
 könnten wir auch jedes 0/1--Rucksackproblem in Polynomialzeit lösen.
 Somit ist das \fp{} NP--schwer.
+
+%Wir können daraus eine entsprechende Instanz des \textsc{Floh\-markt-\-Pro\-blem}s auf folgende Weise generieren.
+%Für jede Zahl im Rucksackproblem bilden wir ein Rechteck der Breite 1 und der Länge, die 
+%dieser Zahl entspricht.
+%So bilden wir eine Anmeldung im \fp{}, deren Länge der
+%Zahl aus dem Rucksackproblem entspricht und der Unterschied zwischen
+%dem Beginn und dem Ende der Anmeldung beträgt eine Stunde.
+%Außerdem bilden wir ein großes, umschließendes Rechteck, dessen Länge der Größe des Rucksacks entspricht
+%und dessen Breite ebenfalls 1 beträgt.
+%Somit bilden wir eine Instanz eines Flohmarkts, der eine Stunde dauert und dessen 
+%Länge der Größe des Rucksacks entspricht.
+%In dem hierdurch entstandenen Problem wählen wir die Rechtecke so, 
+%dass sie über die Grenzen des umschließenden Rechtecks nicht hinausreichen
+%und der Gesamtflächeninhalt der kleineren Rechtecke maximal ist. 
+%Insbesondere beachte man, dass man die kleineren Rechtecke nur entlang der längeren
+%Seite des großen Rechtecks bewegen darf.
 
 Korf beschreibt ein sehr ähnliches Problem wie das \fp.\cite{korf} 
 In seinem Artikel schildert der Autor das \textit{rectangle packing problem}.
@@ -64,9 +86,9 @@ der dieses Problem in Pseudopolynomialzeit lösen würde.
 Das betrifft beispielsweise das Rucksackproblem, das sich durch einen dynamischen 
 Ansatz in Pseudopolynomialzeit lösen lässt.\cite{parametrized}
 
-Allerdings nutzen wir die Hinweise, die Cormen et al. zum Lösen von NP--vollständigen Problemen
-in ihrem Buch bechreiben. Grundsätzlich gibt es drei Ansätze zum Lösen eines
-solchens Problems.\cite[S.~1106]{cormen}
+Allerdings, um eine Lösung zu entwickeln, nutzen wir die Hinweise, die Cormen et al. zum Lösen von NP--vollständigen Problemen
+in ihrem Buch beschreiben. Grundsätzlich gibt es drei Ansätze zum Lösen eines
+solchen Problems.\cite[S.~1106]{cormen}
 Erstens, wenn die Eingabe klein genug ist, reicht ein 
 Algorithmus mit einer exponentieller Laufzeit aus.
 Allerdings lässt sich diese Idee schlecht umsetzen,

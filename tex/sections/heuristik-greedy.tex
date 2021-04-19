@@ -52,6 +52,8 @@ die Lücken „rechts“ (an größeren $x$--Werten) mit schmaleren Rechtecken.
 Die grobe Idee ist, dass wir das Rechteck $R$ quasi vom Punkt $(0,0)$ bis zum Punkt
 $(N, E)$ Streifen für Streifen mit immer schmaleren Rechtecken füllen.
 
+\input{./tex/figures/fig_rechteck-streifen-platzierung}
+
 Bevor wir zur Beschreibung des Algorithmus übergehen, legen wir noch fest, was
 eine Lücke ist. Als \textbf{\textit{Lücke}} bezeichnen wir eine Strecke 
 zwischen zwei Rechtecke in einem Streifen. Jede Lücke betrifft einen
@@ -60,8 +62,6 @@ die den Eckpunkten der zwei Rechtecken in $j$ bzw. den Seiten des Rechtecks $R$ 
 Man beachte insbesondere, dass es keine Lücke zwischen zwei Rechtecken gibt,
 die eine gemeinsame Seite haben.
 Als \textit{Größe} oder \textit{Länge} einer Lücke bezeichnen wir: $x_2 - x_1$.
-
-\input{./tex/figures/fig_rechteck-streifen-platzierung}
 
 Wir verarbeiten Streifen für Streifen in der
 aufsteigenden Reihenfolge der $y$--Werte, beginnend mit dem 0--ten Streifen.

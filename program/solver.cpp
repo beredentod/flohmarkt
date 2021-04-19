@@ -207,9 +207,13 @@ void Solver::determineUnused(int p){
 		for (int i = 0; i < M; i++)
 			determineUnused(i);
 
+		//der Zufallszahlengenerator
+		mt19937 g(rd());
+
 		//jede der Liste wird sortiert
 		for (int i = 0; i < M; i++)
-			sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), smallerSize);
+			//sort(unusedRectangles[i].begin(), unusedRectangles[i].end(), greaterEnd);
+			shuffle(unusedRectangles[i].begin(), unusedRectangles[i].end(), g);
 	}
 	else {
 		//in jedem Streifen wird jedes Rechteck
@@ -232,8 +236,12 @@ void Solver::findHoles(int p){
 		for (int i = 0; i < M; i++)
 			findHoles(i);
 
+		//der Zufallszahlengenerator
+		mt19937 g(rd());
+
 		//die Luecken werden sortiert
-		sort(all_holes.begin(), all_holes.end(), greaterHolesSize);
+		sort(all_holes.begin(), all_holes.end(), smallerHolesSize);
+		//shuffle(all_holes.begin(), all_holes.end(), g);
 	}
 	else {
 		//es wird geprueft, ob es Luecken zwischen

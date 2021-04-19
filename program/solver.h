@@ -97,6 +97,8 @@ class Solver{
 	//der Lauf des heuristischen Verbesserungsverfahrens
 	void runOptimization();
 
+	random_device rd;
+	
 public:
 	Solver(string path){
 		//die Textdatei wird eingelesen
@@ -105,6 +107,7 @@ public:
 		placed = vector<set<Rec*, setRecSort>> (M);
 		unusedRectangles = vector<vector<Rec*>> (M);
 		holes = vector<vector<Hole>> (M);
+
 		//Lauf des Programms
 		run();
 	}
